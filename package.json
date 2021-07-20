@@ -1,0 +1,20 @@
+{
+  "name": "diplomacy-rest",
+  "version": "1.0.0",
+  "description": "REST API for Diplomacy hosted on Bankbook.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ToxicOverload/diplomacy-rest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ToxicOverload/diplomacy-rest/issues"
+  },
+  "homepage": "https://github.com/ToxicOverload/diplomacy-rest#readme"
+}
