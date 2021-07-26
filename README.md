@@ -1,6 +1,6 @@
 # Diplomacy REST API
 
-REST API for Diplomacy hosted on [Bankbook](bankbook.kolbly.name).
+REST API for Diplomacy hosted on [Bankbook](http://bankbook.kolbly.name/).
 
 ## Development
 
