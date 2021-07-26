@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ToxicOverload/diplomacy-rest#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.12"
   }
 }
