@@ -9,6 +9,7 @@ services:
       - 9229:9229
     environment:
       - SERVER_PORT=8000
+      - DB_UPSTREAM=${DOCKER_GATEWAY_HOST:-host.docker.internal}
     command: npm run debug
     volumes:
       - type: bind
