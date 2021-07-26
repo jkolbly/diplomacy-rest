@@ -32,7 +32,7 @@ function mysql_connect(host) {
 /**
  * @param {Request} req Request object with auth_token cookie.
  * @param {string} app String ID of app to check permissions or empty for no permission checking.
- * @returns {[boolean, string?]} Whether the user is authenticated and the username or reason for not being authenticated.
+ * @returns {Promise<[boolean, string?]>} Whether the user is authenticated and the username or reason for not being authenticated.
  */
 async function authenticate(req, app="") {
   if (req.cookies.auth_token) {
@@ -40,7 +40,7 @@ async function authenticate(req, app="") {
     if (rows.length > 0) {
       let username = rows[0].username;
       if (app) {
-        if (user_app_permission(username, app)) {
+        if (await user_app_permission(username, app)) {
           return [true, username];
         } else {
           return [false, `User ${username} doesn't have permission to use app ${app}.`]
@@ -58,10 +58,10 @@ async function authenticate(req, app="") {
  * Get whether or not a user has permission to use an app
  * @param {string} username String username of user
  * @param {string} app String ID of app
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
 async function user_app_permission(username, app) {
-  if (column_exists("users", app)) {
+  if (await column_exists("users", app)) {
     return (await query(`SELECT ${pool.escapeId(app)} FROM users WHERE username=?`, [username]))[0][app] == true;
   }
   return false;
@@ -71,7 +71,7 @@ async function user_app_permission(username, app) {
  * Get whether or not a column exists on a table. Sanitizes both inputs for safety.
  * @param {string} table ID of table
  * @param {string} column String to match columns
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
 async function column_exists(table, column) {
   return (await query(`SHOW COLUMNS FROM ?? LIKE ?`, [table, column])).length > 0;
