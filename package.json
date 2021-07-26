@@ -4,7 +4,8 @@
   "description": "REST API for Diplomacy hosted on Bankbook.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "nodemon -L --inspect=0.0.0.0:9229 server.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/ToxicOverload/diplomacy-rest/issues"
   },
-  "homepage": "https://github.com/ToxicOverload/diplomacy-rest#readme"
+  "homepage": "https://github.com/ToxicOverload/diplomacy-rest#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
+  }
 }
