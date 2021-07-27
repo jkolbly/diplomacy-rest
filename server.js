@@ -51,4 +51,8 @@ app.get("/maps/list-details", generic_auth_func(async (username, req, res) => {
   res.send(arr);
 }));
 
+app.get("/maps/:path(*)/data", generic_auth_func(async (username, req, res) => {
+  res.send(await utils.get_map_info(req.params.path));
+}));
+
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
