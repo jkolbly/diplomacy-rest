@@ -19,12 +19,13 @@ function generic_auth_func(authenticated, denied=default_deny) {
     try {
       let [auth, username] = await sql.authenticate(req, "diplomacy");
       if (auth) {
-        authenticated(username, req, res);
+        await authenticated(username, req, res);
       } else {
-        denied(req, res);
+        await denied(req, res);
       }
     } catch (error) {
       console.error(error);
+      res.status(500).send(error);
     }
   };
 }
