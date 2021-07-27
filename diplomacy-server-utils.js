@@ -61,7 +61,7 @@ async function get_map_info(rel) {
 /**
  * Get the list of JSON representations of games involving `username`
  * @param {string} username Username or empty for no username checking.
- * @returns {Promise<Object[]>} 
+ * @returns {Promise<ServerGameData[]>} 
  */
  async function get_game_list_json(username="") {
   let rows = await sql.query("SELECT json FROM diplomacy_games WHERE archived=FALSE");
@@ -69,7 +69,7 @@ async function get_map_info(rel) {
   for (let row of rows) {
     let json = JSON.parse(row.json);
     if (!username || json.users.includes(username)) {
-      list.push(json);
+      list.push(new ServerGameData(json));
     }
   }
   return list;
