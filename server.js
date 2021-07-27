@@ -26,7 +26,7 @@ function generic_auth_func(authenticated, denied=default_deny) {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).send(error);
+      res.status(500).send({error: error.message});
     }
   };
 }
