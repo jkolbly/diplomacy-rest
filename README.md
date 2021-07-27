@@ -4,7 +4,7 @@ REST API for Diplomacy hosted on [Bankbook](http://bankbook.kolbly.name/).
 
 ## Endpoints
 
-Endpoints are relative to [http://bankbook.kolbly.name/diplomacy/api](http://bankbook.kolbly.name/diplomacy/api). The browser accessing this API must have a valid `auth_token` cookie.
+Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http://bankbook.kolbly.name:8000/diplomacy/api). The browser accessing this API must have a valid `auth_token` cookie.
 
 | Endpoint | GET/POST | GET Params | Content-Type | Request Body | Description |
 |---|---|---|---|---|---|
