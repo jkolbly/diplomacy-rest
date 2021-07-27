@@ -40,6 +40,10 @@ function default_deny(req, res) {
   console.log(`Unauthorized access from ${req.ip}`);
 }
 
+app.get("/maps", generic_auth_func(async (username, req, res) => {
+  res.redirect("/maps/list");
+}));
+
 app.get("/maps/list", generic_auth_func(async (username, req, res) => {
   res.send(await utils.get_map_list());
 }));

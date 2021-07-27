@@ -8,6 +8,7 @@ Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http:
 
 | Endpoint | GET/POST | GET Params | Content-Type | Request Body | Description |
 |---|---|---|---|---|---|
+| /maps | GET | | | | Redirects to /maps/list |
 | /maps/list | GET | | | | Get a list of paths to maps. |
 | /maps/list-details | GET | | | | Get a list of maps as objects with keys `filename`, `name`, and `players` (list of integers representing possible player counts for the map). |
 | /maps/{path} | GET | | | | Redirects to /maps/{path}/data | 
