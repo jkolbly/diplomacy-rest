@@ -7,6 +7,7 @@ const path = require("path");
 /**
  * Get map data from a uri relative to ./maps
  * @param {Promise<string>} rel 
+ * @returns {shared.MapInfo}
  */
 async function get_map_info(rel) {
   return JSON.parse(await fs.readFile(path.join("maps", rel)));
