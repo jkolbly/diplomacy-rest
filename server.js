@@ -42,4 +42,12 @@ app.get("/maps/list", generic_auth_func(async (username, req, res) => {
   res.send(await utils.get_map_list());
 }));
 
+app.get("/maps/list-details", generic_auth_func(async (username, req, res) => {
+  let arr = [];
+  for await (let val of (await utils.get_map_list()).map(async (f) => { return await utils.get_map_overview(f); })) {
+    arr.push(val);
+  }
+  res.send(arr);
+}));
+
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
