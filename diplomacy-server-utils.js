@@ -5,6 +5,32 @@ const util = require("util");
 const path = require("path");
 
 /**
+ * @param {string} rootPath 
+ * @param {RegExp} regex To match against file names or false to get all files.
+ */
+async function* get_files_recursive(rootPath, regex=false) {
+  let filenames = await fs.readdir(rootPath);
+  for (let filename of filenames) {
+    const p = path.resolve(rootPath, filename);
+    if ((await fs.stat(p)).isDirectory()) {
+      yield* get_files_recursive(p, regex);
+    } else if (!regex || regex.test(filename)) {
+      yield p;
+    }
+  }
+}
+
+/**
+ * Get a list of paths to .dipmap files relative to ./maps
+ * @returns {Promise<string[]>}
+ */
+async function get_map_list() {
+  let list = [];
+  for await (let file of get_files_recursive("maps", /^.*\.dipmap/)) list.push(path.relative("maps", file));
+  return list;
+}
+
+/**
  * Get map data from a uri relative to ./maps
  * @param {Promise<string>} rel 
  * @returns {shared.MapInfo}
@@ -38,3 +64,4 @@ class ServerGameData extends shared.GameData {
 
 exports.ServerGameData = ServerGameData;
 exports.gamedata_from_id = gamedata_from_id;
+exports.get_map_list = get_map_list;
