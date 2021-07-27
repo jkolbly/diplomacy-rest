@@ -107,4 +107,5 @@ async function user_data(username) {
 
 exports.mysql_connect = mysql_connect;
 exports.authenticate = authenticate;
+exports.user_app_permission = user_app_permission;
 exports.user_data = user_data;
