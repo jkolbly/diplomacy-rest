@@ -103,7 +103,25 @@ async function create_gamedata(json) {
  * Server-specific information and methods about a game
  */
 class ServerGameData extends shared.GameData {
-
+  /**
+   * Get an object with basic info about a game.id, gameName, mapName, playerFirstNames (list of strings), phase, season, and winner
+   * @returns {Promise<{id:number,gameName:string,mapName:string,playerFirstNames:string[],phase:number,season:number,winner:string}>}
+   */
+  async get_game_overview() {
+    let firstNames = [];
+    for (let username of this.users) {
+      firstNames.push((await sql.user_data(username)).firstname);
+    }
+    return {
+      id: this.id,
+      gameName: this.name,
+      mapName: this.mapInfo.info.name,
+      playerFirstNames: firstNames,
+      phase: this.state.phase,
+      season: this.state.season,
+      winner: this.winner ? (await sql.user_data(this.winner)).firstname : ""
+    };
+  }
 }
 
 exports.ServerGameData = ServerGameData;

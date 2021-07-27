@@ -83,6 +83,14 @@ app.get("/games/list", generic_auth_func(async (username, req, res) => {
   res.send((await utils.get_game_list(username)).map((gameData) => gameData.id));
 }));
 
+app.get("/games/list-details", generic_auth_func(async (username, req, res) => {
+  let arr = [];
+  for await (let details of (await utils.get_game_list(username)).map(async (gameData) => gameData.get_game_overview())) {
+    arr.push(details);
+  }
+  res.send(arr);
+}));
+
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
 }));
