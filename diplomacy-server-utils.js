@@ -59,6 +59,32 @@ async function get_map_info(rel) {
 }
 
 /**
+ * Get the list of JSON representations of games involving `username`
+ * @param {string} username Username or empty for no username checking.
+ * @returns {Promise<Object[]>} 
+ */
+ async function get_game_list_json(username="") {
+  let rows = await sql.query("SELECT json FROM diplomacy_games WHERE archived=FALSE");
+  let list = [];
+  for (let row of rows) {
+    let json = JSON.parse(row.json);
+    if (!username || json.users.includes(username)) {
+      list.push(json);
+    }
+  }
+  return list;
+}
+
+/**
+ * Get the list of number ID's of games involving `username`
+ * @param {string} username Username or empty for no username checking.
+ * @returns {Promise<number[]>} 
+ */
+async function get_game_list(username="") {
+  return (await get_game_list_json(username)).map((gameData) => gameData.id);
+}
+
+/**
  * Get a ServerGameData object from a game's ID or false if no such game exists.
  * @param {number} id
  * @returns {Promise<ServerGameData|boolean>} 
@@ -82,6 +108,7 @@ class ServerGameData extends shared.GameData {
 }
 
 exports.ServerGameData = ServerGameData;
+exports.get_game_list = get_game_list;
 exports.gamedata_from_id = gamedata_from_id;
 exports.get_map_list = get_map_list;
 exports.get_map_overview = get_map_overview;
