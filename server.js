@@ -71,4 +71,8 @@ app.get("/maps/:path(*)/transparency/:id", generic_auth_func(async (username, re
   }
 }));
 
+app.get("/maps/:path(*)", generic_auth_func(async (username, req, res) => {
+  res.redirect(path.join("/maps", req.params.path, "data"));
+}));
+
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
