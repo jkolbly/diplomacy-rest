@@ -69,7 +69,7 @@ async function get_map_info(rel) {
   for (let row of rows) {
     let json = JSON.parse(row.json);
     if (!username || json.users.includes(username)) {
-      list.push(new ServerGameData(json));
+      list.push(await create_gamedata(json));
     }
   }
   return list;
@@ -84,12 +84,20 @@ async function gamedata_from_id(id) {
   let rows = await sql.query("SELECT json FROM diplomacy_games WHERE id=?", id);
   if (rows.length > 0) {
     let json = JSON.parse(rows[0].json);
-    json.mapInfo = await get_map_info(json.map);
-    return new ServerGameData(json);
+    return await create_gamedata(json);
   }
   return false;
 }
 
+/**
+ * Create a ServerGameData object from a JSON object and get map data from the SQL server.
+ * @param {Object} json JSON object without map data. This object gets modified in the process.
+ * @returns {Promise<ServerGameData>}
+ */
+async function create_gamedata(json) {
+  json.mapInfo = await get_map_info(json.map);
+  return new ServerGameData(json);
+}
 
 /**
  * Server-specific information and methods about a game
