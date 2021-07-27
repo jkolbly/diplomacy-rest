@@ -63,7 +63,7 @@ async function get_map_info(rel) {
  * @param {string} username Username or empty for no username checking.
  * @returns {Promise<ServerGameData[]>} 
  */
- async function get_game_list_json(username="") {
+ async function get_game_list(username="") {
   let rows = await sql.query("SELECT json FROM diplomacy_games WHERE archived=FALSE");
   let list = [];
   for (let row of rows) {
@@ -73,15 +73,6 @@ async function get_map_info(rel) {
     }
   }
   return list;
-}
-
-/**
- * Get the list of number ID's of games involving `username`
- * @param {string} username Username or empty for no username checking.
- * @returns {Promise<number[]>} 
- */
-async function get_game_list(username="") {
-  return (await get_game_list_json(username)).map((gameData) => gameData.id);
 }
 
 /**

@@ -80,7 +80,7 @@ app.get("/maps/:path(*)", generic_auth_func(async (username, req, res) => {
 }));
 
 app.get("/games/list", generic_auth_func(async (username, req, res) => {
-  res.send(await utils.get_game_list(username));
+  res.send((await utils.get_game_list(username)).map((gameData) => gameData.id));
 }));
 
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
