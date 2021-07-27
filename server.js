@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 const shared = require("./diplomacy-shared-utils/utils.js");
 const sql = require("./bankbook-server-utils/sql-utils.js");
 const utils = require("./diplomacy-server-utils.js");
@@ -53,6 +54,11 @@ app.get("/maps/list-details", generic_auth_func(async (username, req, res) => {
 
 app.get("/maps/:path(*)/data", generic_auth_func(async (username, req, res) => {
   res.send(await utils.get_map_info(req.params.path));
+}));
+
+app.get("/maps/:path(*)/image", generic_auth_func(async (username, req, res) => {
+  let mapInfo = await utils.get_map_info(req.params.path);
+  res.sendFile(path.resolve("maps", path.dirname(req.params.path), mapInfo.info.image));
 }));
 
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
