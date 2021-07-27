@@ -62,7 +62,12 @@ async function authenticate(req, app="") {
  */
 async function user_app_permission(username, app) {
   if (await column_exists("users", app)) {
-    return (await query(`SELECT ${pool.escapeId(app)} FROM users WHERE username=?`, [username]))[0][app] == true;
+    let rows = await query(`SELECT ${pool.escapeId(app)} FROM users WHERE username=?`, [username]);
+    if (rows.length > 0) {
+      return rows[0][app] == true;
+    } else {
+      throw Error(`No user found with username ${username}`);
+    }
   }
   return false;
 }
