@@ -61,4 +61,14 @@ app.get("/maps/:path(*)/image", generic_auth_func(async (username, req, res) => 
   res.sendFile(path.resolve("maps", path.dirname(req.params.path), mapInfo.info.image));
 }));
 
+app.get("/maps/:path(*)/transparency/:id", generic_auth_func(async (username, req, res) => {
+  let mapInfo = await utils.get_map_info(req.params.path);
+  let province = mapInfo.provinces.find(p => p.id == req.params.id);
+  if (province) {
+    res.sendFile(path.resolve("maps", path.dirname(req.params.path), province.transparency));
+  } else {
+    throw Error(`That province doesn't exist.`);
+  }
+}));
+
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
