@@ -7,6 +7,7 @@ const utils = require("./diplomacy-server-utils.js");
 
 const app = express();
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 sql.mysql_connect(process.env.DB_UPSTREAM);
 
