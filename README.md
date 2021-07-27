@@ -27,4 +27,6 @@ Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http:
 
 To run a docker container with live reloading, compose [docker-compose.dev.yml](docker-compose.dev.yml):
 
-    docker-compose -f docker-compose.dev.yml up --build
+    docker-compose -f docker-compose.dev.yml up
+
+Append `--build` to rebuild the Docker image entirely. This is needed when modifying dependencies because `npm install` is run when building the image.
