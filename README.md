@@ -22,6 +22,7 @@ Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http:
 | /games/{id}/delete | POST | | | | "Delete" a game by tagging it as deleted, and get a boolean representing whether the deletion was successful. |
 | /games/{id}/submit-orders | POST | | application/json | JSON list of orders | Submit a list of orders, and get a boolean representing whether the submission was successful. |
 | /games/{id}/claim-country | POST | | application/x-www-form-urlencoded | country | Claim a country or group of countries for a user. If claiming a group of countries, post the ID of _one_ of the countries. |
+| /users/{username} | GET | | | | Get information about a user as an object with keys `username`, `firstname`, `lastname`, `type`, `email`. Works for all Bankbook users, not just Diplomacy users. |
 
 ## Development
 

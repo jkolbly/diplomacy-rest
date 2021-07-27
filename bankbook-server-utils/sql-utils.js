@@ -77,5 +77,34 @@ async function column_exists(table, column) {
   return (await query(`SHOW COLUMNS FROM ?? LIKE ?`, [table, column])).length > 0;
 }
 
+/**
+ * @typedef {Object} UserData
+ * @property {string} username
+ * @property {string} firstname
+ * @property {string} lastname
+ * @property {string} type
+ * @property {string} email
+ */
+
+/** @type {Object.<string, UserData>} */
+const user_data_cache = {};
+
+/**
+ * @param {string} username
+ * @returns {Promise<UserData>}
+ */
+async function user_data(username) {
+  if (user_data_cache[username]) {
+    return user_data_cache[username];
+  } else {
+    let rows = await query("SELECT username, first_name AS firstname, last_name AS lastname, type, email FROM users WHERE username=?", [username]);
+    if (rows.length > 0) {
+      return user_data_cache[username] = rows[0];
+    }
+    throw Error(`No user found with username ${username}`);
+  }
+}
+
 exports.mysql_connect = mysql_connect;
 exports.authenticate = authenticate;
+exports.user_data = user_data;
