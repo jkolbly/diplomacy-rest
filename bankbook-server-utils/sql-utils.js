@@ -30,7 +30,7 @@ function mysql_connect(host) {
 }
 
 /**
- * @param {Request} req Request object with auth_token cookie.
+ * @param {express.Request} req Request object with auth_token cookie.
  * @param {string} app String ID of app to check permissions or empty for no permission checking.
  * @returns {Promise<[boolean, string?]>} Whether the user is authenticated and the username or reason for not being authenticated.
  */
