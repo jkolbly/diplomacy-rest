@@ -85,3 +85,4 @@ exports.ServerGameData = ServerGameData;
 exports.gamedata_from_id = gamedata_from_id;
 exports.get_map_list = get_map_list;
 exports.get_map_overview = get_map_overview;
+exports.get_map_info = get_map_info;
