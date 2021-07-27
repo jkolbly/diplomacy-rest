@@ -31,6 +31,25 @@ async function get_map_list() {
 }
 
 /**
+ * Get an object with basic info about a map.
+ * @param {path} rel Relative to ./maps
+ * @returns {Promise<{filename:string,name:string,players:number[]}>}
+ */
+async function get_map_overview(rel) {
+  let map = await get_map_info(rel);
+  console.log({
+    filename: rel,
+    name: map.info.name,
+    players: Object.keys(map.playerConfigurations).map((n) => Number(n))
+  });
+  return {
+    filename: rel,
+    name: map.info.name,
+    players: Object.keys(map.playerConfigurations).map((n) => Number(n))
+  }
+}
+
+/**
  * Get map data from a uri relative to ./maps
  * @param {Promise<string>} rel 
  * @returns {Promise<shared.MapInfo>}
@@ -65,3 +84,4 @@ class ServerGameData extends shared.GameData {
 exports.ServerGameData = ServerGameData;
 exports.gamedata_from_id = gamedata_from_id;
 exports.get_map_list = get_map_list;
+exports.get_map_overview = get_map_overview;
