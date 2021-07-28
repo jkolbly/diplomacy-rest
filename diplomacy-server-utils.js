@@ -210,6 +210,14 @@ function randint(min, max) {
  */
 class ServerGameData extends shared.GameData {
   /**
+   * The player configuration being used
+   * @returns {shared.PlayerConfiguration}
+   */
+  get playerConfig() {
+    return this.mapInfo.playerConfigurations[this.users.length.toString];
+  }
+
+  /**
    * Get an object with basic info about a game.id, gameName, mapName, playerFirstNames (list of strings), phase, season, and winner
    * @returns {Promise<{id:number,gameName:string,mapName:string,playerFirstNames:string[],phase:number,season:number,winner:string}>}
    */
