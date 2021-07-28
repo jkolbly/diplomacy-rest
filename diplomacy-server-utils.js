@@ -268,6 +268,39 @@ class ServerGameData extends shared.GameData {
       sql.query("INSERT INTO diplomacy_games (id, json) VALUES (?, ?)", [this.id, JSON.stringify(toStore)]);
     }
   }
+
+  /**
+   * Get an object with a version of this game that can safely be shown to a user without revealing information.
+   * Also removes unused parts of the map.
+   * @param {string} username
+   * @returns {Object}
+   */
+  sanitized(username) {
+    let obj = ["id", "name", "map", "users", "players", "winner", "won", "history", "mapInfo"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
+    obj = JSON.parse(JSON.stringify(obj));
+
+    for (let country in this.state.orders) {
+      if (this.country_owner(country) != username) {
+        delete obj.history[obj.history.length - 1].orders[country];
+      }
+    }
+    for (let country in this.state.retreats) {
+      if (this.country_owner(country) != username) {
+        delete obj.history[obj.history.length - 1].retreats[country];
+      }
+    }
+    for (let country in this.state.adjustments) {
+      if (this.country_owner(country) != username) {
+        delete obj.history[obj.history.length - 1].adjustments[country];
+      }
+    }
+    
+    obj.mapInfo.countries = this.mapInfo.countries.filter(c => this.state.nations[c]);
+    obj.mapInfo.provinces = this.mapInfo.provinces.filter(p => !this.eliminatedProvinces.includes(p.id));
+    obj.mapInfo.routes = this.mapInfo.routes.filter(r => !this.eliminatedProvinces.includes(r.p0) && !this.eliminatedProvinces.includes(r.p1));
+
+    return obj;
+  }
 }
 
 exports.ServerGameData = ServerGameData;
