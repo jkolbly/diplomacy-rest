@@ -232,6 +232,7 @@ class ServerGameData extends shared.GameData {
 
 exports.ServerGameData = ServerGameData;
 exports.get_game_list = get_game_list;
+exports.new_game = new_game;
 exports.gamedata_from_id = gamedata_from_id;
 exports.get_map_list = get_map_list;
 exports.get_map_overview = get_map_overview;
