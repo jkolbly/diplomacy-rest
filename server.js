@@ -92,6 +92,12 @@ app.get("/games/list-details", generic_auth_func(async (username, req, res) => {
   res.send(arr);
 }));
 
+app.post("/games/new", generic_auth_func(async (username, req, res) => {
+  let gameData = await utils.new_game(username, req.body.name, req.body.map, req.body.users.split(","));
+  gameData.save();
+  res.send(gameData.id.toString());
+}));
+
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
 }));
