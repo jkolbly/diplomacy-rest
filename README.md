@@ -8,6 +8,8 @@ Okay so it's not actually RESTful but gimme a break.
 
 Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http://bankbook.kolbly.name:8000/diplomacy/api). The browser accessing this API must have a valid `auth_token` cookie.
 
+If there's an error during a request on any endpoint, the server will send a response of the form `{"error":"description"}`.
+
 | Endpoint | GET/POST | GET Params | Content-Type | Request Body | Description |
 |---|---|---|---|---|---|
 | /maps | GET | | | | Redirects to /maps/list. |
