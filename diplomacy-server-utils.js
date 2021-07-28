@@ -214,7 +214,7 @@ class ServerGameData extends shared.GameData {
    * @returns {shared.PlayerConfiguration}
    */
   get playerConfig() {
-    return this.mapInfo.playerConfigurations[this.users.length.toString];
+    return this.mapInfo.playerConfigurations[this.users.length.toString()];
   }
 
   /**
