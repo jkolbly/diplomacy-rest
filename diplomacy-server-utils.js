@@ -90,6 +90,15 @@ async function gamedata_from_id(id) {
 }
 
 /**
+ * Return whether or not a game exists with this ID.
+ * @param {number} id 
+ * @returns {Promise<boolean>}
+ */
+async function game_exists(id) {
+  return (await sql.query("SELECT id FROM diplomacy_games WHERE id=?", id)).length > 0;
+}
+
+/**
  * Create a ServerGameData object from a JSON object and get map data from the SQL server.
  * @param {Object} json JSON object without map data. This object gets modified in the process.
  * @returns {Promise<ServerGameData>}
