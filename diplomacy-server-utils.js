@@ -218,6 +218,26 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * A list of province ID's that are eliminated from the game.
+   * @returns {string[]}
+   */
+   get eliminatedProvinces() {
+    if (!this._eliminatedProvinces) {
+      /**
+       * Cached for eliminatedProvinces
+       * @type {string[]}
+       */
+      this._eliminatedProvinces = [];
+      if (!this.playerConfig.neutralEliminate) {
+        for (let country of this.playerConfig.eliminate) {
+          this._eliminatedProvinces.push(...this.get_country(country).supplyCenters);
+        }
+      }
+    }
+    return this._eliminatedProvinces;
+  }
+
+  /**
    * Get an object with basic info about a game.id, gameName, mapName, playerFirstNames (list of strings), phase, season, and winner
    * @returns {Promise<{id:number,gameName:string,mapName:string,playerFirstNames:string[],phase:number,season:number,winner:string}>}
    */
