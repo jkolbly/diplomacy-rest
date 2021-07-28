@@ -228,6 +228,18 @@ class ServerGameData extends shared.GameData {
       winner: this.winner ? (await sql.user_data(this.winner)).firstname : ""
     };
   }
+
+  /**
+   * Save this game to the SQL server
+   */
+  async save() {
+    let toStore = ["id", "name", "map", "users", "players", "winner", "won", "history"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
+    if (await game_exists(this.id)) {
+      sql.query("UPDATE diplomacy_games SET json=? WHERE id=?", [JSON.stringify(toStore), this.id]);
+    } else {
+      sql.query("INSERT INTO diplomacy_games (id, json) VALUES (?, ?)", [this.id, JSON.stringify(toStore)]);
+    }
+  }
 }
 
 exports.ServerGameData = ServerGameData;
