@@ -109,6 +109,103 @@ async function create_gamedata(json) {
 }
 
 /**
+ * Create a new ServerGameData object from scratch. Throws an error if:
+ *  - mapPath is invalid
+ *  - The requesting user isn't one of the listed users
+ *  - A user doesn't have permission to play Diplomacy
+ *  - A user doesn't exist
+ *  - The number of players is invalid for the map
+ * @param {string} user
+ * @param {string} gameName 
+ * @param {string} mapPath 
+ * @param {string[]} usernames 
+ * @returns {Promise<ServerGameData>}
+ */
+async function new_game(user, gameName, mapPath, usernames) {
+  let data = {};
+
+  if (!usernames.includes(user)) {
+    throw Error("You can't create a game you're not part of.");
+  }
+
+  do {
+    data.id = randint(0, 1000000000);
+    console.log(data.id);
+  } while (await game_exists(data.id));
+
+  data.name = gameName;
+  data.map = mapPath;
+  data.users = usernames;
+  data.winner = "";
+  data.won = shared.winStateEnum.Playing;
+
+  for (let user of usernames) {
+    if (!(await sql.user_app_permission(user, "diplomacy"))) {
+      throw Error(`User ${user} doesn't have permission to play Diplomacy.`);
+    }
+  }
+
+  data.mapInfo = await get_map_info(mapPath);
+
+  if (!Object.keys(data.mapInfo.playerConfigurations).includes(usernames.length.toString())) {
+    throw Error(`${usernames.length} is an invalid number of players for this map.`);
+  }
+  let playerConfig = data.mapInfo.playerConfigurations[usernames.length.toString()];
+
+  data.history = [{
+    date: data.mapInfo.info.date,
+    season: shared.seasonEnum.Spring,
+    phase: shared.phaseEnum["Country Claiming"],
+    orders: {},
+    retreats: {},
+    adjustments: {},
+    nations: {}
+  }];
+
+  data.players = {};
+
+  for (let country of data.mapInfo.countries) {
+    let eliminated = playerConfig.eliminate.includes(country.id);
+    if (!eliminated) {
+      data.players[country.id] = "";
+    }
+
+    if (playerConfig.neutralEliminate || !eliminated) {
+      let units = [];
+
+      for (let supplyCenter of country.supplyCenters) {
+        let province = data.mapInfo.provinces.find(p => p.id == supplyCenter);
+        if (province.startUnit > 0) {
+          units.push({
+            type: province.startUnit - 1,
+            province: supplyCenter,
+            coast: (province.startUnit - 1 == shared.unitTypeEnum.Fleet && !province.water) ? province.coasts.find(c => c.frigateStart).id : ""
+          });
+        }
+      }
+
+      data.history[0].nations[country.id] = {
+        id: country.id,
+        supplyCenters: country.supplyCenters,
+        units: units,
+        neutral: eliminated
+      }
+    }
+  }
+
+  return new ServerGameData(data);
+}
+
+/**
+ * @param {number} min 
+ * @param {number} max 
+ * @returns {number} Pseudo-random integer n such that min <= n < max
+ */
+function randint(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+/**
  * Server-specific information and methods about a game
  */
 class ServerGameData extends shared.GameData {
