@@ -10,10 +10,10 @@ Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http:
 
 | Endpoint | GET/POST | GET Params | Content-Type | Request Body | Description |
 |---|---|---|---|---|---|
-| /maps | GET | | | | Redirects to /maps/list |
+| /maps | GET | | | | Redirects to /maps/list. |
 | /maps/list | GET | | | | Get a list of paths to maps. |
 | /maps/list-details | GET | | | | Get a list of maps as objects with keys `filename`, `name`, and `players` (list of integers representing possible player counts for the map). |
-| /maps/{path} | GET | | | | Redirects to /maps/{path}/data | 
+| /maps/{path} | GET | | | | Redirects to /maps/{path}/data. | 
 | /maps/{path}/data | GET | | | | Get the JSON contents of the .dipmap file representing a map. {path} is the same as the string under the key `map` in a game JSON. | 
 | /maps/{path}/image | GET | | | | Get the image file linked in the .dipmap file found at {path}. |
 | /maps/{path}/transparency/{id} | GET | | | | Get the image or svg file for province {id} linked in the .dipmap file found at {path}. |
