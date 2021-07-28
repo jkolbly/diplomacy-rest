@@ -270,6 +270,13 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Tag this game as archived in the SQL server
+   */
+  async archive() {
+    await sql.query("UPDATE diplomacy_games SET archived=TRUE WHERE id=?", [this.id]);
+  }
+
+  /**
    * Get an object with a version of this game that can safely be shown to a user without revealing information.
    * Also removes unused parts of the map.
    * @param {string} username
