@@ -221,20 +221,14 @@ class ServerGameData extends shared.GameData {
    * A list of province ID's that are eliminated from the game.
    * @returns {string[]}
    */
-   get eliminatedProvinces() {
-    if (!this._eliminatedProvinces) {
-      /**
-       * Cached for eliminatedProvinces
-       * @type {string[]}
-       */
-      this._eliminatedProvinces = [];
-      if (!this.playerConfig.neutralEliminate) {
-        for (let country of this.playerConfig.eliminate) {
-          this._eliminatedProvinces.push(...this.get_country(country).supplyCenters);
-        }
+  get eliminatedProvinces() {
+    Object.defineProperty(this, "eliminatedProvinces", { value: [] });
+    if (!this.playerConfig.neutralEliminate) {
+      for (let country of this.playerConfig.eliminate) {
+        this.eliminatedProvinces.push(...this.get_country(country).supplyCenters);
       }
     }
-    return this._eliminatedProvinces;
+    return this.eliminatedProvinces;
   }
 
   /**
