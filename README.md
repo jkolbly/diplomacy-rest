@@ -6,7 +6,7 @@ Okay so it's not actually RESTful but gimme a break.
 
 ## Endpoints
 
-Endpoints are relative to [http://bankbook.kolbly.name:8000/diplomacy/api](http://bankbook.kolbly.name:8000/diplomacy/api). The browser accessing this API must have a valid `auth_token` cookie.
+Endpoints are relative to [http://bankbook.kolbly.name/diplomacy/api](http://bankbook.kolbly.name/diplomacy/api). The browser accessing this API must have a valid `auth_token` cookie.
 
 If there's an error during a request on any endpoint, the server will send a response of the form `{"error":"{description}"}`.
 
@@ -35,3 +35,18 @@ To run a docker container with live reloading, compose [docker-compose.dev.yml](
     docker-compose -f docker-compose.dev.yml up
 
 Append `--build` to rebuild the Docker image entirely. This is needed when modifying dependencies because `npm install` is run when building the image and not when running the image.
+
+## Apache Instructions
+
+To use Apache as a proxy for this server, make sure the module `mod_proxy_http` is enabled:
+
+    LoadModule proxy_http_module modules/mod_proxy_http.so
+
+Set up the proxy pass:
+
+    <Location "/diplomacy/api/">
+        ProxyPass "http://localhost:8000/"
+        ProxyPassReverse "/"
+    </location>
+
+Note: I have no clue how the `ProxyPassReverse "/"` line works, but it was necessary to change it from `ProxyPassReverse "http://localhost:8000/"` to allow the Express server to redirect with urls starting with `/`.
