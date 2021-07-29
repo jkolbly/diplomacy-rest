@@ -37,11 +37,6 @@ async function get_map_list() {
  */
 async function get_map_overview(rel) {
   let map = await get_map_info(rel);
-  console.log({
-    filename: rel,
-    name: map.info.name,
-    players: Object.keys(map.playerConfigurations).map((n) => Number(n))
-  });
   return {
     filename: rel,
     name: map.info.name,
@@ -130,7 +125,6 @@ async function new_game(user, gameName, mapPath, usernames) {
 
   do {
     data.id = randint(0, 1000000000);
-    console.log(data.id);
   } while (await game_exists(data.id));
 
   data.name = gameName;
