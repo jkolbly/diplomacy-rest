@@ -219,6 +219,7 @@ class ServerGameData extends shared.GameData {
 
   /**
    * A list of province ID's that are eliminated from the game.
+   * Value gets cached.
    * @returns {string[]}
    */
   get eliminatedProvinces() {
