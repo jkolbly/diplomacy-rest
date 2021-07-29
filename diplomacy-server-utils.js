@@ -78,7 +78,7 @@ async function get_map_info(rel) {
 /**
  * Get a ServerGameData object from a game's ID or false if no such game exists.
  * @param {number} id
- * @returns {Promise<ServerGameData|boolean>} 
+ * @returns {Promise<ServerGameData>} 
  */
 async function gamedata_from_id(id) {
   let rows = await sql.query("SELECT json FROM diplomacy_games WHERE id=?", id);
@@ -86,7 +86,7 @@ async function gamedata_from_id(id) {
     let json = JSON.parse(rows[0].json);
     return await create_gamedata(json);
   }
-  return false;
+  throw Error(`No game found with ID ${id}.`);
 }
 
 /**
