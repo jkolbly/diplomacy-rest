@@ -296,10 +296,6 @@ class ServerGameData extends shared.GameData {
         delete obj.history[obj.history.length - 1].adjustments[country];
       }
     }
-    
-    obj.mapInfo.countries = this.mapInfo.countries.filter(c => this.state.nations[c]);
-    obj.mapInfo.provinces = this.mapInfo.provinces.filter(p => !this.eliminatedProvinces.includes(p.id));
-    obj.mapInfo.routes = this.mapInfo.routes.filter(r => !this.eliminatedProvinces.includes(r.p0) && !this.eliminatedProvinces.includes(r.p1));
 
     return obj;
   }
