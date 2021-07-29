@@ -80,6 +80,10 @@ app.get("/maps/:path(*)", generic_auth_func(async (username, req, res) => {
   res.redirect(path.join("/maps", req.params.path, "data"));
 }));
 
+app.get("/games", generic_auth_func(async (username, req, res) => {
+  res.redirect("/games/list");
+}));
+
 app.get("/games/list", generic_auth_func(async (username, req, res) => {
   res.send((await utils.get_game_list(username)).map((gameData) => gameData.id));
 }));
