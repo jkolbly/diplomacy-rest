@@ -1,3 +1,4 @@
 [submodule "diplomacy-shared-utils"]
 	path = diplomacy-shared-utils
 	url = https://github.com/ToxicOverload/diplomacy-shared-utils.git
+	branch = develop
