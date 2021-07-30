@@ -150,9 +150,6 @@ async function new_game(user, gameName, mapPath, usernames) {
     date: data.mapInfo.info.date,
     season: shared.seasonEnum.Spring,
     phase: shared.phaseEnum["Country Claiming"],
-    orders: {},
-    retreats: {},
-    adjustments: {},
     nations: {}
   }];
 
