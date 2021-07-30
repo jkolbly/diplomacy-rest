@@ -270,6 +270,27 @@ class ServerGameData extends shared.GameData {
 
     return obj;
   }
+
+  /**
+   * Claim a country for a user. If the input country is part of a country group, claim all countries in the group.
+   * @param {string} username 
+   * @param {string} country 
+   */
+  claim_country(username, country) {
+    if (this.state.phase != shared.phaseEnum["Country Claiming"]) throw Error("You can't claim a country after the game has started.");
+
+    let group = this.country_group(country);
+    if (!group) throw Error(`Country ${country} is not selectable.`);
+    if (group.find(c => this.players[c] && this.players[c] != username)) throw Error("You can't claim a country that's already been claimed.");
+
+    for (let c in this.players) {
+      if (group.includes(c)) {
+        this.players[c] = username;
+      } else if (this.players[c] == username) {
+        this.players[c] = "";
+      }
+    }
+  }
 }
 
 exports.ServerGameData = ServerGameData;

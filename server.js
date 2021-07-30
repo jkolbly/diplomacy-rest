@@ -132,6 +132,12 @@ app.post("/games/:id/delete", generic_game_auth_func(async (username, gameData, 
   res.send("true");
 }));
 
+app.post("/games/:id/claim-country", generic_game_auth_func(async (username, gameData, req, res) => {
+  gameData.claim_country(username, req.body.country);
+  gameData.save();
+  res.send("true");
+}));
+
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
 }));
