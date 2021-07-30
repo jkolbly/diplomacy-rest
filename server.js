@@ -33,6 +33,23 @@ function generic_auth_func(authenticated, denied=default_deny) {
 }
 
 /**
+ * Same as `generic_auth_func` but also makes sure user has permission to view/edit this particular game and passes the ServerGameData object to `authenticated`
+ * @param {(username:string,gameData:utils.ServerGameData,req:express.Request,res:express.Response)=>} authenticated 
+ * @param {(req:express.Request,res:express.Response)=>} denied 
+ * @returns {(req:express.Request,res:express.Response)=>Promise}
+ */
+function generic_game_auth_func(authenticated, denied=default_deny) {
+  return generic_auth_func(async (username, req, res) => {
+    let gameData = await utils.gamedata_from_id(req.params.id);
+    if (gameData.users.includes(username)) {
+      await authenticated(username, gameData, req, res);
+    } else {
+      await denied(req, res);
+    }
+  }, denied);
+}
+
+/**
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
@@ -106,12 +123,12 @@ app.get("/games/:id", generic_auth_func(async (username, req, res) => {
   res.redirect(`/games/${req.params.id}/view`);
 }));
 
-app.get("/games/:id/view", generic_auth_func(async (username, req, res) => {
-  res.send((await utils.gamedata_from_id(req.params.id)).sanitized(username));
+app.get("/games/:id/view", generic_game_auth_func(async (username, gameData, req, res) => {
+  res.send(gameData.sanitized(username));
 }));
 
-app.post("/games/:id/delete", generic_auth_func(async (username, req, res) => {
-  (await utils.gamedata_from_id(req.params.id)).archive();
+app.post("/games/:id/delete", generic_game_auth_func(async (username, gameData, req, res) => {
+  gameData.archive();
   res.send("true");
 }));
 
