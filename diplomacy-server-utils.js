@@ -310,6 +310,21 @@ class ServerGameData extends shared.GameData {
         this.players[c] = "";
       }
     }
+
+    if (!(Object.values(this.players).some(p => !p))) {
+      this.start_order_writing();
+    }
+  }
+
+  /**
+   * Initiate the order writing phase and set the value of `this.state.phase`.
+   */
+  start_order_writing() {
+    this.state.orders = {};
+    for (let c in this.players) {
+      this.state.orders[c] = {};
+    }
+    this.state.phase = shared.phaseEnum["Order Writing"];
   }
 }
 
