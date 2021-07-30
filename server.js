@@ -14,12 +14,18 @@ sql.mysql_connect(process.env.DB_UPSTREAM);
 /**
  * @param {(username:string,req:express.Request,res:express.Response,)=>} authenticated
  * @param {(req:express.Request,res:express.Response)=>} denied
+ * @param {string[]} body_params List of required body parameters.
  * @returns {(req:express.Request,res:express.Response)=>Promise} Calls `authenticated` if user is authenticated, `denied` otherwise.
  */
-function generic_auth_func(authenticated, denied=default_deny) {
+function generic_auth_func(authenticated, denied=default_deny, body_params=[]) {
   return async (req, res) => {
     try {
       let [auth, username] = await sql.authenticate(req, "diplomacy");
+      for (let param of body_params) {
+        if (!Object.keys(req.body).includes(param)) {
+          throw Error(`Missing required POST param ${param}.`);
+        }
+      }
       if (auth) {
         await authenticated(username, req, res);
       } else {
@@ -38,7 +44,7 @@ function generic_auth_func(authenticated, denied=default_deny) {
  * @param {(req:express.Request,res:express.Response)=>} denied 
  * @returns {(req:express.Request,res:express.Response)=>Promise}
  */
-function generic_game_auth_func(authenticated, denied=default_deny) {
+function generic_game_auth_func(authenticated, denied=default_deny, body_params=[]) {
   return generic_auth_func(async (username, req, res) => {
     let gameData = await utils.gamedata_from_id(req.params.id);
     if (gameData.users.includes(username)) {
@@ -46,7 +52,7 @@ function generic_game_auth_func(authenticated, denied=default_deny) {
     } else {
       await denied(req, res);
     }
-  }, denied);
+  }, denied, body_params);
 }
 
 /**
@@ -117,7 +123,7 @@ app.post("/games/new", generic_auth_func(async (username, req, res) => {
   let gameData = await utils.new_game(username, req.body.name, req.body.map, req.body.users.split(","));
   gameData.save();
   res.send(gameData.id.toString());
-}));
+}, default_deny, ["name", "map", "users"]));
 
 app.get("/games/:id", generic_auth_func(async (username, req, res) => {
   res.redirect(`/games/${req.params.id}/view`);
@@ -136,7 +142,7 @@ app.post("/games/:id/claim-country", generic_game_auth_func(async (username, gam
   gameData.claim_country(username, req.body.country);
   gameData.save();
   res.send("true");
-}));
+}, default_deny, ["country"]));
 
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
