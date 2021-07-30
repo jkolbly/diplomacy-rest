@@ -203,6 +203,29 @@ function randint(min, max) {
  * Server-specific information and methods about a game
  */
 class ServerGameData extends shared.GameData {
+  constructor(json) {
+    super(json);
+
+    this.mapInfo.provinces = this.mapInfo.provinces.filter(p => !this.eliminatedProvinces.includes(p.id));
+    this.mapInfo.countries = this.mapInfo.countries.filter(c => Object.keys(this.state.nations).includes(c.id));
+    this.mapInfo.routes = this.mapInfo.routes.filter(r => !this.eliminatedProvinces.includes(r.p0) && !this.eliminatedProvinces.includes(r.p1));
+  }
+
+  /**
+   * A list of province ID's that are eliminated from the game.
+   * Value gets cached.
+   * @type {string[]}
+   */
+   get eliminatedProvinces() {
+    Object.defineProperty(this, "eliminatedProvinces", { value: [] });
+    if (!this.playerConfig.neutralEliminate) {
+      for (let country of this.playerConfig.eliminate) {
+        this.eliminatedProvinces.push(...this.get_country(country).supplyCenters);
+      }
+    }
+    return this.eliminatedProvinces;
+  }
+
   /**
    * Get an object with basic info about a game.id, gameName, mapName, playerFirstNames (list of strings), phase, season, and winner
    * @returns {Promise<{id:number,gameName:string,mapName:string,playerFirstNames:string[],phase:number,season:number,winner:string}>}
