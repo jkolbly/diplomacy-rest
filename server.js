@@ -54,8 +54,8 @@ function generic_game_auth_func(authenticated, denied=default_deny) {
  * @param {express.Response} res 
  */
 function default_deny(req, res) {
-  res.send("Unauthorized use");
   console.log(`Unauthorized access from ${req.ip}`);
+  throw Error("Unauthorized access.");
 }
 
 app.get("/maps", generic_auth_func(async (username, req, res) => {
