@@ -336,9 +336,14 @@ class ServerGameData extends shared.GameData {
 
     if (!unit) throw Error(`There is no unit at ${order.province}.`);
     if (this.get_unit_owner_player(order.province) != username) throw Error(`User ${username} has no control over unit at ${order.province}.`);
-    if (!this.get_valid_orders(unit).some(o => o.id == order.id)) throw Error(`Order ${order.id} is not valid.`);
 
-    this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
+    if (order.type == shared.orderTypeEnum.cancel) {
+      delete this.state.orders[this.get_unit_owner_id(unit.province)][unit.province];
+    } else {
+      if (!this.get_valid_orders(unit).some(o => o.id == order.id)) throw Error(`Order ${order.id} is not valid.`);
+
+      this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
+    }
   }
 
   /**
