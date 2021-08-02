@@ -197,6 +197,13 @@ function randint(min, max) {
 }
 
 /**
+ * Used as a replacer function for JSON.stringify when stringifying ServerGameData objects.
+ */
+function gamedata_stringify_replacer(key, val) {
+  return val instanceof shared.Order ? val.export() : val
+}
+
+/**
  * Server-specific information and methods about a game
  */
 class ServerGameData extends shared.GameData {
@@ -248,10 +255,13 @@ class ServerGameData extends shared.GameData {
    */
   async save() {
     let toStore = ["id", "name", "map", "users", "players", "winner", "won", "history"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
+    
+    let stringified = JSON.stringify(toStore, gamedata_stringify_replacer);
+
     if (await game_exists(this.id)) {
-      sql.query("UPDATE diplomacy_games SET json=? WHERE id=?", [JSON.stringify(toStore), this.id]);
+      sql.query("UPDATE diplomacy_games SET json=? WHERE id=?", [stringified, this.id]);
     } else {
-      sql.query("INSERT INTO diplomacy_games (id, json) VALUES (?, ?)", [this.id, JSON.stringify(toStore)]);
+      sql.query("INSERT INTO diplomacy_games (id, json) VALUES (?, ?)", [this.id, stringified]);
     }
   }
 
@@ -270,7 +280,7 @@ class ServerGameData extends shared.GameData {
    */
   sanitized(username) {
     let obj = ["id", "name", "map", "users", "players", "winner", "won", "history", "mapInfo"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
-    obj = JSON.parse(JSON.stringify(obj));
+    obj = JSON.parse(JSON.stringify(obj, gamedata_stringify_replacer));
 
     for (let country in this.state.orders) {
       if (this.country_owner(country) != username) {
