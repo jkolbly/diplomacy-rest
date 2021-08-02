@@ -10,7 +10,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-sql.mysql_connect(process.env.DB_UPSTREAM);
+sql.mysql_connect(process.env.DB_UPSTREAM, utils.config.SQL_USER, utils.config.SQL_PASSWORD, utils.config.SQL_DATABASE);
 
 /**
  * @param {(username:string,req:express.Request,res:express.Response,)=>} authenticated

@@ -13,13 +13,13 @@ var query;
  * @param {string} host Hostname of SQL server 
  * @returns {Promise} A promise wrapper for the pool query function
  */
-function mysql_connect(host) {
+function mysql_connect(host, user, password, database) {
   pool = mysql.createPool({
     connectionLimit: 10,
     host: host,
-    user: "pi",
-    password: "elegantexempt19",
-    database: "bankbook"
+    user: user,
+    password: password,
+    database: database
   });
   query = util.promisify(pool.query).bind(pool);
 

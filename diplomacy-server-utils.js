@@ -1,8 +1,24 @@
 const shared = require("./diplomacy-shared-utils/utils.js");
 const sql = require("./bankbook-server-utils/sql-utils.js");
-const fs = require("fs").promises;
+const fssync = require("fs");
+const fs = fssync.promises;
 const util = require("util");
 const path = require("path");
+
+/**
+ * The config data loaded from ./config.
+ */
+const config = {};
+
+// Read the config file ./config and save its data to config.
+(function() {
+  let raw = fssync.readFileSync("./config").toString();
+
+  for (let line of raw.split("\n")) {
+    let [key, val] = line.split("=");
+    config[key.trim()] = val.trim();
+  }
+})();
 
 /**
  * @param {string} rootPath 
@@ -365,3 +381,4 @@ exports.gamedata_from_id = gamedata_from_id;
 exports.get_map_list = get_map_list;
 exports.get_map_overview = get_map_overview;
 exports.get_map_info = get_map_info;
+exports.config = config;
