@@ -151,6 +151,10 @@ app.post("/games/:id/submit-orders", generic_game_auth_func(async (username, gam
   res.send("true");
 }));
 
+app.get("/games/:id/valid-orders/:province", generic_game_auth_func(async (username, gameData, req, res) => {
+  res.send(gameData.get_valid_orders(gameData.get_unit(req.params.province)).map(order => order.export()));
+}));
+
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
 }));
