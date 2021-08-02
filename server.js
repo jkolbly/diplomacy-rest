@@ -8,6 +8,7 @@ const utils = require("./diplomacy-server-utils.js");
 const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 sql.mysql_connect(process.env.DB_UPSTREAM);
 
@@ -143,6 +144,12 @@ app.post("/games/:id/claim-country", generic_game_auth_func(async (username, gam
   gameData.save();
   res.send("true");
 }, default_deny, ["country"]));
+
+app.post("/games/:id/submit-orders", generic_game_auth_func(async (username, gameData, req, res) => {
+  for (let order of req.body) gameData.submit_order(username, shared.import_order(order));
+  gameData.save();
+  res.send("true");
+}));
 
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));

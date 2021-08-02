@@ -327,6 +327,21 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Check if an order is valid and save it as submitted if so.
+   * @param {string} username Username of user trying to submit order.
+   * @param {shared.Order} order Order to be submitted.
+   */
+  submit_order(username, order) {
+    let unit = this.get_unit(order.province);
+
+    if (!unit) throw Error(`There is no unit at ${order.province}.`)
+    if (this.get_unit_owner_player(order.province) != username) throw Error(`User ${username} has no control over unit at ${order.province}.`);
+    if (!this.get_valid_orders(unit).some(o => o.id == order.id)) throw Error(`Order ${order.id} is not valid.`);
+
+    this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
+  }
+
+  /**
    * Initiate the order writing phase and set the value of `this.state.phase`.
    */
   start_order_writing() {
