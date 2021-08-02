@@ -53,3 +53,7 @@ Set up the proxy pass:
     </location>
 
 Note: I have no clue how the `ProxyPassReverse "/"` line works, but it was necessary to change it from `ProxyPassReverse "http://localhost:8000/"` to allow the Express server to redirect with urls starting with `/`.
+
+## Config
+
+In order to successfuly connect to the SQL server, there must be a file called `config` in the root directory. See [config-example](config-example) for a sample config file.

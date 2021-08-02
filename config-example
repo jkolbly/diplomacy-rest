@@ -1,0 +1,3 @@
+SQL_USER=pi
+SQL_PASSWORD=password
+SQL_DATABASE=bankbook
