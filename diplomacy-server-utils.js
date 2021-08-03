@@ -74,7 +74,7 @@ async function get_map_info(rel) {
  * @param {string} username Username or empty for no username checking.
  * @returns {Promise<ServerGameData[]>} 
  */
- async function get_game_list(username="") {
+async function get_game_list(username="") {
   let rows = await sql.query("SELECT json FROM diplomacy_games WHERE archived=FALSE");
   let list = [];
   for (let row of rows) {
@@ -236,7 +236,7 @@ class ServerGameData extends shared.GameData {
    * Value gets cached.
    * @type {string[]}
    */
-   get eliminatedProvinces() {
+  get eliminatedProvinces() {
     Object.defineProperty(this, "eliminatedProvinces", { value: [] });
     if (!this.playerConfig.neutralEliminate) {
       for (let country of this.playerConfig.eliminate) {
