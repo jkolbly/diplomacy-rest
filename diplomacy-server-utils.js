@@ -148,6 +148,7 @@ async function new_game(user, gameName, mapPath, usernames) {
   data.users = usernames;
   data.winner = "";
   data.won = shared.winStateEnum.Playing;
+  data.phase = shared.phaseEnum["Country Claiming"];
 
   for (let user of usernames) {
     if (!(await sql.user_app_permission(user, "diplomacy"))) {
@@ -165,7 +166,6 @@ async function new_game(user, gameName, mapPath, usernames) {
   data.history = [{
     date: data.mapInfo.info.date,
     season: shared.seasonEnum.Spring,
-    phase: shared.phaseEnum["Country Claiming"],
     nations: {}
   }];
 
@@ -260,7 +260,7 @@ class ServerGameData extends shared.GameData {
       gameName: this.name,
       mapName: this.mapInfo.info.name,
       playerFirstNames: firstNames,
-      phase: this.state.phase,
+      phase: this.phase,
       season: this.state.season,
       winner: this.winner ? (await sql.user_data(this.winner)).firstname : ""
     };
@@ -323,7 +323,7 @@ class ServerGameData extends shared.GameData {
    * @param {string} country 
    */
   claim_country(username, country) {
-    if (this.state.phase != shared.phaseEnum["Country Claiming"]) throw Error("You can't claim a country after the game has started.");
+    if (this.phase != shared.phaseEnum["Country Claiming"]) throw Error("You can't claim a country after the game has started.");
 
     let group = this.country_group(country);
     if (!group) throw Error(`Country ${country} is not selectable.`);
@@ -363,14 +363,14 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
-   * Initiate the order writing phase and set the value of `this.state.phase`.
+   * Initiate the order writing phase and set the value of `this.phase`.
    */
   start_order_writing() {
     this.state.orders = {};
     for (let c in this.players) {
       this.state.orders[c] = {};
     }
-    this.state.phase = shared.phaseEnum["Order Writing"];
+    this.phase = shared.phaseEnum["Order Writing"];
   }
 }
 
