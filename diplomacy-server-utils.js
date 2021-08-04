@@ -130,9 +130,10 @@ async function create_gamedata(json) {
  * @param {string} gameName 
  * @param {string} mapPath 
  * @param {string[]} usernames 
+ * @param {boolean} populate Whether to add the starting units.
  * @returns {Promise<ServerGameData>}
  */
-async function new_game(user, gameName, mapPath, usernames) {
+async function new_game(user, gameName, mapPath, usernames, populate=true) {
   let data = {};
 
   if (!usernames.includes(user)) {
@@ -180,14 +181,16 @@ async function new_game(user, gameName, mapPath, usernames) {
     if (playerConfig.neutralEliminate || !eliminated) {
       let units = [];
 
-      for (let supplyCenter of country.supplyCenters) {
-        let province = data.mapInfo.provinces.find(p => p.id == supplyCenter);
-        if (province.startUnit > 0) {
-          units.push({
-            type: province.startUnit - 1,
-            province: supplyCenter,
-            coast: (province.startUnit - 1 == shared.unitTypeEnum.Fleet && !province.water) ? province.coasts.find(c => c.frigateStart).id : ""
-          });
+      if (populate) {
+        for (let supplyCenter of country.supplyCenters) {
+          let province = data.mapInfo.provinces.find(p => p.id == supplyCenter);
+          if (province.startUnit > 0) {
+            units.push({
+              type: province.startUnit - 1,
+              province: supplyCenter,
+              coast: (province.startUnit - 1 == shared.unitTypeEnum.Fleet && !province.water) ? province.coasts.find(c => c.frigateStart).id : ""
+            });
+          }
         }
       }
 
