@@ -89,7 +89,35 @@ class InstructionSpec {
 }
 
 const instructionSpecs = [
+  new InstructionSpec(["start", "init"], [
+    { key: "map", required: true },
+    { key: "name", default: "Test Game" },
+    { key: "userCount", type: instructionParamTypeEnum.number, default: -1 },
+    { key: "countryClaiming", type: instructionParamTypeEnum.boolean, default: true },
+    { key: "users", type: instructionParamTypeEnum.stringList, default: [] }
+  ],
+  async (test, params) => {
+    if (params.users.length == 0) {
+      if (params.userCount < 1) {
+        let possibleCounts = Object.keys((await utils.get_map_info(params.map)).playerConfigurations).map(n => Number(n));
+        params.userCount = params.userCount == 0 ? Math.min(...possibleCounts) : Math.max(...possibleCounts);
+      }
+      for (let i = 1; i <= params.userCount; i++) {
+        params.users.push(`Player ${i}`);
+      }
+    } else {
+      params.countryClaiming = false;
+      params.userCount = params.users.length;
+    }
 
+    test.gameData = await utils.new_game(params.users[0], params.name, params.map, params.users, false, false);
+
+    if (params.countryClaiming) {
+      for (let user of params.users) {
+        test.gameData.claim_country(user, test.gameData.unclaimed_country_groups()[0][0]);
+      }
+    }
+  })
 ];
 
 /**
