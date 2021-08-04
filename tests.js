@@ -3,69 +3,154 @@ const fs = require("fs").promises;
 const path = require("path");
 
 /**
- * Enum for storing the action type for a test instruction.
+ * Enum to store the type of parameter for a single instruction parameter.
  * @readonly
  * @enum {string}
  */
-const instructionTypeEnum = {
-  /**
-   * Initialize the game.
-   * 
-   * Required properties:
-   * - `map`
-   * 
-   * Optional properties:
-   * - `name` Default: "test"
-   * - `userCount` Default: "max"
-   * - `countryClaiming` Default: false
-   * - `users` Overrides `userCount` and disables `countryClaiming`. Default: ["player 1", "player 2", etc.]
-   */
-  start: "start",
-  
-  /**
-   * Create starting units.
-   */
-  populate: "populate",
-
-  /**
-   * Claim a country for a user
-   * 
-   * Required properties:
-   * - `country`
-   * - `username`
-   * 
-   * Optional properties:
-   * - `overrideGroups` Default: false
-   */
-  claim: "claim",
-
-  /**
-   * Spawn a unit.
-   * 
-   * Required properties:
-   * - `province`
-   * 
-   * Optional properties:
-   * - `type` "army"/"a" or "fleet"/"f". Default: "army" for land or coast province, "fleet" for water
-   * - `coast` Required for summoning fleet with multiple possible coasts.
-   * - `replace` Replace existing units. Default: true
-   */
-  spawnUnit: "spawn-unit",
-
-  /**
-   * Remove a unit.
-   * 
-   * Required properties:
-   * - `province`
-   */
-  removeUnit: "remove-unit"
+const instructionParamTypeEnum = {
+  string: "string",
+  number: "number",
+  boolean: "boolean",
+  /** Comma-separated list of strings */
+  stringList: "list-string"
 }
 
 /**
  * Class with a single step in the creation of a test.
  * @typedef {Object} TestInstruction
- * @property {instructionTypeEnum} type
+ * @property {string} type
+ * @property {Object.<string,any>} params
  */
+
+/**
+ * Data required to define a single instruction set parameter.
+ * @typedef {object} InstructionParamSpec
+ * @property {string} key Name of this parameter
+ * @property {instructionParamTypeEnum} [type] Default: string
+ * @property {any} [default] Default value for parameter
+ * @property {boolean} [required] Default: false
+ */
+
+/**
+ * Class with the specifications for an instruction type (name, parameters, etc.) and methods to execute the instruction.
+ */
+class InstructionSpec {
+  /**
+   * @param {string|string[]} keyword Keyword or list of keyword synonyms
+   * @param {InstructionParamSpec[]} params
+   * @param {(test:Test,params:Object.<string,any>)=>(void|Promise)} execute
+   */
+  constructor(keyword, params, execute) {
+    if (typeof keyword == "string") {
+      /**
+       * All keywords that can refer to this instruction.
+       * @type {string[]}
+       */
+      this.keywords = [keyword];
+    } else {
+      this.keywords = keyword;
+    }
+    this.keywords = this.keywords.map(s => s.toLowerCase());
+
+    /**
+     * The parameters for this instruction.
+     * @type {InstructionParamSpec[]}
+     */
+    this.params = params;
+    for (let param of this.params) {
+      if (!param.type) param.type = instructionParamTypeEnum.string;
+      if (!param.required) param.required = false;
+    }
+
+    /**
+     * The execute function for this instruction
+     * @type {(test:Test,params:Object.<string,any>)=>(void|Promise)}
+     */
+    this.execute = execute;
+  }
+
+  /**
+   * Return whether the keywords for this instruction include `word`.
+   * @param {string} word
+   * @returns {boolean} 
+   */
+  matches(word) {
+    return this.keywords.includes(word.toLowerCase());
+  }
+
+  /**
+   * Get the param spec corresponding to `key`
+   * @param {string} key
+   * @returns {InstructionParamSpec} 
+   */
+  get_param_spec(key) {
+    return this.params.find(p => p.key == key);
+  }
+}
+
+const instructionSpecs = [
+
+];
+
+/**
+ * Get the instruction spec with a given keyword.
+ * @param {string} keyword
+ * @returns {InstructionSpec} 
+ */
+function get_instruction_spec(keyword) {
+  return instructionSpecs.find(i => i.matches(keyword));
+}
+
+/**
+ * Parse a single parameter value based on its type
+ * @param {string} val 
+ * @param {instructionParamTypeEnum} type 
+ * @returns {any}
+ */
+function parse_raw_val(val, type) {
+  switch (type) {
+    case instructionParamTypeEnum.string:
+      return val.replace(/^\"/g, "").replace(/\"$/g, "");
+    case instructionParamTypeEnum.number:
+      return Number(val);
+    case instructionParamTypeEnum.boolean:
+      return val.toLowerCase() == "true";
+    case instructionParamTypeEnum.stringList:
+      return val.match(/(?:[^,"']+|['"][^'"]*["'])+/g).map(s => parse_raw_val(s, instructionParamTypeEnum.string));
+    default:
+      throw Error(`Unknown instruction parameter type ${type}`)
+  }
+}
+
+/**
+ * Create an instruction from text.
+ * @param {string} line 
+ * @returns {TestInstruction}
+ */
+function parse_instruction(line) {
+  let args = line.match(/(?:[^\s"']+|['"][^'"]*["'])+/g).map(s => s.trim());
+  let instruction = { type: args.shift(), params: {} }
+
+  let instructionSpec = get_instruction_spec(instruction.type);
+  if (!instructionSpec) throw Error(`Unknown instruction ${instruction.type}`);
+
+  for (let arg of args) {
+    let split = arg.split(":");
+    let key = split.shift().trim();
+    instruction.params[key] = split.join(":").trim();
+  }
+
+  for (let param of instructionSpec.params) {
+    if (instruction.params[param.key]) {
+      instruction.params[param.key] = parse_raw_val(instruction.params[param.key], param.type);
+    } else {
+      if (param.required) throw Error(`Parameter '${param.key}' (${param.type}) is required for instruction ${instruction.type}`);
+      instruction.params[param.key] = param.default;
+    }
+  }
+
+  return instruction;
+}
 
 /**
  * Load a test from a file.
@@ -75,20 +160,7 @@ const instructionTypeEnum = {
 async function load_test(filename) {
   let raw = (await fs.readFile(path.join("./tests", filename))).toString();
 
-  let instructions = [];
-  for (let line of raw.split("\n").map(s => s.trim()).filter(s => s && !s.startsWith("#"))) {
-    let args = line.match(/(?:[^\s"']+|['"][^'"]*["'])+/g);
-    args = args ? args : [];
-    args = args.map(s => s.trim());
-    let instruction = {
-      type: args.shift()
-    }
-    for (let arg of args) {
-      let split = arg.split(":");
-      instruction[split.shift().trim()] = split.join(":").trim().replace(/\\"/g, '"').replace(/^\"/g, "").replace(/\"$/g, "");
-    }
-    instructions.push(instruction);
-  }
+  let instructions = raw.split("\n").map(s => s.trim()).filter(s => s && !s.startsWith("#")).map(l => parse_instruction(l));
 
   return new Test(instructions);
 }
@@ -132,34 +204,7 @@ class Test {
    * @param {TestInstruction} instruction 
    */
   async execute(instruction) {
-    switch (instruction.type) {
-      case instructionTypeEnum.start:
-        let name = instruction.name ? instruction.name : "test";
-
-        let users;
-        if (instruction.users) {
-          users = instruction.users.split(",");
-        } else {
-          let userCount = instruction.userCount;
-          let possibleCounts = Object.keys((await utils.get_map_info(instruction.map)).playerConfigurations).map(n => Number(n));
-          if (!userCount || userCount == "max") {
-            userCount = Math.max(...possibleCounts);
-          } else if (userCount == "min") {
-            userCount = Math.min(...possibleCounts);
-          }
-          users = [];
-          for (let i = 1; i <= userCount; i++) {
-            users.push(`Player ${i}`);
-          }
-        }
-
-        /** @type {utils.ServerGameData} */
-        this.gameData = await utils.new_game(users[0], name, instruction.map, users, false, instruction.populate == "true");
-        break;
-      case instructionTypeEnum.populate:
-        this.gameData.populate();
-        break;
-    }
+    await get_instruction_spec(instruction.type).execute(this, instruction.params);
   }
 
   /**
