@@ -144,7 +144,7 @@ function get_instruction_spec(keyword) {
 function parse_raw_val(val, type) {
   switch (type) {
     case instructionParamTypeEnum.string:
-      return val.replace(/^\"/g, "").replace(/\"$/g, "");
+      return JSON.parse(`"${val.replace(/^\"/g, "").replace(/\"$/g, "")}"`);
     case instructionParamTypeEnum.number:
       return Number(val);
     case instructionParamTypeEnum.boolean:
