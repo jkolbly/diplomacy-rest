@@ -183,6 +183,12 @@ class Test {
      * @type {Generator<Promise<TestInstruction>,void>}
      */
     this.generator = this.get_generator();
+
+    /* For documentation only. These properties may or may not be undefined at runtime. */
+    /**
+     * @type {utils.ServerGameData}
+     */
+    this.gameData;
   }
 
   /**
