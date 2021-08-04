@@ -298,19 +298,23 @@ class ServerGameData extends shared.GameData {
     let obj = ["phase", "id", "name", "map", "users", "players", "winner", "won", "history", "mapInfo"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
     obj = JSON.parse(JSON.stringify(obj, gamedata_stringify_replacer));
 
-    for (let country in this.state.orders) {
-      if (this.country_owner(country) != username) {
-        delete obj.history[obj.history.length - 1].orders[country];
+    if (this.phase == shared.phaseEnum["Order Writing"]) {
+      for (let country in this.state.orders) {
+        if (this.country_owner(country) != username) {
+          delete obj.history[obj.history.length - 1].orders[country];
+        }
       }
-    }
-    for (let country in this.state.retreats) {
-      if (this.country_owner(country) != username) {
-        delete obj.history[obj.history.length - 1].retreats[country];
+    } else if (this.phase == shared.phaseEnum.Retreating) {
+      for (let country in this.state.retreats) {
+        if (this.country_owner(country) != username) {
+          delete obj.history[obj.history.length - 1].retreats[country];
+        }
       }
-    }
-    for (let country in this.state.adjustments) {
-      if (this.country_owner(country) != username) {
-        delete obj.history[obj.history.length - 1].adjustments[country];
+    } else if (this.phase == shared.phaseEnum["Creating/Disbanding"]) {
+      for (let country in this.state.adjustments) {
+        if (this.country_owner(country) != username) {
+          delete obj.history[obj.history.length - 1].adjustments[country];
+        }
       }
     }
 
