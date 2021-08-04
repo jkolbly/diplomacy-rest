@@ -4,6 +4,7 @@ const path = require("path");
 const shared = require("./diplomacy-shared-utils/utils.js");
 const sql = require("./bankbook-server-utils/sql-utils.js");
 const utils = require("./diplomacy-server-utils.js");
+const tests = require("./tests.js");
 
 const app = express();
 app.use(cookieParser());
@@ -157,6 +158,11 @@ app.get("/games/:id/valid-orders/:province", generic_game_auth_func(async (usern
 
 app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
+}));
+
+app.get("/tests/:test", generic_auth_func(async (username, req, res) => {
+  (await tests.load_test(req.params.test)).run();
+  res.send("true");
 }));
 
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
