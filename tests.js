@@ -118,6 +118,11 @@ const instructionSpecs = [
         }
       }
     }
+  ),
+  new InstructionSpec("populate", [],
+    async (test, params) => {
+      test.gameData.populate();
+    }
   )
 ];
 
