@@ -182,31 +182,20 @@ async function new_game(user, gameName, mapPath, usernames, checkUsers=true, pop
     }
 
     if (playerConfig.neutralEliminate || !eliminated) {
-      let units = [];
-
-      if (populate) {
-        for (let supplyCenter of country.supplyCenters) {
-          let province = data.mapInfo.provinces.find(p => p.id == supplyCenter);
-          if (province.startUnit > 0) {
-            units.push({
-              type: province.startUnit - 1,
-              province: supplyCenter,
-              coast: (province.startUnit - 1 == shared.unitTypeEnum.Fleet && !province.water) ? province.coasts.find(c => c.frigateStart).id : ""
-            });
-          }
-        }
-      }
-
       data.history[0].nations[country.id] = {
         id: country.id,
         supplyCenters: country.supplyCenters,
-        units: units,
+        units: [],
         neutral: eliminated
       }
     }
   }
 
-  return new ServerGameData(data);
+  let gameData = new ServerGameData(data);
+  if (populate) {
+    gameData.populate();
+  }
+  return gameData;
 }
 
 /**
@@ -325,6 +314,27 @@ class ServerGameData extends shared.GameData {
     }
 
     return obj;
+  }
+
+  /**
+   * Spawn all the starting units for this game.
+   */
+  populate() {
+    for (let c in this.state.nations) {
+      this.state.nations[c].units = [];
+      let country = this.get_country(c);
+
+      for (let supplyCenter of country.supplyCenters) {
+        let province = this.mapInfo.provinces.find(p => p.id == supplyCenter);
+        if (province.startUnit > 0) {
+          this.state.nations[c].units.push({
+            type: province.startUnit - 1,
+            province: supplyCenter,
+            coast: (province.startUnit - 1 == shared.unitTypeEnum.Fleet && !province.water) ? province.coasts.find(c => c.frigateStart).id : ""
+          });
+        }
+      }
+    }
   }
 
   /**
