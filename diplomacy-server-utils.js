@@ -270,7 +270,7 @@ class ServerGameData extends shared.GameData {
    * Save this game to the SQL server
    */
   async save() {
-    let toStore = ["id", "name", "map", "users", "players", "winner", "won", "history"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
+    let toStore = ["phase", "id", "name", "map", "users", "players", "winner", "won", "history"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
     
     let stringified = JSON.stringify(toStore, gamedata_stringify_replacer);
 
@@ -295,7 +295,7 @@ class ServerGameData extends shared.GameData {
    * @returns {Object}
    */
   sanitized(username) {
-    let obj = ["id", "name", "map", "users", "players", "winner", "won", "history", "mapInfo"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
+    let obj = ["phase", "id", "name", "map", "users", "players", "winner", "won", "history", "mapInfo"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
     obj = JSON.parse(JSON.stringify(obj, gamedata_stringify_replacer));
 
     for (let country in this.state.orders) {
