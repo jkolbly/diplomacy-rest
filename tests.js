@@ -108,7 +108,7 @@ class Test {
     this.instructions = instructions;
 
     /**
-     * @type {Generator<TestInstruction,void>}
+     * @type {Generator<Promise<TestInstruction>,void>}
      */
     this.generator = this.get_generator();
   }
@@ -116,32 +116,32 @@ class Test {
   /**
    * Run the rest of the instructions.
    */
-  run() {
-    for (let i of this.generator) { }
+  async run() {
+    for await (let i of this.generator) { }
   }
 
   /**
    * Execute the next instruction and advance the generator.
    */
-  step() {
-    this.generator.next();
+  async step() {
+    await this.generator.next();
   }
 
   /**
    * Execute a single instruction.
    * @param {TestInstruction} instruction 
    */
-  execute(instruction) {
+  async execute(instruction) {
     
   }
 
   /**
    * Return a generator that iterates through the instruction set and yields the executed instruction.
-   * @returns {Generator<TestInstruction,void,any>}
+   * @returns {Generator<Promise<TestInstruction>,void,any>}
    */
-  * get_generator() {
+  async* get_generator() {
     for (let instruction of this.instructions) {
-      this.execute(instruction);
+      await this.execute(instruction);
       yield instruction;
     }
   }
