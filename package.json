@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "nodemon -L --inspect=0.0.0.0:9229 server.js"
+    "debug": "nodemon -L --inspect=0.0.0.0:9229 --watch /app --watch /app/tests/* server.js"
   },
   "repository": {
     "type": "git",
