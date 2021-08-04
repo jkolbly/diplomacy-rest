@@ -132,7 +132,34 @@ class Test {
    * @param {TestInstruction} instruction 
    */
   async execute(instruction) {
-    
+    switch (instruction.type) {
+      case instructionTypeEnum.start:
+        let name = instruction.name ? instruction.name : "test";
+
+        let users;
+        if (instruction.users) {
+          users = instruction.users.split(",");
+        } else {
+          let userCount = instruction.userCount;
+          let possibleCounts = Object.keys((await utils.get_map_info(instruction.map)).playerConfigurations).map(n => Number(n));
+          if (!userCount || userCount == "max") {
+            userCount = Math.max(...possibleCounts);
+          } else if (userCount == "min") {
+            userCount = Math.min(...possibleCounts);
+          }
+          users = [];
+          for (let i = 1; i <= userCount; i++) {
+            users.push(`Player ${i}`);
+          }
+        }
+
+        /** @type {utils.ServerGameData} */
+        this.gameData = await utils.new_game(users[0], name, instruction.map, users, false, instruction.populate == "true");
+        break;
+      case instructionTypeEnum.populate:
+        this.gameData.populate();
+        break;
+    }
   }
 
   /**
