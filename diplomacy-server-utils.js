@@ -130,10 +130,11 @@ async function create_gamedata(json) {
  * @param {string} gameName 
  * @param {string} mapPath 
  * @param {string[]} usernames 
+ * @param {boolean} checkUsers Whether to verify users have correct permissions.
  * @param {boolean} populate Whether to add the starting units.
  * @returns {Promise<ServerGameData>}
  */
-async function new_game(user, gameName, mapPath, usernames, populate=true) {
+async function new_game(user, gameName, mapPath, usernames, checkUsers=true, populate=true) {
   let data = {};
 
   if (!usernames.includes(user)) {
@@ -151,9 +152,11 @@ async function new_game(user, gameName, mapPath, usernames, populate=true) {
   data.won = shared.winStateEnum.Playing;
   data.phase = shared.phaseEnum["Country Claiming"];
 
-  for (let user of usernames) {
-    if (!(await sql.user_app_permission(user, "diplomacy"))) {
-      throw Error(`User ${user} doesn't have permission to play Diplomacy.`);
+  if (checkUsers) {
+    for (let user of usernames) {
+      if (!(await sql.user_app_permission(user, "diplomacy"))) {
+        throw Error(`User ${user} doesn't have permission to play Diplomacy.`);
+      }
     }
   }
 
