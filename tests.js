@@ -76,7 +76,7 @@ async function load_test(filename) {
   let raw = (await fs.readFile(path.join("./tests", filename))).toString();
 
   let instructions = [];
-  for (let line of raw.split("\n").filter(s => s.trim())) {
+  for (let line of raw.split("\n").map(s => s.trim()).filter(s => s && !s.startsWith("#"))) {
     let args = line.match(/(?:[^\s"']+|['"][^'"]*["'])+/g);
     args = args ? args : [];
     args = args.map(s => s.trim());
