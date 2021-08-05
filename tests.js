@@ -150,7 +150,7 @@ function parse_raw_val(val, type) {
     case instructionParamTypeEnum.boolean:
       return val.toLowerCase() == "true";
     case instructionParamTypeEnum.stringList:
-      return val.match(/(?:[^,"']+|['"][^'"]*["'])+/g).map(s => parse_raw_val(s, instructionParamTypeEnum.string));
+      return val.match(/(?:[^,"]+|["][^"]*["])+/g).map(s => parse_raw_val(s, instructionParamTypeEnum.string));
     default:
       throw Error(`Unknown instruction parameter type ${type}`)
   }
@@ -162,7 +162,7 @@ function parse_raw_val(val, type) {
  * @returns {TestInstruction}
  */
 function parse_instruction(line) {
-  let args = line.match(/(?:[^\s"']+|['"][^'"]*["'])+/g).map(s => s.trim());
+  let args = line.match(/(?:[^\s"]+|["][^"]*["])+/g).map(s => s.trim());
   let instruction = { type: args.shift(), params: {} }
 
   let instructionSpec = get_instruction_spec(instruction.type);
