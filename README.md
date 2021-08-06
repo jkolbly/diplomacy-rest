@@ -58,3 +58,11 @@ Note: I have no clue how the `ProxyPassReverse "/"` line works, but it was neces
 ## Config
 
 In order to successfuly connect to the SQL server, there must be a file called `config` in the root directory. See [config-example](config-example) for a sample config file.
+
+## Tests
+
+A tests is defined by a set of instructions. The syntax for writing a single instruction with parameters is:
+
+    {instruction} {key}:{value} {key 2}:{value 2} ...
+
+The order of parameters never matters. If the value of a parameter is a string containing a space, it can be enclosed in double quotes. Quotes and whatnot can be escaped using backslashes. Multiple instructions can be separated with one on each line.
