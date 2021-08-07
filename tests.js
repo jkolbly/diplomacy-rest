@@ -1,4 +1,5 @@
 const utils = require("./diplomacy-server-utils.js");
+const shared = require("./diplomacy-shared-utils/utils.js");
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -122,6 +123,27 @@ const instructionSpecs = [
   new InstructionSpec("populate", [],
     async (test, params) => {
       test.gameData.populate();
+    }
+  ),
+  new InstructionSpec("spawn-unit", [
+      { key: "country", required: true },
+      { key: "province", required: true },
+      { key: "fleet", type: instructionParamTypeEnum.boolean, default: false },
+      { key: "coast", default: "" },
+      { key: "replace", type: instructionParamTypeEnum.boolean, default: true }
+    ],
+    async (test, params) => {
+      let province = test.gameData.get_province(params.province);
+      let type = (province.water || params.fleet) ? shared.unitTypeEnum.Fleet : shared.unitTypeEnum.Army;
+
+      test.gameData.spawn_unit(params.country, params.province, type, params.coast, params.replace);
+    }
+  ),
+  new InstructionSpec("remove-unit", [
+      { key: "province", required: true }
+    ],
+    async (test, params) => {
+      test.gameData.remove_unit(params.province);
     }
   )
 ];
