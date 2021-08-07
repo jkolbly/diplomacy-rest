@@ -338,6 +338,57 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Spawn a single unit at a province.
+   * @param {string} country The nation ID of the nation which will own the spawned unit.
+   * @param {string} province The province ID to spawn the unit at.
+   * @param {shared.unitTypeEnum} type The type of unit to spawn.
+   * @param {string} coast The coast to use for fleets spawning on a coastal province.
+   * @param {boolean} force Remove the existing unit at `province` if one exists.
+   * @returns {boolean} Whether or not a unit was summoned.
+   */
+  spawn_unit(country, province, type, coast="", force=false) {
+    let unit  = this.get_unit(province);
+    if (unit) {
+      if (force) {
+        this.remove_unit(province);
+      } else {
+        return false;
+      }
+    }
+
+    let p = this.get_province(province);
+    
+    if (type == shared.unitTypeEnum.Fleet && p.coasts.length == 1) coast = p.coasts[0].id;
+
+    if (type == shared.unitTypeEnum.Fleet && !p.water && p.coasts.length == 0) throw Error(`Tried to spawn fleet on landlocked province ${province}.`);
+    if (type == shared.unitTypeEnum.Fleet && !p.water && !this.get_coast(province, coast)) throw Error(`Couldn't find coast ${coast} on province ${province}.`);
+    if (type == shared.unitTypeEnum.Army && p.water) throw Error(`Tried to spawn army on water province ${province}.`);
+
+    this.state.nations[country].units.push({
+      type: type,
+      province: province,
+      coast: coast
+    });
+
+    return true;
+  }
+
+  /**
+   * Remove the unit from a province if one exists.
+   * @param {string} province The string ID of the province, presumably with a unit.
+   * @returns {boolean} Whether a unit was removed.
+   */
+  remove_unit(province) {
+    let unit = this.get_unit(province);
+    if (unit) {
+      let owner = this.get_unit_owner_id(province);
+      this.state.nations[owner].units = this.state.nations[owner].units.filter(u => u.province != province);
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Claim a country for a user. If the input country is part of a country group, claim all countries in the group.
    * @param {string} username 
    * @param {string} country 
