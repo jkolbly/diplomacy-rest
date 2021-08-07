@@ -65,7 +65,7 @@ A tests is defined by a set of instructions. The syntax for writing a single ins
 
     {instruction} {key}:{value} {key 2}:{value 2} ...
 
-The order of parameters never matters. If the value of a parameter is a string containing a space, it can be enclosed in double quotes. Quotes and whatnot can be escaped using backslashes. Multiple instructions can be separated with one on each line.
+The order of parameters never matters. If the value of a parameter is a string containing a space, it can be enclosed in double quotes. Quotes and whatnot can be escaped using backslashes. Multiple instructions can be separated with one on each line. Blank lines and lines starting with "#" are ignored.
 
 
 A list of test instructions and their descriptions can be found in [test-instructions.md](test-instructions.md).
