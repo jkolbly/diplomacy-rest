@@ -255,7 +255,7 @@ function parse_instruction(line) {
       instruction.params[param.key] = parse_raw_val(instruction.params[param.key], param.type);
     } else {
       if (param.required) throw Error(`Parameter '${param.key}' (${param.type}) is required for instruction ${instruction.type}`);
-      instruction.params[param.key] = param.default;
+      instruction.params[param.key] = JSON.parse(JSON.stringify(param.default));
     }
   }
 
