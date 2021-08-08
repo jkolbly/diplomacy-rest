@@ -32,6 +32,34 @@ const instructionParamTypeEnum = {
  * @property {boolean} [required] Default: false
  */
 
+const unitTypeDictionary = {
+  army: [ "army", "a" ],
+  fleet: [ "fleet", "f" ]
+}
+
+/**
+ * Parse the English word version of a unit type ("army", "a", "fleet", or "f").
+ * @param {string} english 
+ * @returns {shared.unitTypeEnum}
+ */
+function type_from_english(english) {
+  let lower = english.toLowerCase();
+  if (unitTypeDictionary.army.includes(lower)) return shared.unitTypeEnum.Army;
+  if (unitTypeDictionary.fleet.includes(lower)) return shared.unitTypeEnum.Fleet;
+  throw Error(`Unknown unit type ${english}`);
+}
+
+/**
+ * Get the English word version of a unit type.
+ * @param {shared.unitTypeEnum} type 
+ * @returns {string}
+ */
+function english_from_type(type) {
+  if (type == shared.unitTypeEnum.Army) return unitTypeDictionary.army[0];
+  if (type == shared.unitTypeEnum.Fleet) return unitTypeDictionary.fleet[0];
+  throw Error(`Unknown unit type ${type}`);
+}
+
 /**
  * Class with the specifications for an instruction type (name, parameters, etc.) and methods to execute the instruction.
  */
@@ -144,6 +172,31 @@ const instructionSpecs = [
     ],
     async (test, params) => {
       test.gameData.remove_unit(params.province);
+    }
+  ),
+  new InstructionSpec("assert-unit", [
+    { key: "province", required: true },
+    { key: "type", default: "" },
+    { key: "country", default: "" },
+    { key: "coast", default: "" }
+    ],
+    async (test, params) => {
+      let province = test.gameData.get_province(params.province);
+
+      let unit = test.gameData.get_unit(params.province);
+      if (!unit) throw Error(`Assert failed: no unit at ${params.province}`);
+
+      if (params.type) {
+        let type = type_from_english(params.type);
+        if (unit.type != type) throw Error(`Assert failed: unit at ${params.province} is ${english_from_type(unit.type)} not ${english_from_type(type)}`);
+      }
+
+      if (params.country) {
+        let owner = test.gameData.get_unit_owner_id(params.province);
+        if (owner != params.country) throw Error(`Assert failed: unit at ${params.province} belongs to ${owner} not ${params.country}`);
+      }
+
+      if (params.coast && unit.coast != params.coast) throw Error(`Assert failed: no unit at ${params.province} on coast ${params.coast}`);
     }
   )
 ];
