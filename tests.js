@@ -21,6 +21,7 @@ const instructionParamTypeEnum = {
  * @typedef {Object} TestInstruction
  * @property {string} type
  * @property {Object.<string,any>} params
+ * @property {string} raw
  */
 
 /**
@@ -258,6 +259,8 @@ function parse_instruction(line) {
     }
   }
 
+  instruction.raw = line;
+
   return instruction;
 }
 
@@ -319,7 +322,11 @@ class Test {
    * @param {TestInstruction} instruction 
    */
   async execute(instruction) {
-    await get_instruction_spec(instruction.type).execute(this, instruction.params);
+    try {
+      await get_instruction_spec(instruction.type).execute(this, instruction.params);
+    } catch (error) {
+      console.log(`Error executing test instruction "${instruction.raw}": "${error.message}"`);
+    }
   }
 
   /**
