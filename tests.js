@@ -17,6 +17,20 @@ const instructionParamTypeEnum = {
 }
 
 /**
+ * Enum to store the log levels for messages in a test log.
+ * @readonly
+ * @enum {string}
+ */
+const logLevelsEnum = {
+  /** Messages that aren't normally visible but provide extra information for debugging. */
+  Debug: "debug",
+  /** Messages that are normally visible but aren't errors. */
+  Log: "log",
+  /** Messages that are errors, including failed assertions. */
+  Error: "error"
+}
+
+/**
  * Class with a single step in the creation of a test.
  * @typedef {Object} TestInstruction
  * @property {string} type
@@ -296,11 +310,44 @@ class Test {
      */
     this.generator = this.get_generator();
 
+    /**
+     * @type {{message:string,level:logLevelsEnum}[]}
+     */
+    this.logs = [];
+
     /* For documentation only. These properties may or may not be undefined at runtime. */
     /**
      * @type {utils.ServerGameData}
      */
     this.gameData;
+  }
+
+  /**
+   * Log a message about this test.
+   * @param {string} message
+   * @param {logLevelsEnum} level
+   */
+  log(message, level=logLevelsEnum.Log) {
+    this.logs.push({
+      message: message,
+      level: level
+    });
+  }
+
+  /**
+   * Log a message at the "debug" level.
+   * @param {string} message 
+   */
+  debug(message) {
+    this.log(message, logLevelsEnum.Debug);
+  }
+
+  /**
+   * Log a message at the "error" level.
+   * @param {string} message 
+   */
+  error(message) {
+    this.log(message, logLevelsEnum.Error);
   }
 
   /**
@@ -325,7 +372,7 @@ class Test {
     try {
       await get_instruction_spec(instruction.type).execute(this, instruction.params);
     } catch (error) {
-      console.log(`Error executing test instruction "${instruction.raw}": "${error.message}"`);
+      this.log(`Error executing test instruction "${instruction.raw}": "${error.message}"`, logLevelsEnum.Error);
     }
   }
 
