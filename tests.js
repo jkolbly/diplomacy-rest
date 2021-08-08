@@ -385,6 +385,8 @@ class Test {
       await this.execute(instruction);
       yield instruction;
     }
+    this.log("Finished test.");
+    return;
   }
 }
 
