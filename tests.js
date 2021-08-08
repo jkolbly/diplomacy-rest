@@ -175,10 +175,10 @@ const instructionSpecs = [
     }
   ),
   new InstructionSpec("assert-unit", [
-    { key: "province", required: true },
-    { key: "type", default: "" },
-    { key: "country", default: "" },
-    { key: "coast", default: "" }
+      { key: "province", required: true },
+      { key: "type", default: "" },
+      { key: "country", default: "" },
+      { key: "coast", default: "" }
     ],
     async (test, params) => {
       let province = test.gameData.get_province(params.province);
