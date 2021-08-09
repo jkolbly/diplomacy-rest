@@ -177,7 +177,7 @@ const instructionSpecs = [
     ],
     async (test, params) => {
       let province = test.gameData.get_province(params.province);
-      let type = (province.water || params.fleet) ? shared.unitTypeEnum.Fleet : shared.unitTypeEnum.Army;
+      let type = (province.water || params.fleet || params.coast) ? shared.unitTypeEnum.Fleet : shared.unitTypeEnum.Army;
 
       test.gameData.spawn_unit(params.country, params.province, type, params.coast, params.replace);
     }
