@@ -213,6 +213,50 @@ const instructionSpecs = [
 
       if (params.coast && unit.coast != params.coast) throw Error(`Assert failed: no unit at ${params.province} on coast ${params.coast}`);
     }
+  ),
+  new InstructionSpec("order-hold", [
+      { key: "country", required: true },
+      { key: "unit", required: true }
+    ],
+    async (test, params) => {
+      test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.HoldOrder(params.unit));
+    }
+  ),
+  new InstructionSpec("order-move", [
+      { key: "country", required: true },
+      { key: "unit", required: true },
+      { key: "dest", required: true },
+      { key: "coast", default: "" },
+      { key: "convoy", type: instructionParamTypeEnum.boolean, default: false }
+    ],
+    async (test, params) => {
+      let province = test.gameData.get_province(params.dest);
+      if (province.coasts.length == 1 && test.gameData.get_unit(params.unit).type == shared.unitTypeEnum.Fleet) params.coast = province.coasts[0].id;
+      test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.MoveOrder(params.unit, params.dest, params.coast, params.convoy));
+    }
+  ),
+  new InstructionSpec("order-convoy", [
+      { key: "country", required: true },
+      { key: "unit", required: true },
+      { key: "from", required: true },
+      { key: "to", required: true }
+    ],
+    async (test, params) => {
+      test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.ConvoyOrder(params.unit, params.from, params.to));
+    }
+  ),
+  new InstructionSpec("order-support", [
+      { key: "country", required: true },
+      { key: "unit", required: true },
+      { key: "supporting", required: true },
+      { key: "from", default: "" }
+    ],
+    async (test, params) => {
+      test.gameData.submit_order(test.gameData.country_owner(params.country),
+          params.from
+            ? new shared.SupportMoveOrder(params.unit, params.supporting, params.from)
+            : new shared.SupportHoldOrder(params.unit, params.supporting));
+    }
   )
 ];
 
