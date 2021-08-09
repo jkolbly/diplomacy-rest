@@ -1,0 +1,14 @@
+start map:europe/europe.dipmap userCount:4 name:"Howdy Doody"
+
+spawn-unit country:FRA province:spa
+spawn-unit country:FRA province:wes
+spawn-unit country:GBR province:mao
+spawn-unit country:ITA province:tun
+
+assert-unit province:spa type:army
+assert-unit province:wes type:fleet
+
+order-move country:FRA unit:spa dest:naf convoy:true
+order-convoy country:FRA unit:wes from:spa to:naf
+order-support country:GBR unit:mao supporting:wes
+order-support country:ITA unit:tun supporting:naf from:spa
