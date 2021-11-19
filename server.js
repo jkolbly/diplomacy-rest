@@ -172,4 +172,8 @@ app.get("/tests/run/:test", generic_auth_func(async (username, req, res) => {
   }));
 }));
 
+app.get("/tests/list", generic_auth_func(async (username, req, res) => {
+  res.send(await utils.get_test_list());
+}));
+
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
