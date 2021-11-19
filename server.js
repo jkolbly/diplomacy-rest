@@ -160,9 +160,16 @@ app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
 }));
 
-app.get("/tests/:test", generic_auth_func(async (username, req, res) => {
-  (await tests.load_test(req.params.test)).run();
-  res.send("true");
+app.get("/tests/run/:test", generic_auth_func(async (username, req, res) => {
+  let test = await tests.load_test(req.params.test);
+  let logs = [];
+  for await (i of test.generator) {
+    logs.push(test.lastLogs);
+  }
+  res.send(JSON.stringify({
+    gameData: test.gameData.sanitized(),
+    logs: logs
+  }));
 }));
 
 app.listen(process.env.SERVER_PORT, () => { console.log(`Listening on port ${process.env.SERVER_PORT}`); });
