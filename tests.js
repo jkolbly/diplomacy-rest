@@ -359,6 +359,12 @@ class Test {
      */
     this.logs = [];
 
+    /**
+     * Logs from the most recent test instruction
+     * @type {{message:string,level:logLevelsEnum}[]}
+     */
+    this.lastLogs = [];
+
     /* For documentation only. These properties may or may not be undefined at runtime. */
     /**
      * @type {utils.ServerGameData}
@@ -372,10 +378,12 @@ class Test {
    * @param {logLevelsEnum} level
    */
   log(message, level=logLevelsEnum.Log) {
-    this.logs.push({
+    let msg = {
       message: message,
       level: level
-    });
+    };
+    this.logs.push(msg);
+    this.lastLogs.push(msg);
   }
 
   /**
@@ -413,6 +421,7 @@ class Test {
    * @param {TestInstruction} instruction 
    */
   async execute(instruction) {
+    this.lastLogs = [];
     try {
       await get_instruction_spec(instruction.type).execute(this, instruction.params);
     } catch (error) {
