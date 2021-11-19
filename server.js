@@ -166,10 +166,10 @@ app.get("/tests/run/:test", generic_auth_func(async (username, req, res) => {
   for await (i of test.generator) {
     logs.push(test.lastLogs);
   }
-  res.send(JSON.stringify({
+  res.send({
     gameData: test.gameData.sanitized(),
     logs: logs
-  }));
+  });
 }));
 
 app.get("/tests/list", generic_auth_func(async (username, req, res) => {
