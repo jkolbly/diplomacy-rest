@@ -16,7 +16,7 @@ const config = {};
 
   for (let line of raw.split("\n")) {
     let [key, val] = line.split("=");
-    config[key.trim()] = val.trim();
+    if (key && val) config[key.trim()] = val.trim();
   }
 })();
 
