@@ -3,9 +3,14 @@ const util = require("util");
 
 /** @type {mysql.Pool} */
 var pool;
+var pools = {};
 
 /** @type {Promise} */
 var query;
+var queries = {};
+
+/** @type {string} */
+var mainDatabase;
 
 /**
  * Create a mysql connection pool and use this pool for future queries.
@@ -13,20 +18,28 @@ var query;
  * @param {string} host Hostname of SQL server 
  * @returns {Promise} A promise wrapper for the pool query function
  */
-function mysql_connect(host, user, password, database) {
-  pool = mysql.createPool({
+function mysql_connect(host, user, password, database, main=true) {
+  pools[database] = mysql.createPool({
     connectionLimit: 10,
     host: host,
     user: user,
     password: password,
     database: database
   });
-  query = util.promisify(pool.query).bind(pool);
+  queries[database] = util.promisify(pools[database].query).bind(pools[database]);
 
-  exports.pool = pool;
-  exports.query = query;
+  if (main) {
+    pool = pools[database];
+    query = queries[database];
+    mainDatabase = database;
 
-  return pool;
+    exports.pool = pool;
+    exports.query = query;
+  }
+
+  exports.pools = pools;
+
+  return pools[database];
 }
 
 /**
