@@ -435,7 +435,7 @@ class Test {
     try {
       await get_instruction_spec(instruction.type).execute(this, instruction.params);
     } catch (error) {
-      this.log(`Error executing test instruction "${instruction.raw}": "${error.message}"`, logLevelsEnum.Error);
+      this.log(error.message, logLevelsEnum.Error);
     }
   }
 
