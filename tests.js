@@ -134,7 +134,7 @@ class InstructionSpec {
 
 const instructionSpecs = [
   new InstructionSpec(["start", "init"], [
-      { key: "map", required: true },
+      { key: "map", default: "europe/europe.dipmap" },
       { key: "name", default: "Test Game" },
       { key: "userCount", type: instructionParamTypeEnum.number, default: -1 },
       { key: "countryClaiming", type: instructionParamTypeEnum.boolean, default: true },
