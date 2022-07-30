@@ -172,12 +172,22 @@ const instructionSpecs = [
       { key: "country", required: true },
       { key: "province", required: true },
       { key: "fleet", type: instructionParamTypeEnum.boolean, default: false },
+      { key: "type", default: "" },
       { key: "coast", default: "" },
       { key: "replace", type: instructionParamTypeEnum.boolean, default: true }
     ],
     async (test, params) => {
       let province = test.gameData.get_province(params.province);
-      let type = (province.water || params.fleet || params.coast) ? shared.unitTypeEnum.Fleet : shared.unitTypeEnum.Army;
+      if (!province) throw Error(`Cannot spawn unit at unknown province ${params.province}`);
+
+      let type = null;
+      if (params.type) type = type_from_english(params.type);
+      if (type == shared.unitTypeEnum.Army && params.fleet) throw Error(`Invalid test instruction. A unit cannot be a fleet and an army at the same time.`);
+      if (type == shared.unitTypeEnum.Army && params.coast) throw Error(`Invalid test instruction. An army cannot be spawned on a coast.`);
+      if (type == null) type = (params.coast || province.water) ? shared.unitTypeEnum.Fleet : shared.unitTypeEnum.Army;
+
+      if (type == shared.unitTypeEnum.Army && province.water) throw Error(`Cannot spawn army on ocean province ${params.province}.`);
+      if (type == shared.unitTypeEnum.Fleet && !(province.water || province.coasts.length > 0)) throw Error(`Cannot spawn fleet on landlocked province ${params.province}.`);
 
       test.gameData.spawn_unit(params.country, params.province, type, params.coast, params.replace);
     }
