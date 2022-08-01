@@ -282,7 +282,7 @@ const instructionSpecs = [
   ),
   new InstructionSpec("adjudicate", [],
     async (test, params) => {
-      test.gameData.calculate_orders(test.gameData.state);
+      test.gameData.calculate_orders();
     }
   )
 ];
