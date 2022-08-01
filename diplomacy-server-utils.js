@@ -299,8 +299,10 @@ class ServerGameData extends shared.GameData {
    * @param {string} username
    * @returns {Object}
    */
-  sanitized(username="") {
-    let obj = ["phase", "id", "name", "map", "users", "players", "winner", "won", "history", "mapInfo"].reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
+  sanitized(username="", includeMapInfo=true) {
+    let keys = ["phase", "id", "name", "map", "users", "players", "winner", "won", "history"];
+    if (includeMapInfo) keys.push("mapInfo");
+    let obj = keys.reduce((obj, key) => { obj[key] = this[key]; return obj; }, {});
     obj = JSON.parse(JSON.stringify(obj, gamedata_stringify_replacer));
 
     if (username) {
