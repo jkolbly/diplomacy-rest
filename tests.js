@@ -222,10 +222,14 @@ const instructionSpecs = [
   ),
   new InstructionSpec("order-hold", [
       { key: "country", required: true },
-      { key: "unit", required: true }
+      { key: "unit", required: true },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
     ],
     async (test, params) => {
-      test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.HoldOrder(params.unit));
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.HoldOrder(params.unit)),
+        params.shouldfail
+      );
     }
   ),
   new InstructionSpec("order-move", [
@@ -233,38 +237,65 @@ const instructionSpecs = [
       { key: "unit", required: true },
       { key: "dest", required: true },
       { key: "coast", default: "" },
-      { key: "convoy", type: instructionParamTypeEnum.boolean, default: false }
+      { key: "convoy", type: instructionParamTypeEnum.boolean, default: false },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
     ],
     async (test, params) => {
       let province = test.gameData.get_province(params.dest);
       if (province.coasts.length == 1 && test.gameData.get_unit(params.unit).type == shared.unitTypeEnum.Fleet) params.coast = province.coasts[0].id;
-      test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.MoveOrder(params.unit, params.dest, params.coast, params.convoy));
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.MoveOrder(params.unit, params.dest, params.coast, params.convoy)),
+        params.shouldfail
+      );
     }
   ),
   new InstructionSpec("order-convoy", [
       { key: "country", required: true },
       { key: "unit", required: true },
       { key: "from", required: true },
-      { key: "to", required: true }
+      { key: "to", required: true },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
     ],
     async (test, params) => {
-      test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.ConvoyOrder(params.unit, params.from, params.to));
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.ConvoyOrder(params.unit, params.from, params.to)),
+        params.shouldfail
+      );
     }
   ),
   new InstructionSpec("order-support", [
       { key: "country", required: true },
       { key: "unit", required: true },
       { key: "supporting", required: true },
-      { key: "from", default: "" }
+      { key: "from", default: "" },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
     ],
     async (test, params) => {
-      test.gameData.submit_order(test.gameData.country_owner(params.country),
-          params.from
-            ? new shared.SupportMoveOrder(params.unit, params.supporting, params.from)
-            : new shared.SupportHoldOrder(params.unit, params.supporting));
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country),
+            params.from
+              ? new shared.SupportMoveOrder(params.unit, params.supporting, params.from)
+              : new shared.SupportHoldOrder(params.unit, params.supporting)),
+        params.shouldfail
+      );
+    }
+  ),
+  new InstructionSpec("adjudicate", [],
+    async (test, params) => {
+      test.gameData.calculate_orders(test.gameData.state);
     }
   )
 ];
+
+function conditional_expect_error(tocall, expect_error) {
+  try {
+    tocall();
+  } catch (error) {
+    if (!expect_error) throw error;
+    return;
+  }
+  if (expect_error) throw Error("Expected error but none was thrown.");
+}
 
 /**
  * Get the instruction spec with a given keyword.
