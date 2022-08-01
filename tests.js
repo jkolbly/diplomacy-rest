@@ -177,8 +177,7 @@ const instructionSpecs = [
       { key: "replace", type: instructionParamTypeEnum.boolean, default: true }
     ],
     async (test, params) => {
-      let province = test.gameData.get_province(params.province);
-      if (!province) throw Error(`Cannot spawn unit at unknown province ${params.province}`);
+      let province = test.gameData.get_province_or_err(params.province);
 
       let type = null;
       if (params.type) type = type_from_english(params.type);

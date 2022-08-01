@@ -368,7 +368,7 @@ class ServerGameData extends shared.GameData {
       }
     }
 
-    let p = this.get_province(province);
+    let p = this.get_province_or_err(province);
     
     if (type == shared.unitTypeEnum.Fleet && p.coasts.length == 1) coast = p.coasts[0].id;
 
