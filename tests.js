@@ -186,9 +186,6 @@ const instructionSpecs = [
       if (type == shared.unitTypeEnum.Army && params.coast) throw Error(`Invalid test instruction. An army cannot be spawned on a coast.`);
       if (type == null) type = (params.coast || province.water) ? shared.unitTypeEnum.Fleet : shared.unitTypeEnum.Army;
 
-      if (type == shared.unitTypeEnum.Army && province.water) throw Error(`Cannot spawn army on ocean province ${params.province}.`);
-      if (type == shared.unitTypeEnum.Fleet && !(province.water || province.coasts.length > 0)) throw Error(`Cannot spawn fleet on landlocked province ${params.province}.`);
-
       test.gameData.spawn_unit(params.country, params.province, type, params.coast, params.replace);
     }
   ),
