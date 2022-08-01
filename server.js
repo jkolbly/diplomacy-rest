@@ -160,11 +160,11 @@ app.get("/users/:username", generic_auth_func(async (username, req, res) => {
   res.send(await sql.user_data(req.params.username));
 }));
 
-app.get("/tests/run/:test", generic_auth_func(async (username, req, res) => {
+app.get("/tests/run/:test(*)", generic_auth_func(async (username, req, res) => {
   let test = await tests.load_test(req.params.test);
-  let logs = [];
-  for await (i of test.generator) {
-    logs.push(test.lastLogs);
+  let logs = {};
+  for await (let i of test.generator) {
+    logs[i.raw] = test.lastLogs;
   }
   res.send({
     gameData: test.gameData.sanitized(),
