@@ -714,22 +714,44 @@ class ServerGameData extends shared.GameData {
     this.start_retreat_writing();
 
     console.log("\nStarting adjudication\n");
+
+    /** Units to be dislodged. */
+    let to_dislodge = [];
+
+    /** Units that shouldn't be dislodged because they're moving. */
+    let cannot_dislodge = [];
+
+    /** Successful move orders to be executed simultaneously. */
+    let successful_moves = [];
+
     for (let i = 0; i < orders.length; i++) {
       let order = orders[i];
       let success = resolve(i);
 
       if (success && order.type == shared.orderTypeEnum.move) {
-        // TODO: change this to make unit retreat
-        // this.remove_unit(order.dest);
-        this.make_unit_retreat(order.dest);
+        to_dislodge.push(order.dest);
+        cannot_dislodge.push(order.province);
 
-        let unit = this.get_unit(order.province);
-        unit.province = order.dest;
-        unit.coast = order.coast;
+        successful_moves.push({
+          unit: this.get_unit(order.province),
+          dest: order.dest,
+          coast: order.coast 
+        });
       }
 
       console.log(`Does ${order.id} succeed? ${success}\n`);
     }
+
+    for (let move of successful_moves) {
+      move.unit.province = move.dest;
+      move.unit.coast = move.coast;
+    }
+
+    to_dislodge = to_dislodge.filter((p) => !cannot_dislodge.includes(p));
+    for (let p of to_dislodge) {
+      this.make_unit_retreat(p);
+    }
+
     console.log("Ended adjudication");
   }
 
