@@ -6,6 +6,17 @@ const util = require("util");
 const path = require("path");
 
 /**
+ * Enum for storing the state of an order within the adjudication process.
+ * @readonly
+ * @enum {number}
+ */
+const resolutionStateEnum = {
+  Unresolved: 0,
+  Guessing: 1,
+  Resolved: 2
+}
+
+/**
  * The config data loaded from ./config.
  */
 const config = {};
@@ -630,7 +641,7 @@ class ServerGameData extends shared.GameData {
           return true;
         case shared.orderTypeEnum["support hold"]:
         case shared.orderTypeEnum["support move"]:
-          for (let i = 0; i < order.length; i++) {
+          for (let i = 0; i < orders.length; i++) {
             let o = orders[i];
             if (o.type == shared.orderTypeEnum.move && o.dest == order.province && !this.same_team(o.province, order.province) && (o.province != order.supporting || resolve(i))) {
               return false;
@@ -776,7 +787,7 @@ class ServerGameData extends shared.GameData {
    * @returns {boolean} Whether the units are on the same time.
    */
   same_team(provinceA, provinceB) {
-    return this.get_unit_owner_player(provinceA) != this.get_unit_owner_player(provinceB);
+    return this.get_unit_owner_player(provinceA) == this.get_unit_owner_player(provinceB);
   }
 
   /**
