@@ -671,7 +671,7 @@ class ServerGameData extends shared.GameData {
            */
           let strength = ord => orders.filter((o, i) => this.order_supports(ord, o) && resolve(i)).length;
 
-          let otherattacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && o.dest == order.dest);
+          let otherattacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && (o.dest == order.dest || (o.dest == order.province && o.province == order.dest)));
           let otherattackstrengths = otherattacks.map(o => strength(o));
 
           let attackstrength = strength(order);
