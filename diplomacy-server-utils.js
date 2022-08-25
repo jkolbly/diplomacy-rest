@@ -742,14 +742,15 @@ class ServerGameData extends shared.GameData {
       console.log(`Does ${order.id} succeed? ${success}\n`);
     }
 
+    to_dislodge = to_dislodge.filter(p => !cannot_dislodge.includes(p));
+    for (let p of to_dislodge) {
+      console.log(`Dislodging at ${p}`)
+      this.make_unit_retreat(p);
+    }
+
     for (let move of successful_moves) {
       move.unit.province = move.dest;
       move.unit.coast = move.coast;
-    }
-
-    to_dislodge = to_dislodge.filter((p) => !cannot_dislodge.includes(p));
-    for (let p of to_dislodge) {
-      this.make_unit_retreat(p);
     }
 
     console.log("Ended adjudication");
