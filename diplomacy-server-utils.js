@@ -703,7 +703,7 @@ class ServerGameData extends shared.GameData {
 
           return true;
         case shared.orderTypeEnum.convoy:
-          for (let i = 0; i < order.length; i++) {
+          for (let i = 0; i < orders.length; i++) {
             let o = orders[i];
             if (o.type == shared.orderTypeEnum.move && o.dest == order.province && !this.same_team(o.province, order.province) && resolve(i)) {
               return false;
