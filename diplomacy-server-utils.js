@@ -744,7 +744,6 @@ class ServerGameData extends shared.GameData {
 
     to_dislodge = to_dislodge.filter(p => !cannot_dislodge.includes(p));
     for (let p of to_dislodge) {
-      console.log(`Dislodging at ${p}`)
       this.make_unit_retreat(p);
     }
 
