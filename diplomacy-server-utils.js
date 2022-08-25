@@ -2,7 +2,6 @@ const shared = require("./diplomacy-shared-utils/utils.js");
 const sql = require("./bankbook-server-utils/sql-utils.js");
 const fssync = require("fs");
 const fs = fssync.promises;
-const util = require("util");
 const path = require("path");
 
 /**
@@ -580,7 +579,7 @@ class ServerGameData extends shared.GameData {
         case resolutionStateEnum.Guessing:
           if (!dep_list.includes(orderIndex)) dep_list.push(orderIndex);
           return resolutions[orderIndex];
-        case resolutionStateEnum.Unresolved:
+        case resolutionStateEnum.Unresolved: {
           let old_dep_size = dep_list.length;
 
           resolutions[orderIndex] = false;
@@ -638,6 +637,7 @@ class ServerGameData extends shared.GameData {
 
           // Start over in case backup rule leaves some orders unresolved.
           return resolve(orderIndex);
+        }
       }
     };
 
@@ -658,7 +658,7 @@ class ServerGameData extends shared.GameData {
             }
           }
           return true;
-        case shared.orderTypeEnum.move:
+        case shared.orderTypeEnum.move: {
           // Convoys fail if any of the fleets can't convoy
           if (order.isConvoy) {
             let anyrouteworks = false;
@@ -704,6 +704,7 @@ class ServerGameData extends shared.GameData {
           }
 
           return true;
+        }
         case shared.orderTypeEnum.convoy:
           for (let i = 0; i < orders.length; i++) {
             let o = orders[i];
@@ -718,7 +719,7 @@ class ServerGameData extends shared.GameData {
     /**
      * @param {number} dep_start_index Index of first dependency in this cycle.
      */
-    let backup_rule = (dep_start_index) => {
+    let backup_rule = (_dep_start_index) => {
 
     }
 

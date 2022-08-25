@@ -164,7 +164,7 @@ const instructionSpecs = [
     }
   ),
   new InstructionSpec("populate", [],
-    async (test, params) => {
+    async (test, _params) => {
       test.gameData.populate();
     }
   ),
@@ -202,8 +202,6 @@ const instructionSpecs = [
       { key: "coast", default: "" }
     ],
     async (test, params) => {
-      let province = test.gameData.get_province(params.province);
-
       let unit = test.gameData.get_unit(params.province);
       if (!unit) throw Error(`Assert failed: no unit at ${params.province}`);
 
@@ -281,12 +279,12 @@ const instructionSpecs = [
     }
   ),
   new InstructionSpec("adjudicate", [],
-    async (test, params) => {
+    async (test, _params) => {
       test.gameData.calculate_orders();
     }
   ),
   new InstructionSpec("todo", [],
-    async (test, params) => {
+    async (_test, _params) => {
       throw Error("Encountered \"todo\" instruction");
     }
   )
@@ -320,7 +318,7 @@ function get_instruction_spec(keyword) {
 function parse_raw_val(val, type) {
   switch (type) {
     case instructionParamTypeEnum.string:
-      return JSON.parse(`"${val.replace(/^\"/g, "").replace(/((?<!\\)|(?<=\\.))(")$/g, "$1")}"`);
+      return JSON.parse(`"${val.replace(/^"/g, "").replace(/((?<!\\)|(?<=\\.))(")$/g, "$1")}"`);
     case instructionParamTypeEnum.number:
       return Number(val);
     case instructionParamTypeEnum.boolean:
@@ -448,7 +446,7 @@ class Test {
    * Run the rest of the instructions.
    */
   async run() {
-    for await (let i of this.generator) { }
+    for await (let _ of this.generator) { /* empty */ }
   }
 
   /**
