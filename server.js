@@ -61,7 +61,7 @@ function generic_game_auth_func(authenticated, denied=default_deny, body_params=
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
-function default_deny(req, res) {
+function default_deny(req, _) {
   console.log(`Unauthorized access from ${req.ip}`);
   throw Error("Unauthorized access.");
 }
@@ -178,7 +178,7 @@ app.get("/tests/run-datc", generic_auth_func(async (username, req, res) => {
   let results = {};
   for (let t of test_paths) {
     let test = await tests.load_test(t);
-    for await (let i of test.generator) {
+    for await (let _ of test.generator) { // estlint
       for (let log of test.lastLogs) {
         if (log.level == "error") {
           results[t] = "fail";
