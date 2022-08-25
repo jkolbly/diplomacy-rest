@@ -776,6 +776,7 @@ class ServerGameData extends shared.GameData {
   all_convoy_routes(orders, start, end) {
     /** @type {string[]} */
     let provinces = orders.filter(o => o.type == shared.orderTypeEnum.convoy && o.start == start && o.end == end).map(o => o.province);
+    provinces.push(end);
 
     /**
      * All routes from `from` to `to` that don't pass through provinces in `ignore`.
@@ -788,11 +789,24 @@ class ServerGameData extends shared.GameData {
 
       let filtered = provinces.filter(p => !ignore.includes(p));
 
-      // Get all adjacencies.
+      if (filtered.length == 0) return [];
+
+      // Get all adjacencies
+      let adj = this.get_adjacencies_ignore_coasts(from);
+
       // Filter them to only include unignored valid convoys.
-      // For each, find the routes from the adjacency to end. Prepend the adjacency to each route.
-      // Flatten the list of lists of routes to return a list of routes.
-      return this.get_adjacencies_ignore_coasts(from).filter(p => filtered.includes(p)).map(p => routes(p, end, ignore.concat(p)).map(r => [from].concat(r))).flat();
+      let filtered_adj = adj.filter(p => filtered.includes(p));
+
+      // For each, find the routes from the adjacency to end.
+      let adj_routes = filtered_adj.map(p => routes(p, ignore.concat(p)));
+
+      // Prepend the adjacency to each route.
+      let full_routes = adj_routes.map(l => l.map(r => [from].concat(...r)));
+
+      // Flatten the list of lists of routes to get a list of routes.
+      let flattened = full_routes.flat();
+
+      return flattened;
     };
 
     /** @type {number[]} */
