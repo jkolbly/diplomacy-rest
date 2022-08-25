@@ -284,6 +284,11 @@ const instructionSpecs = [
     async (test, params) => {
       test.gameData.calculate_orders();
     }
+  ),
+  new InstructionSpec("todo", [],
+    async (test, params) => {
+      throw Error("Encountered \"todo\" instruction");
+    }
   )
 ];
 
