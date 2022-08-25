@@ -807,14 +807,11 @@ class ServerGameData extends shared.GameData {
       // Filter them to only include unignored valid convoys.
       let filtered_adj = adj.filter(p => filtered.includes(p));
 
-      // For each, find the routes from the adjacency to end.
-      let adj_routes = filtered_adj.map(p => routes(p, ignore.concat(p)));
-
-      // Prepend the adjacency to each route.
-      let full_routes = adj_routes.map(l => l.map(r => [from].concat(...r)));
+      // For each, find the routes from the adjacency to end and prepend the adjacency to each route unless the adjacency is the destination of the route.
+      let adj_routes = filtered_adj.map(p => routes(p, ignore.concat(p)).map(r => p == end ? r : [p].concat(...r)));
 
       // Flatten the list of lists of routes to get a list of routes.
-      let flattened = full_routes.flat();
+      let flattened = adj_routes.flat();
 
       return flattened;
     };
