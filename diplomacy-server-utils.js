@@ -68,6 +68,16 @@ async function get_test_list() {
 }
 
 /**
+ * Get a list of DATC test files relative to ./tests
+ * @returns {Promise<string[]>}
+ */
+ async function get_datc_list() {
+  let list = [];
+  for await (let file of get_files_recursive("tests/DATC")) list.push(path.relative("tests", file));
+  return list;
+}
+
+/**
  * Get an object with basic info about a map.
  * @param {path} rel Relative to ./maps
  * @returns {Promise<{filename:string,name:string,players:number[]}>}
@@ -877,6 +887,7 @@ exports.new_game = new_game;
 exports.gamedata_from_id = gamedata_from_id;
 exports.get_map_list = get_map_list;
 exports.get_test_list = get_test_list;
+exports.get_datc_list = get_datc_list;
 exports.get_map_overview = get_map_overview;
 exports.get_map_info = get_map_info;
 exports.config = config;

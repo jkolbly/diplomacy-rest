@@ -172,6 +172,25 @@ app.get("/tests/run/:test(*)", generic_auth_func(async (username, req, res) => {
   });
 }));
 
+app.get("/tests/run-datc", generic_auth_func(async (username, req, res) => {
+  let test_paths = await utils.get_datc_list();
+  console.log(tests);
+  let results = {};
+  for (let t of test_paths) {
+    let test = await tests.load_test(t);
+    for await (let i of test.generator) {
+      for (let log of test.lastLogs) {
+        if (log.level == "error") {
+          results[t] = "fail";
+          break;
+        }
+      }
+    }
+    if (!results[t]) results[t] = "pass";
+  }
+  res.send(results);
+}));
+
 app.get("/tests/list", generic_auth_func(async (username, req, res) => {
   res.send(await utils.get_test_list());
 }));
