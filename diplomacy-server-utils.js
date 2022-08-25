@@ -661,19 +661,21 @@ class ServerGameData extends shared.GameData {
         case shared.orderTypeEnum.move:
           // Convoys fail if any of the fleets can't convoy
           if (order.isConvoy) {
-            let fail = true;
+            let anyrouteworks = false;
             for (let route of this.all_convoy_routes(orders, order.province, order.dest)) {
               let routeworks = true;
               for (let i of route) {
                 if (!resolve(i)) {
-                  fail = false;
                   routeworks = false;
                   break;
                 }
               }
-              if (routeworks) break;
+              if (routeworks) {
+                anyrouteworks = true;
+                break;
+              }
             }
-            if (fail) return false;
+            if (!anyrouteworks) return false;
           }
 
           /**
