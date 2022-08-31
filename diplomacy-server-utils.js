@@ -778,7 +778,7 @@ class ServerGameData extends shared.GameData {
    */
   order_supports(order, support) {
     return (support.type == shared.orderTypeEnum["support hold"] && order.type != shared.orderTypeEnum.move && order.province == support.supporting)
-      || (support.type == shared.orderTypeEnum["support move"] && order.type == shared.orderTypeEnum.move && order.dest == support.supporting && order.province == support.from);
+      || (support.type == shared.orderTypeEnum["support move"] && order.type == shared.orderTypeEnum.move && order.dest == support.supporting && order.province == support.from && !this.same_team(order.dest, support.province));
   }
 
   /**
