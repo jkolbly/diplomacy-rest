@@ -659,6 +659,8 @@ class ServerGameData extends shared.GameData {
           }
           return true;
         case shared.orderTypeEnum.move: {
+          if (this.same_team(order.province, order.dest)) return false;
+
           // Convoys fail if any of the fleets can't convoy
           if (order.isConvoy) {
             let anyrouteworks = false;
