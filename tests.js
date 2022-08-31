@@ -218,6 +218,23 @@ const instructionSpecs = [
       if (params.coast && unit.coast != params.coast) throw Error(`Assert failed: no unit at ${params.province} on coast ${params.coast}`);
     }
   ),
+  new InstructionSpec("assert-not-unit", [
+      { key: "province", required: true },
+      { key: "type", default: "" },
+      { key: "country", default: "" },
+      { key: "coast", default: "" }
+    ],
+    async (test, params) => {
+      let unit = test.gameData.get_unit(params.province);
+
+      if (!unit) return;
+      if (params.type && unit.type != type_from_english(params.type)) return;
+      if (params.country && params.country != test.gameData.get_unit_owner_id(params.province)) return;
+      if (params.coast && params.coast != unit.coast) return;
+
+      throw Error(`Assert failed: found ${params.type ? params.type : "unit"} ${params.country ? `belonging to ${params.country} ` : ""}at ${params.province}${params.coast ? " " + params.coast : ""}`);
+    }
+  ),
   new InstructionSpec("order-hold", [
       { key: "country", required: true },
       { key: "unit", required: true },
