@@ -653,6 +653,7 @@ class ServerGameData extends shared.GameData {
         case shared.orderTypeEnum["support move"]:
           for (let i = 0; i < orders.length; i++) {
             let o = orders[i];
+            // Cut support if attacked by a foreign power from any province other than the one being supported
             if (o.type == shared.orderTypeEnum.move && o.dest == order.province && !this.same_team(o.province, order.province) && (o.province != order.supporting || resolve(i))) {
               return false;
             }
