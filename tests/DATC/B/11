@@ -1,0 +1,9 @@
+start
+
+spawn-unit country:FRA province:spa type:fleet coast:NC
+
+order-move country:FRA unit:spa dest:lyo shouldfail:true
+
+# France has a fleet on the north coast of Spain
+# France:
+# F Spain(sc) - Gulf of Lyon

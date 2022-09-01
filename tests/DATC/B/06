@@ -1,0 +1,28 @@
+start
+
+spawn-unit country:GBR province:iri type:fleet
+spawn-unit country:GBR province:nao type:fleet
+spawn-unit country:FRA province:spa type:fleet coast:NC
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:ITA province:lyo
+
+order-support country:GBR unit:iri supporting:mao from:nao
+order-move country:GBR unit:nao dest:mao
+order-support country:FRA unit:spa supporting:mao
+order-hold country:FRA unit:mao
+order-move country:ITA unit:lyo dest:spa coast:SC
+
+adjudicate
+
+assert-unit country:GBR province:mao
+
+# England: 
+# F Irish Sea Supports F North Atlantic Ocean - Mid-Atlantic Ocean
+# F North Atlantic Ocean - Mid-Atlantic Ocean
+
+# France: 
+# F Spain(nc) Supports F Mid-Atlantic Ocean
+# F Mid-Atlantic Ocean Hold
+
+# Italy: 
+# F Gulf of Lyon - Spain(sc)

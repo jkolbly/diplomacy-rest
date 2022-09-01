@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:FRA province:por type:fleet
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:ITA province:lyo type:fleet
+spawn-unit country:ITA province:wes type:fleet
+
+order-support country:FRA unit:por supporting:spa from:mao
+order-move country:FRA unit:mao dest:spa coast:NC
+order-support country:ITA unit:lyo supporting:spa from:wes
+order-move country:ITA unit:wes dest:spa coast:SC
+
+adjudicate
+
+assert-unit country:FRA province:mao
+assert-unit country:ITA province:wes
+
+# France: 
+# F Portugal Supports F Mid-Atlantic Ocean - Spain
+# F Mid-Atlantic Ocean - Spain(nc)
+
+# Italy: 
+# F Gulf of Lyon Supports F Western Mediterranean - Spain(sc)
+# F Western Mediterranean - Spain(sc)

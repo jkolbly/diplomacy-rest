@@ -1,0 +1,17 @@
+start
+
+spawn-unit country:FRA province:mar type:fleet
+spawn-unit country:FRA province:spa type:fleet coast:NC
+spawn-unit country:ITA province:lyo type:fleet
+
+order-move country:FRA unit:mar dest:lyo
+order-support country:FRA unit:spa supporting:lyo from:mar shouldfail:true
+
+order-hold country:ITA unit:lyo
+
+# France: 
+# F Marseilles - Gulf of Lyon
+# F Spain(nc) Supports F Marseilles - Gulf of Lyon
+
+# Italy: 
+# F Gulf of Lyon Hold

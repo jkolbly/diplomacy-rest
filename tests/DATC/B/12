@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:FRA province:gas
+
+order-move country:FRA unit:gas dest:spa coast:NC shouldfail:true
+
+# France:
+# A Gascony - Spain(nc)

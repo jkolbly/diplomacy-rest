@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:FRA province:por type:fleet
+spawn-unit country:FRA province:gas type:fleet
+spawn-unit country:ITA province:lyo type:fleet
+spawn-unit country:ITA province:wes type:fleet
+
+order-support country:FRA unit:por supporting:spa from:gas
+order-move country:FRA unit:gas dest:spa coast:NC
+order-support country:ITA unit:lyo supporting:spa from:wes
+order-move country:ITA unit:wes dest:spa coast:SC
+
+adjudicate
+
+assert-unit country:FRA province:gas
+assert-unit country:ITA province:wes
+
+# France: 
+# F Portugal Supports F Gascony - Spain
+# F Gascony - Spain(nc)
+
+# Italy: 
+# F Gulf of Lyon Supports F Western Mediterranean - Spain(sc)
+# F Western Mediterranean - Spain(sc)

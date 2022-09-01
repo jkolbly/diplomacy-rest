@@ -1,0 +1,22 @@
+start
+
+spawn-unit country:FRA province:gas type:fleet
+spawn-unit country:FRA province:mar type:fleet
+spawn-unit country:ITA province:wes type:fleet
+
+order-move country:FRA unit:gas dest:spa coast:NC
+order-support country:FRA unit:mar supporting:spa from:gas
+order-move country:ITA unit:wes dest:spa coast:SC
+
+adjudicate
+
+assert-unit country:FRA province:spa
+assert-unit country:FRA province:mar
+assert-unit country:ITA province:wes
+
+# France: 
+# F Gascony - Spain(nc)
+# F Marseilles Supports F Gascony - Spain(nc)
+
+# Italy: 
+# F Western Mediterranean - Spain(sc)

@@ -1,0 +1,18 @@
+start
+
+spawn-unit country:TUR province:bul type:fleet coast:SC
+spawn-unit country:FRA province:con type:fleet
+
+order-move country:TUR unit:bul dest:con
+order-move country:FRA unit:con dest:bul coast:NC
+
+adjudicate
+
+assert-unit country:TUR province:bul
+assert-unit country:FRA province:con
+
+# Turkey: 
+# F Bulgaria(sc) - Constantinople
+
+# France:
+# F Constantinople - Bulgaria(ec)

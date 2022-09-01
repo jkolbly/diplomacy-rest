@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:FRA province:gas type:fleet
+
+order-move country:FRA unit:gas dest:spa shouldfail:true
+
+# France: 
+# F Gascony - Spain
