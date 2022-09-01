@@ -660,8 +660,6 @@ class ServerGameData extends shared.GameData {
           }
           return true;
         case shared.orderTypeEnum.move: {
-          if (this.same_team(order.province, order.dest)) return false;
-
           // Convoys fail if any of the fleets can't convoy
           if (order.isConvoy) {
             let anyrouteworks = false;
@@ -684,26 +682,52 @@ class ServerGameData extends shared.GameData {
           /**
            * @param {shared.Order} ord
            */
-          let strength = ord => orders.filter((o, i) => this.order_supports(ord, o) && resolve(i)).length;
+          let strength = ord => orders.filter((o, i) => this.move_supports(ord, o) && resolve(i)).length;
+          let strength_ignore_teams = ord => orders.filter((o, i) => this.move_supports_ignore_teams(ord, o) && resolve(i)).length;
+          let def_strength = p => orders.filter((o, i) => this.hold_supports(p, o) && resolve(i)).length;
 
-          let otherattacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && (o.dest == order.dest || (!o.isConvoy && o.dest == order.province && o.province == order.dest)));
-          let otherattackstrengths = otherattacks.map(o => strength(o));
+          // Hold strength is 0 if the destination is empty or contains a unit that successfully moves.
+          // Hold strength is 1 if the destination contains a unit that is ordered to move but fails.
+          // Otherwise, hold strength is 1 plus the number of units that support the unit to hold.
+          let holding_unit = this.get_unit(order.dest);
+          let holding_unit_move_order = orders.findIndex(o => o.type == shared.orderTypeEnum.move && o.province == order.dest);
+          let hold_strength = !holding_unit || (holding_unit_move_order != -1 && resolve(holding_unit_move_order))
+            ? 0 // Either no holding unit or the holding unit successfully moves
+            : (holding_unit_move_order != -1
+              ? 1 // Holding unit unsuccessfully moves
+              : 1 + def_strength(order.dest)); // Hold strength is 1 plus number of supports to hold
 
-          let attackstrength = strength(order);
-          console.log(`Movement strength: ${attackstrength}`);
-          console.log(`Other strengths: ${otherattackstrengths}`);
+          // Attack strength is 1 plus the number of movement supports if the destination is empty or there's no head-to-head battle and the destination unit successfully moves
+          // Otherwise, attack strength is 0 if the unit at the destination is of the same nationality
+          // Otherwise, attack strength is 1 plus the number of successfully supporting units that aren't the same nationality as the destination unit
+          let is_hth_battle = holding_unit_move_order != -1 && !order.isConvoy && !orders[holding_unit_move_order].isConvoy && orders[holding_unit_move_order].dest == order.province;
+          let attack_strength = !holding_unit || (is_hth_battle && resolve(holding_unit_move_order))
+            ? 1 + strength_ignore_teams(order) // Destination is empty or there's no head-to-head battle and the destination unit moves
+            : (this.same_team(order.province, order.dest)
+              ? 0 // Attacking and defending units are on the same team
+              : 1 + strength(order)); // Attack strength is 1 plus number of supports
 
-          for (let o of orders) {
-            console.log(`${o.id} supports move? ${this.order_supports(order, o)}`);
+          let other_attacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && (o.dest == order.dest || (!o.isConvoy && o.dest == order.province && o.province == order.dest)));
+
+          console.log(`Attack strength: ${attack_strength}`);
+          console.log(`Hold strength: ${hold_strength}`);
+          console.log(`Is head-to-head battle? ${is_hth_battle}`);
+
+          // If there's a head-to-head battle, calculate defend strength
+          if (is_hth_battle) {
+            // Defend strength is 1 plus the number of support orders
+            let defend_strength = 1 + strength(orders[holding_unit_move_order]);
+            if (defend_strength >= attack_strength) return false;
+          } else if (hold_strength >= attack_strength) {
+            return false;
           }
 
-          let defender = orders.find((o, i) => o.province == order.dest && (o.type != shared.orderTypeEnum.move || !resolve(i)));
-          if (defender && strength(defender) >= attackstrength) return false;
-
-          for (let s of otherattackstrengths) {
-            if (s >= attackstrength) {
-              return false;
-            }
+          for (let attack of other_attacks) {
+            // Prevent strength is 0 if part of a head-to-head battle with a unit that successfully moves
+            // Otherwise, prevent strength is 1 plus the number of successfully supporting units
+            let successful_hth_order = orders.find((o, i) => o.type == shared.orderTypeEnum.move && o.province == attack.dest && o.dest == attack.province && resolve(i));
+            let prevent_strength = successful_hth_order ? 0 : 1 + strength(attack);
+            if (prevent_strength >= attack_strength) return false;
           }
 
           return true;
@@ -780,6 +804,36 @@ class ServerGameData extends shared.GameData {
   order_supports(order, support) {
     return (support.type == shared.orderTypeEnum["support hold"] && order.type != shared.orderTypeEnum.move && order.province == support.supporting)
       || (support.type == shared.orderTypeEnum["support move"] && order.type == shared.orderTypeEnum.move && order.dest == support.supporting && order.province == support.from && !this.same_team(order.dest, support.province));
+  }
+
+  /**
+   * Return whether `support` is an order supporting a move order `move`.
+   * @param {shared.Order} move Move order to be supported. This is assumed to be a move order.
+   * @param {shared.Order} support Supporting order.
+   * @returns {boolean} Whether `support` is a valid support order for `move`.
+   */
+  move_supports(move, support) {
+    return this.move_supports_ignore_teams(move, support) && !this.same_team(move.dest, support.province);
+  }
+
+  /**
+   * Return whether `support` is an order supporting a move order `move` without considering the teams of both units.
+   * @param {shared.Order} move Move order to be supported. This is assumed to be a move order.
+   * @param {shared.Order} support Supporting order.
+   * @returns {boolean} Whether `support` is a valid support order for `move`.
+   */
+  move_supports_ignore_teams(move, support) {
+    return support.type == shared.orderTypeEnum["support move"] && move.dest == support.supporting && move.province == support.from;
+  }
+
+  /**
+   * Return whether `support` is an order supporting the unit in `province` to hold.
+   * @param {string} province Province of unit to be supported.
+   * @param {shared.Order} support Supporting order.
+   * @returns {boolean} Whether `support` is a valid hold support for the unit at `province`.
+   */
+  hold_supports(province, support) {
+    return support.type == shared.orderTypeEnum["support hold"] && province == support.supporting;
   }
 
   /**
