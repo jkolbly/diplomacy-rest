@@ -1,0 +1,18 @@
+start
+
+spawn-unit country:AUT province:vie
+spawn-unit country:ITA province:ven
+
+order-move country:AUT unit:vie dest:tyr
+order-move country:ITA unit:ven dest:tyr
+
+adjudicate
+
+assert-unit country:AUT province:vie
+assert-unit country:ITA province:ven
+
+# Austria: 
+# A Vienna - Tyrolia
+
+# Italy: 
+# A Venice - Tyrolia

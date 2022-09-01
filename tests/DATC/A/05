@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:GBR province:nth
+spawn-unit country:GBR province:yor
+spawn-unit country:GBR province:lvp
+
+spawn-unit country:DEU province:lon type:fleet
+spawn-unit country:DEU province:wal
+
+order-convoy country:GBR unit:nth from:yor to:yor shouldfail:true
+order-move country:GBR unit:yor dest:yor convoy:true shouldfail:true
+order-support country:GBR unit:lvp supporting:yor from:yor shouldfail:true
+
+order-move country:DEU unit:lon dest:yor
+order-support country:DEU unit:wal supporting:yor from:lon
+
+# England: 
+# F North Sea Convoys A Yorkshire - Yorkshire
+# A Yorkshire - Yorkshire
+# A Liverpool Supports A Yorkshire - Yorkshire
+
+# Germany:
+# F London - Yorkshire
+# A Wales Supports F London - Yorkshire

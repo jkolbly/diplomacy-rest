@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:GBR province:nth
+
+order-move country:GBR unit:nth dest:pic shouldfail:true
+
+# England: 
+# F North Sea - Picardy

@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:GBR province:lvp
+
+order-move country:GBR unit:lvp dest:iri shouldfail:true
+
+# England: 
+# A Liverpool - Irish Sea

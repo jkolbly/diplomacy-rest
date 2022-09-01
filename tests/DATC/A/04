@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:DEU province:kie
+
+order-move country:DEU unit:kie dest:kie shouldfail:true
+
+# Germany: 
+# F Kiel - Kiel

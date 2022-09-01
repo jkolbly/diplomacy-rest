@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:DEU province:kie coast:C
+
+order-move country:DEU unit:kie dest:mun shouldfail:true
+
+# Germany: 
+# F Kiel - Munich

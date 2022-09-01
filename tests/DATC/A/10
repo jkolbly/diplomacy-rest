@@ -1,0 +1,18 @@
+start
+
+spawn-unit country:AUT province:ven
+
+spawn-unit country:ITA province:rom type:fleet
+spawn-unit country:ITA province:apu
+
+order-hold country:AUT unit:ven
+
+order-support country:ITA unit:rom supporting:ven from:apu shouldfail:true
+order-move country:ITA unit:apu dest:ven
+
+# Austria: 
+# A Venice Hold
+
+# Italy: 
+# F Rome Supports A Apulia - Venice
+# A Apulia - Venice

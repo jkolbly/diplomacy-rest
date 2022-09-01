@@ -1,0 +1,18 @@
+start
+
+spawn-unit country:ITA province:ven
+spawn-unit country:ITA province:tyr
+
+spawn-unit country:AUT province:tri
+
+order-move country:ITA unit:ven dest:tri
+order-support country:ITA unit:tyr supporting:tri from:ven
+
+order-support country:AUT unit:tri supporting:tri shouldfail:true
+
+# Italy: 
+# A Venice - Trieste
+# A Tyrolia Supports A Venice - Trieste
+
+# Austria: 
+# F Trieste Supports F Trieste

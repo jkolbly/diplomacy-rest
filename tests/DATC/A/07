@@ -1,0 +1,11 @@
+start
+
+spawn-unit country:GBR province:lon type:fleet
+spawn-unit country:GBR province:nth
+
+order-move country:GBR unit:lon dest:bel shouldfail:true
+order-convoy country:GBR unit:nth from:lon to:bel shouldfail:true
+
+# England: 
+# F London - Belgium
+# F North Sea Convoys A London - Belgium

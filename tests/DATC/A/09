@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:ITA province:rom type:fleet
+
+order-move country:ITA unit:rom dest:ven shouldfail:true
+
+# Italy: 
+# F Rome - Venice

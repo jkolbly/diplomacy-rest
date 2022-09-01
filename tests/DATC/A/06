@@ -1,0 +1,8 @@
+start
+
+spawn-unit country:GBR province:lon type:fleet
+
+order-move country:DEU unit:lon dest:nth shouldfail:true
+
+# Germany: 
+# F London - North Sea
