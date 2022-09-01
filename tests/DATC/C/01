@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:TUR province:ank type:fleet
+spawn-unit country:FRA province:con
+spawn-unit country:GBR province:smy
+
+order-move country:TUR unit:ank dest:con
+order-move country:FRA unit:con dest:smy
+order-move country:GBR unit:smy dest:ank
+
+adjudicate
+
+assert-unit country:TUR province:con
+assert-unit country:FRA province:smy
+assert-unit country:GBR province:ank
+
+# Turkey: 
+# F Ankara - Constantinople
+
+# France:
+# A Constantinople - Smyrna
+
+# England:
+# A Smyrna - Ankara

@@ -1,0 +1,28 @@
+start
+
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:lon
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:FRA province:bel
+spawn-unit country:FRA province:bur
+
+order-convoy country:GBR unit:nth from:lon to:bel
+order-move country:GBR unit:lon dest:bel convoy:true
+order-convoy country:FRA unit:eng from:bel to:lon
+order-move country:FRA unit:bel dest:lon convoy:true
+order-move country:FRA unit:bur dest:bel
+
+adjudicate
+
+assert-unit country:GBR province:lon
+assert-unit country:FRA province:bel
+assert-unit country:FRA province:bur
+
+# England: 
+# F North Sea Convoys A London - Belgium
+# A London - Belgium
+
+# France: 
+# F English Channel Convoys A Belgium - London
+# A Belgium - London
+# A Burgundy - Belgium

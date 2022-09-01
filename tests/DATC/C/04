@@ -1,0 +1,39 @@
+start
+
+spawn-unit country:AUT province:tri
+spawn-unit country:GBR province:ser
+spawn-unit country:TUR province:bul
+spawn-unit country:TUR province:aeg type:fleet
+spawn-unit country:TUR province:ion type:fleet
+spawn-unit country:TUR province:adr type:fleet
+spawn-unit country:ITA province:nap type:fleet
+
+order-move country:AUT unit:tri dest:ser
+order-move country:GBR unit:ser dest:bul
+order-move country:TUR unit:bul dest:tri convoy:true
+order-convoy country:TUR unit:aeg from:bul to:tri
+order-convoy country:TUR unit:ion from:bul to:tri
+order-convoy country:TUR unit:adr from:bul to:tri
+order-move country:ITA unit:nap dest:ion
+
+adjudicate
+
+assert-unit country:AUT province:ser
+assert-unit country:GBR province:bul
+assert-unit country:TUR province:tri
+assert-unit country:ITA province:nap
+
+# Austria: 
+# A Trieste - Serbia
+
+# England:
+# A Serbia - Bulgaria
+
+# Turkey: 
+# A Bulgaria - Trieste
+# F Aegean Sea Convoys A Bulgaria - Trieste
+# F Ionian Sea Convoys A Bulgaria - Trieste
+# F Adriatic Sea Convoys A Bulgaria - Trieste
+
+# Italy: 
+# F Naples - Ionian Sea
