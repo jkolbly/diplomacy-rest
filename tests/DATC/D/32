@@ -1,0 +1,26 @@
+start
+
+spawn-unit country:GBR province:edi type:fleet
+spawn-unit country:GBR province:lvp
+spawn-unit country:FRA province:lon type:fleet
+spawn-unit country:DEU province:yor
+
+order-support country:GBR unit:edi supporting:yor from:lvp
+order-move country:GBR unit:lvp dest:yor
+order-support country:FRA unit:lon supporting:yor
+order-move country:DEU unit:yor dest:hol convoy:true shouldfail:true  
+
+adjudicate
+
+assert-unit country:GBR province:lvp
+assert-unit country:DEU province:yor
+
+# England: 
+# F Edinburgh Supports A Liverpool - Yorkshire
+# A Liverpool - Yorkshire
+
+# France: 
+# F London Supports A Yorkshire
+
+# Germany: 
+# A Yorkshire - Holland

@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:ITA province:ven
+spawn-unit country:ITA province:tyr
+spawn-unit country:AUT province:alb
+spawn-unit country:AUT province:tri
+
+order-move country:ITA unit:ven dest:tri
+order-support country:ITA unit:tyr supporting:tri from:ven
+order-support country:AUT unit:alb supporting:ser from:tri
+order-hold country:AUT unit:tri
+
+adjudicate
+
+assert-unit country:ITA province:tri
+assert-not-unit province:ser
+
+# Italy: 
+# A Venice - Trieste
+# A Tyrolia Supports A Venice - Trieste
+
+# Austria: 
+# A Albania Supports A Trieste - Serbia
+# A Trieste Hold

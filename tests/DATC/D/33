@@ -1,0 +1,27 @@
+start
+
+spawn-unit country:AUT province:ser
+spawn-unit country:AUT province:vie
+spawn-unit country:RUS province:gal
+spawn-unit country:TUR province:bul
+
+order-move country:AUT unit:ser dest:bud
+order-move country:AUT unit:vie dest:bud
+order-support country:RUS unit:gal supporting:bud from:ser
+order-move country:TUR unit:bul dest:ser
+
+adjudicate
+
+assert-unit country:AUT province:bud
+assert-unit country:AUT province:vie
+assert-unit country:TUR province:ser
+
+# Austria: 
+# A Serbia - Budapest
+# A Vienna - Budapest
+
+# Russia: 
+# A Galicia Supports A Serbia - Budapest
+
+# Turkey: 
+# A Bulgaria - Serbia

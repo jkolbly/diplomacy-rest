@@ -1,0 +1,29 @@
+start
+
+spawn-unit country:FRA province:mar
+spawn-unit country:FRA province:spa type:fleet coast:SC
+spawn-unit country:ITA province:lyo type:fleet
+spawn-unit country:TUR province:tys type:fleet
+spawn-unit country:TUR province:wes type:fleet
+
+order-move country:FRA unit:mar dest:lyo shouldfail:true
+order-support country:FRA unit:spa supporting:lyo from:mar shouldfail:true
+order-hold country:ITA unit:lyo
+order-support country:TUR unit:tys supporting:lyo from:wes
+order-move country:TUR unit:wes dest:lyo
+
+adjudicate
+
+assert-unit country:FRA province:mar
+assert-unit country:TUR province:lyo
+
+# France: 
+# A Marseilles - Gulf of Lyon
+# F Spain(sc) Supports A Marseilles - Gulf of Lyon
+
+# Italy: 
+# F Gulf of Lyon Hold
+
+# Turkey: 
+# F Tyrrhenian Sea Supports F Western Mediterranean - Gulf of Lyon
+# F Western Mediterranean - Gulf of Lyon

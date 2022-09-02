@@ -1,0 +1,23 @@
+start
+
+spawn-unit country:GBR province:lon type:fleet
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:yor
+spawn-unit country:FRA province:eng type:fleet
+
+order-support country:GBR unit:lon supporting:eng from:nth
+order-move country:GBR unit:nth dest:eng
+order-move country:GBR unit:yor dest:lon
+order-hold country:FRA unit:eng
+
+adjudicate
+
+assert-unit country:GBR province:eng
+
+# England: 
+# F London Supports F North Sea - English Channel
+# F North Sea - English Channel
+# A Yorkshire - London
+
+# France: 
+# F English Channel Hold

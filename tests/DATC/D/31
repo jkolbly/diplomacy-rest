@@ -1,0 +1,13 @@
+start
+
+spawn-unit country:AUT province:rum
+spawn-unit country:TUR province:bla type:fleet
+
+order-move country:AUT unit:rum dest:arm convoy:true
+order-support country:TUR unit:bla supporting:arm from:rum shouldfail:true
+
+# Austria: 
+# A Rumania - Armenia
+
+# Turkey: 
+# F Black Sea Supports A Rumania - Armenia

@@ -1,0 +1,27 @@
+start
+
+spawn-unit country:DEU province:bal type:fleet
+spawn-unit country:DEU province:pru type:fleet
+spawn-unit country:RUS province:lvn type:fleet
+spawn-unit country:RUS province:bot type:fleet
+spawn-unit country:RUS province:fin
+
+order-move country:DEU unit:bal dest:swe
+order-support country:DEU unit:pru supporting:bal
+order-move country:RUS unit:lvn dest:bal
+order-support country:RUS unit:bot supporting:bal from:lvn
+order-move country:RUS unit:fin dest:swe
+
+adjudicate
+
+assert-unit country:RUS province:fin
+assert-unit country:RUS province:bal
+
+# Germany: 
+# F Baltic Sea - Sweden
+# F Prussia Supports F Baltic Sea
+
+# Russia: 
+# F Livonia - Baltic Sea
+# F Gulf of Bothnia Supports F Livonia - Baltic Sea
+# A Finland - Sweden

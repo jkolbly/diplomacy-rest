@@ -1,0 +1,31 @@
+start
+
+spawn-unit country:DEU province:ber
+spawn-unit country:DEU province:sil
+spawn-unit country:DEU province:bal type:fleet
+spawn-unit country:ITA province:pru
+spawn-unit country:RUS province:war
+spawn-unit country:RUS province:lvn
+
+order-move country:DEU unit:ber dest:pru
+order-support country:DEU unit:sil supporting:pru from:ber
+order-support country:DEU unit:bal supporting:pru from:ber
+order-support country:ITA unit:pru supporting:pru from:lvn shouldfail:true
+order-support country:RUS unit:war supporting:pru from:lvn
+order-move country:RUS unit:lvn dest:pru
+
+adjudicate
+
+assert-unit country:DEU province:pru
+
+# Germany:
+# A Berlin - Prussia
+# A Silesia Supports A Berlin - Prussia
+# F Baltic Sea Supports A Berlin - Prussia
+
+# Italy:
+# A Prussia Supports Livonia - Prussia
+
+# Russia:
+# A Warsaw Supports A Livonia - Prussia
+# A Livonia - Prussia

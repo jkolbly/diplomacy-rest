@@ -1,0 +1,26 @@
+start
+
+spawn-unit country:ITA province:aeg type:fleet
+spawn-unit country:RUS province:con type:fleet
+spawn-unit country:TUR province:bla type:fleet
+spawn-unit country:TUR province:bul
+
+order-support country:ITA unit:aeg supporting:con
+order-move country:RUS unit:con dest:bul shouldfail:true
+order-move country:TUR unit:bla dest:con
+order-support country:TUR unit:bul supporting:con from:bla
+
+adjudicate
+
+assert-unit country:RUS province:con
+assert-unit country:TUR province:bla
+
+# Italy: 
+# F Aegean Sea Supports F Constantinople
+
+# Russia: 
+# F Constantinople - Bulgaria
+
+# Turkey: 
+# F Black Sea - Constantinople
+# A Bulgaria Supports F Black Sea - Constantinople

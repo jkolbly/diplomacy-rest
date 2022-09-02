@@ -1,0 +1,30 @@
+start
+
+spawn-unit country:RUS province:con type:fleet
+spawn-unit country:RUS province:bla type:fleet
+spawn-unit country:RUS province:bul
+spawn-unit country:TUR province:ank type:fleet
+spawn-unit country:TUR province:smy
+spawn-unit country:TUR province:arm
+
+order-support country:RUS unit:con supporting:ank from:bla
+order-move country:RUS unit:bla dest:ank
+order-support country:RUS unit:bul supporting:con
+order-move country:TUR unit:ank dest:con
+order-support country:TUR unit:smy supporting:con from:ank
+order-move country:TUR unit:arm dest:ank
+
+adjudicate
+
+assert-unit country:RUS province:ank
+assert-unit country:TUR province:arm
+
+# Russia: 
+# F Constantinople Supports F Black Sea - Ankara
+# F Black Sea - Ankara
+# A Bulgaria Supports F Constantinople
+
+# Turkey: 
+# F Ankara - Constantinople
+# A Smyrna Supports F Ankara - Constantinople
+# A Armenia - Ankara

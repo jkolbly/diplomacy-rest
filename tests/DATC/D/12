@@ -1,0 +1,21 @@
+start
+
+spawn-unit country:AUT province:tri type:fleet
+spawn-unit country:AUT province:vie
+spawn-unit country:ITA province:ven
+
+order-hold country:AUT unit:tri
+order-support country:AUT unit:vie supporting:tri from:ven
+order-move country:ITA unit:ven dest:tri
+
+adjudicate
+
+assert-unit country:AUT province:tri
+assert-unit country:ITA province:ven
+
+# Austria: 
+# F Trieste Hold
+# A Vienna Supports A Venice - Trieste
+
+# Italy: 
+# A Venice - Trieste

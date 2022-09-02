@@ -1,0 +1,23 @@
+start
+
+spawn-unit country:GBR province:lon
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:FRA province:bel
+
+order-hold country:GBR unit:lon
+order-convoy country:GBR unit:nth from:bel to:lon
+order-support country:FRA unit:eng supporting:lon from:bel
+order-move country:FRA unit:bel dest:lon convoy:true
+
+adjudicate
+
+assert-unit country:FRA province:lon
+
+# England: 
+# A London Hold
+# F North Sea Convoys A Belgium - London
+
+# France: 
+# F English Channel Supports A Belgium - London
+# A Belgium - London

@@ -1,0 +1,25 @@
+start
+
+spawn-unit country:AUT province:tri type:fleet
+spawn-unit country:AUT province:vie
+spawn-unit country:ITA province:ven
+spawn-unit country:ITA province:apu type:fleet
+
+order-move country:AUT unit:tri dest:adr
+order-support country:AUT unit:vie supporting:tri from:ven
+order-move country:ITA unit:ven dest:tri
+order-move country:ITA unit:apu dest:adr
+
+adjudicate
+
+assert-unit country:AUT province:tri
+assert-unit country:ITA province:ven
+assert-unit country:ITA province:apu
+
+# Austria: 
+# F Trieste - Adriatic Sea
+# A Vienna Supports A Venice - Trieste
+
+# Italy: 
+# A Venice - Trieste
+# F Apulia - Adriatic Sea

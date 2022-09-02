@@ -1,0 +1,29 @@
+start
+
+spawn-unit country:GBR province:swe type:fleet
+spawn-unit country:GBR province:den type:fleet
+spawn-unit country:DEU province:ber
+spawn-unit country:RUS province:bal type:fleet
+spawn-unit country:RUS province:pru type:fleet
+
+order-move country:GBR unit:swe dest:bal
+order-support country:GBR unit:den supporting:bal from:swe
+order-hold country:DEU unit:ber
+order-convoy country:RUS unit:bal from:ber to:lvn
+order-support country:RUS unit:pru supporting:bal
+
+adjudicate
+
+assert-unit country:GBR province:swe
+assert-unit country:RUS province:bal
+
+# England: 
+# F Sweden - Baltic Sea
+# F Denmark Supports F Sweden - Baltic Sea
+
+# Germany: 
+# A Berlin Hold
+
+# Russia: 
+# F Baltic Sea Convoys A Berlin - Livonia
+# F Prussia Supports F Baltic Sea

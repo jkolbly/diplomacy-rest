@@ -1,0 +1,26 @@
+start
+
+spawn-unit country:AUT province:bud
+spawn-unit country:RUS province:rum type:fleet
+spawn-unit country:TUR province:bla type:fleet
+spawn-unit country:TUR province:bul
+
+order-support country:AUT unit:bud supporting:rum
+order-move country:RUS unit:rum dest:bul coast:SC shouldfail:true
+order-move country:TUR unit:bla dest:rum
+order-support country:TUR unit:bul supporting:rum from:bla
+
+adjudicate
+
+assert-unit country:RUS province:rum
+assert-unit country:TUR province:bla
+
+# Austria: 
+# A Budapest Supports F Rumania
+
+# Russia: 
+# F Rumania - Bulgaria(sc)
+
+# Turkey: 
+# F Black Sea - Rumania
+# A Bulgaria Supports F Black Sea - Rumania

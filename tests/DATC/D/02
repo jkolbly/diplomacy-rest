@@ -1,0 +1,28 @@
+start
+
+spawn-unit country:AUT province:adr type:fleet
+spawn-unit country:AUT province:tri
+spawn-unit country:AUT province:vie
+spawn-unit country:ITA province:ven
+spawn-unit country:ITA province:tyr
+
+order-support country:AUT unit:adr supporting:ven from:tri
+order-move country:AUT unit:tri dest:ven
+order-move country:AUT unit:vie dest:tyr
+order-hold country:ITA unit:ven
+order-support country:ITA unit:tyr supporting:ven
+
+adjudicate
+
+assert-unit country:AUT province:ven
+assert-unit country:AUT province:vie
+assert-unit country:ITA province:tyr
+
+# Austria: 
+# F Adriatic Sea Supports A Trieste - Venice
+# A Trieste - Venice
+# A Vienna - Tyrolia
+
+# Italy: 
+# A Venice Hold
+# A Tyrolia Supports A Venice

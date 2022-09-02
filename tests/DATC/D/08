@@ -1,0 +1,27 @@
+start
+
+spawn-unit country:AUT province:ion type:fleet
+spawn-unit country:AUT province:ser
+spawn-unit country:AUT province:alb
+spawn-unit country:TUR province:gre
+spawn-unit country:TUR province:bul
+
+order-hold country:AUT unit:ion
+order-support country:AUT unit:ser supporting:gre from:alb
+order-move country:AUT unit:alb dest:gre
+order-move country:TUR unit:gre dest:nap convoy:true
+order-support country:TUR unit:bul supporting:gre
+
+adjudicate
+
+assert-unit country:AUT province:gre
+assert-not-unit province:nap
+
+# Austria: 
+# F Ionian Sea Hold
+# A Serbia Supports A Albania - Greece
+# A Albania - Greece
+
+# Turkey: 
+# A Greece - Naples
+# A Bulgaria Supports A Greece
