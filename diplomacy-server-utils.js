@@ -716,7 +716,7 @@ class ServerGameData extends shared.GameData {
           // If there's a head-to-head battle, calculate defend strength
           if (is_hth_battle) {
             // Defend strength is 1 plus the number of support orders
-            let defend_strength = 1 + strength(orders[holding_unit_move_order]);
+            let defend_strength = 1 + strength_ignore_teams(orders[holding_unit_move_order]);
             if (defend_strength >= attack_strength) return false;
           } else if (hold_strength >= attack_strength) {
             return false;
@@ -726,7 +726,7 @@ class ServerGameData extends shared.GameData {
             // Prevent strength is 0 if part of a head-to-head battle with a unit that successfully moves
             // Otherwise, prevent strength is 1 plus the number of successfully supporting units
             let successful_hth_order = orders.find((o, i) => o.type == shared.orderTypeEnum.move && o.province == attack.dest && o.dest == attack.province && resolve(i));
-            let prevent_strength = successful_hth_order ? 0 : 1 + strength(attack);
+            let prevent_strength = successful_hth_order ? 0 : 1 + strength_ignore_teams(attack);
             if (prevent_strength >= attack_strength) return false;
           }
 
