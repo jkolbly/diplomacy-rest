@@ -701,7 +701,7 @@ class ServerGameData extends shared.GameData {
           // Otherwise, attack strength is 0 if the unit at the destination is of the same nationality
           // Otherwise, attack strength is 1 plus the number of successfully supporting units that aren't the same nationality as the destination unit
           let is_hth_battle = holding_unit_move_order != -1 && !order.isConvoy && !orders[holding_unit_move_order].isConvoy && orders[holding_unit_move_order].dest == order.province;
-          let attack_strength = !holding_unit || (!is_hth_battle && resolve(holding_unit_move_order))
+          let attack_strength = !holding_unit || (!is_hth_battle && holding_unit_move_order != -1 && resolve(holding_unit_move_order))
             ? 1 + strength_ignore_teams(order) // Destination is empty or there's no head-to-head battle and the destination unit moves
             : (this.same_team(order.province, order.dest) && !(holding_unit_move_order != -1 && resolve(holding_unit_move_order))
               ? 0 // Attacking and defending units are on the same team
