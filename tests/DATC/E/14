@@ -1,0 +1,18 @@
+start
+
+spawn-unit country:GBR province:lvp type:army
+spawn-unit country:RUS province:edi type:fleet
+
+order-move country:GBR unit:lvp dest:edi
+order-move country:RUS unit:edi dest:lvp shouldfail:true
+
+adjudicate
+
+assert-unit country:GBR province:lvp
+assert-unit country:RUS province:edi
+
+# England: 
+# A Liverpool - Edinburgh
+
+# Russia: 
+# F Edinburgh - Liverpool

@@ -1,0 +1,48 @@
+start
+
+spawn-unit country:DEU province:hol type:fleet
+spawn-unit country:DEU province:hel type:fleet
+spawn-unit country:DEU province:ska type:fleet
+spawn-unit country:FRA province:nth type:fleet
+spawn-unit country:FRA province:bel type:fleet
+spawn-unit country:GBR province:edi type:fleet
+spawn-unit country:GBR province:yor type:fleet
+spawn-unit country:GBR province:nwg type:fleet
+spawn-unit country:AUT province:kie type:army
+spawn-unit country:AUT province:ruh type:army
+
+order-move country:DEU unit:hol dest:nth
+order-support country:DEU unit:hel supporting:nth from:hol
+order-support country:DEU unit:ska supporting:nth from:hol
+order-move country:FRA unit:nth dest:hol
+order-support country:FRA unit:bel supporting:hol from:nth
+order-support country:GBR unit:edi supporting:nth from:nwg
+order-support country:GBR unit:yor supporting:nth from:nwg
+order-move country:GBR unit:nwg dest:nth
+order-support country:AUT unit:kie supporting:hol from:ruh
+order-move country:AUT unit:ruh dest:hol
+
+adjudicate
+
+assert-unit country:DEU province:hol
+assert-unit country:FRA province:nth
+assert-unit country:GBR province:nwg
+assert-unit country:AUT province:ruh
+
+# Germany: 
+# F Holland - North Sea
+# F Helgoland Bight Supports F Holland - North Sea
+# F Skagerrak Supports F Holland - North Sea
+
+# France: 
+# F North Sea - Holland
+# F Belgium Supports F North Sea - Holland
+
+# England: 
+# F Edinburgh Supports F Norwegian Sea - North Sea
+# F Yorkshire Supports F Norwegian Sea - North Sea
+# F Norwegian Sea - North Sea
+
+# Austria: 
+# A Kiel Supports A Ruhr - Holland
+# A Ruhr - Holland

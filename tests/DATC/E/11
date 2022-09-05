@@ -1,0 +1,36 @@
+start
+
+spawn-unit country:FRA province:spa type:army
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:FRA province:lyo type:fleet
+spawn-unit country:DEU province:mar type:army
+spawn-unit country:DEU province:gas type:army
+spawn-unit country:ITA province:por type:fleet
+spawn-unit country:ITA province:wes type:fleet
+
+order-move country:FRA unit:spa dest:por convoy:true
+order-convoy country:FRA unit:mao from:spa to:por
+order-support country:FRA unit:lyo supporting:spa from:por
+order-support country:DEU unit:mar supporting:spa from:gas
+order-move country:DEU unit:gas dest:spa
+order-move country:ITA unit:por dest:spa coast:NC
+order-support country:ITA unit:wes supporting:spa from:por
+
+adjudicate
+
+assert-unit country:FRA province:por
+assert-unit country:DEU province:gas
+assert-unit country:ITA province:spa
+
+# France: 
+# A Spain - Portugal via Convoy
+# F Mid-Atlantic Ocean Convoys A Spain - Portugal
+# F Gulf of Lyon Supports F Portugal - Spain(nc)
+
+# Germany: 
+# A Marseilles Supports A Gascony - Spain
+# A Gascony - Spain
+
+# Italy: 
+# F Portugal - Spain(nc)
+# F Western Mediterranean Supports F Portugal - Spain(nc)

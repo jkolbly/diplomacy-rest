@@ -1,0 +1,21 @@
+start
+
+spawn-unit country:DEU province:ber
+spawn-unit country:DEU province:mun
+spawn-unit country:GBR province:kie type:fleet
+
+order-move country:DEU unit:ber dest:kie
+order-support country:DEU unit:mun supporting:ber from:kie
+order-move country:GBR unit:kie dest:ber
+
+adjudicate
+
+assert-unit country:DEU province:ber
+assert-unit country:GBR province:kie
+
+# Germany: 
+# A Berlin - Kiel
+# A Munich Supports F Kiel - Berlin
+
+# England: 
+# F Kiel - Berlin

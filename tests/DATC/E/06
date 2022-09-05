@@ -1,0 +1,36 @@
+start
+
+spawn-unit country:DEU province:hol type:fleet
+spawn-unit country:DEU province:hel type:fleet
+spawn-unit country:FRA province:nth type:fleet
+spawn-unit country:FRA province:bel type:fleet
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:AUT province:kie type:army
+spawn-unit country:AUT province:ruh type:army
+
+order-move country:DEU unit:hol dest:nth
+order-support country:DEU unit:hel supporting:nth from:hol
+order-move country:FRA unit:nth dest:hol
+order-support country:FRA unit:bel supporting:hol from:nth
+order-support country:FRA unit:eng supporting:nth from:hol
+order-support country:AUT unit:kie supporting:hol from:ruh
+order-move country:AUT unit:ruh dest:hol
+
+adjudicate
+
+assert-unit country:DEU province:hol
+assert-unit country:FRA province:nth
+assert-unit country:AUT province:ruh
+
+# Germany: 
+# F Holland - North Sea
+# F Helgoland Bight Supports F Holland - North Sea
+
+# France: 
+# F North Sea - Holland
+# F Belgium Supports F North Sea - Holland
+# F English Channel Supports F Holland - North Sea
+
+# Austria: 
+# A Kiel Supports A Ruhr - Holland
+# A Ruhr - Holland

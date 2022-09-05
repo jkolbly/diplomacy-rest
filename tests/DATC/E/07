@@ -1,0 +1,33 @@
+start
+
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:yor type:fleet
+spawn-unit country:DEU province:hol type:fleet
+spawn-unit country:DEU province:hel type:fleet
+spawn-unit country:RUS province:ska type:fleet
+spawn-unit country:RUS province:nor type:fleet
+
+order-hold country:GBR unit:nth
+order-support country:GBR unit:yor supporting:nth from:nor
+order-support country:DEU unit:hol supporting:nth from:hel
+order-move country:DEU unit:hel dest:nth
+order-support country:RUS unit:ska supporting:nth from:nor
+order-move country:RUS unit:nor dest:nth
+
+adjudicate
+
+assert-unit country:GBR province:nth
+assert-unit country:DEU province:hel
+assert-unit country:RUS province:nor
+
+# England: 
+# F North Sea Hold
+# F Yorkshire Supports F Norway - North Sea
+
+# Germany: 
+# F Holland Supports F Helgoland Bight - North Sea
+# F Helgoland Bight - North Sea
+
+# Russia: 
+# F Skagerrak Supports F Norway - North Sea
+# F Norway - North Sea

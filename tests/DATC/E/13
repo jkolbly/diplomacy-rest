@@ -1,0 +1,39 @@
+start
+
+spawn-unit country:GBR province:edi type:fleet
+spawn-unit country:GBR province:yor type:fleet
+spawn-unit country:FRA province:bel type:fleet
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:DEU province:nth type:fleet
+spawn-unit country:RUS province:nwg type:fleet
+spawn-unit country:RUS province:nor type:fleet
+
+order-support country:GBR unit:edi supporting:nth from:yor
+order-move country:GBR unit:yor dest:nth
+order-move country:FRA unit:bel dest:nth
+order-support country:FRA unit:eng supporting:nth from:bel
+order-hold country:DEU unit:nth
+order-move country:RUS unit:nwg dest:nth
+order-support country:RUS unit:nor supporting:nth from:nwg
+
+adjudicate
+
+assert-unit country:GBR province:yor
+assert-unit country:FRA province:bel
+assert-unit country:DEU province:nth
+assert-unit country:RUS province:nor
+
+# England: 
+# F Edinburgh Supports F Yorkshire - North Sea
+# F Yorkshire - North Sea
+
+# France: 
+# F Belgium - North Sea
+# F English Channel Supports F Belgium - North Sea
+
+# Germany: 
+# F North Sea Hold
+
+# Russia: 
+# F Norwegian Sea - North Sea
+# F Norway Supports F Norwegian Sea - North Sea

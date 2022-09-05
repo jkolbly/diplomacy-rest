@@ -1,0 +1,48 @@
+start
+
+spawn-unit country:GBR province:hol type:fleet
+spawn-unit country:GBR province:ruh type:army
+spawn-unit country:FRA province:kie type:army
+spawn-unit country:FRA province:mun type:army
+spawn-unit country:FRA province:sil type:army
+spawn-unit country:DEU province:ber type:army
+spawn-unit country:DEU province:den type:fleet
+spawn-unit country:DEU province:hel type:fleet
+spawn-unit country:RUS province:bal type:fleet
+spawn-unit country:RUS province:pru type:army
+
+order-support country:GBR unit:hol supporting:kie from:ruh
+order-move country:GBR unit:ruh dest:kie
+order-move country:FRA unit:kie dest:ber
+order-support country:FRA unit:mun supporting:ber from:kie
+order-support country:FRA unit:sil supporting:ber from:kie
+order-move country:DEU unit:ber dest:kie
+order-support country:DEU unit:den supporting:kie from:ber
+order-support country:DEU unit:hel supporting:kie from:ber
+order-support country:RUS unit:bal supporting:ber from:pru
+order-move country:RUS unit:pru dest:ber
+
+adjudicate
+
+assert-unit country:GBR province:ruh
+assert-unit country:FRA province:kie
+assert-unit country:DEU province:ber
+assert-unit country:RUS province:pru
+
+# England:
+# F Holland Supports A Ruhr - Kiel
+# A Ruhr - Kiel
+
+# France:
+# A Kiel - Berlin
+# A Munich Supports A Kiel - Berlin
+# A Silesia Supports A Kiel - Berlin
+
+# Germany:
+# A Berlin - Kiel
+# F Denmark Supports A Berlin - Kiel
+# F Helgoland Bight Supports A Berlin - Kiel
+
+# Russia:
+# F Baltic Sea Supports A Prussia - Berlin
+# A Prussia - Berlin

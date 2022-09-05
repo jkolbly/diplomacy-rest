@@ -1,0 +1,30 @@
+start
+
+spawn-unit country:AUT province:bud type:army
+spawn-unit country:AUT province:ser type:army
+spawn-unit country:ITA province:vie type:army
+spawn-unit country:RUS province:gal type:army
+spawn-unit country:RUS province:rum type:army
+
+order-move country:AUT unit:bud dest:rum
+order-support country:AUT unit:ser supporting:bud from:vie
+order-move country:ITA unit:vie dest:bud
+order-move country:RUS unit:gal dest:bud
+order-support country:RUS unit:rum supporting:bud from:gal
+
+adjudicate
+
+assert-unit country:AUT province:bud
+assert-unit country:ITA province:vie
+assert-unit country:RUS province:gal
+
+# Austria: 
+# A Budapest - Rumania
+# A Serbia Supports A Vienna - Budapest
+
+# Italy: 
+# A Vienna - Budapest
+
+# Russia: 
+# A Galicia - Budapest
+# A Rumania Supports A Galicia - Budapest
