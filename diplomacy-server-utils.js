@@ -771,11 +771,38 @@ class ServerGameData extends shared.GameData {
       }
     };
 
+    let backup_rule_type = (_dep_start_index) => {
+      for (let i_dep = _dep_start_index; i_dep < dep_list.length; i_dep++) {
+        let i = dep_list[i_dep];
+        if (orders[i].type == shared.orderTypeEnum.move && orders.find(o => o.type == shared.orderTypeEnum.convoy && o.province == orders[i].dest)) {
+          return backupRuleType.convoy;
+        }
+      }
+      return backupRuleType.circle;
+    }
+
     /**
      * @param {number} dep_start_index Index of first dependency in this cycle.
      */
     let backup_rule = (_dep_start_index) => {
-
+      console.log(`${"  ".repeat(tabsize)}Entering backup rule`);
+      console.log(`${"  ".repeat(tabsize)}Paradoxical cycle dependencies: ${dep_list.slice(_dep_start_index).map(i => orders[i].id).join(", ")}`);
+      let type = backup_rule_type();
+      for (let i_dep = dep_list.length - 1; i_dep >= _dep_start_index; i_dep--) {
+        let i = dep_list[i_dep];
+        if (type == backupRuleType.convoy && (orders[i].type == shared.orderTypeEnum.convoy || (orders[i].type == shared.orderTypeEnum.move && orders[i].isConvoy))) {
+          resolutions[i] = false;
+          resolutionStates[i] = resolutionStateEnum.Resolved;
+          console.log(`${"  ".repeat(tabsize)}Setting ${orders[i].id} to fail to resolve paradox`);
+        } else if (type == backupRuleType.circle && orders[i].type == shared.orderTypeEnum.move) {
+          resolutions[i] = true;
+          resolutionStates[i] = resolutionStateEnum.Resolved;
+          console.log(`${"  ".repeat(tabsize)}Setting ${orders[i].id} to succeed to resolve paradox`);
+        } else {
+          resolutionStates[i] = resolutionStateEnum.Unresolved;
+        }
+        dep_list.pop();
+      }
     }
 
     // Create new state object and prepare for applying adjudications.
