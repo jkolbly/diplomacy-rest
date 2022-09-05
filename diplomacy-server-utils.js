@@ -568,16 +568,24 @@ class ServerGameData extends shared.GameData {
     /** @type {number[]} */
     let dep_list = [];
 
+    let tabsize = 0;
+
     /**
      * @param {number} orderIndex
      */
     let resolve = (orderIndex) => {
-      console.log("Resolution state: " + resolutionStates[orderIndex]);
+      console.log(`${"  ".repeat(tabsize)}Resolving ${orders[orderIndex].id}`);
+      tabsize += 1;
+      // console.log("Resolution state for " + orders[orderIndex].id + ": " + resolutionStates[orderIndex]);
       switch (resolutionStates[orderIndex]) {
         case resolutionStateEnum.Resolved:
+          console.log(`${"  ".repeat(tabsize)}Already resolved as ${resolutions[orderIndex]}`);
+          tabsize -= 1;
           return resolutions[orderIndex];
         case resolutionStateEnum.Guessing:
           if (!dep_list.includes(orderIndex)) dep_list.push(orderIndex);
+          console.log(`${"  ".repeat(tabsize)}Already guessed as ${resolutions[orderIndex]}`);
+          tabsize -= 1;
           return resolutions[orderIndex];
         case resolutionStateEnum.Unresolved: {
           let old_dep_size = dep_list.length;
@@ -585,16 +593,19 @@ class ServerGameData extends shared.GameData {
           resolutions[orderIndex] = false;
           resolutionStates[orderIndex] = resolutionStateEnum.Guessing;
 
+          console.log(`${"  ".repeat(tabsize)}Guessing ${resolutions[orderIndex]} for ${orders[orderIndex].id}`);
+
           let adj_res = adjudicate(orderIndex);
 
-          console.log("Adjudication result: " + adj_res);
+          console.log(`${"  ".repeat(tabsize)}Adjudication result for ${orders[orderIndex].id}: ${adj_res}`);
 
           // No dependencies
           if (old_dep_size == dep_list.length) {
-            console.log("No dependencies");
+            console.log(`${"  ".repeat(tabsize)}No dependencies for ${orders[orderIndex].id}`);
             resolutionStates[orderIndex] = resolutionStateEnum.Resolved;
             resolutions[orderIndex] = adj_res;
-            console.log("Returning " + adj_res);
+            console.log(`${"  ".repeat(tabsize)}Returning ${adj_res} for ${orders[orderIndex].id}`);
+            tabsize -= 1;
             return adj_res;
           }
 
@@ -602,6 +613,7 @@ class ServerGameData extends shared.GameData {
           if (dep_list[old_dep_size] != orderIndex) {
             dep_list.push(orderIndex);
             resolutions[orderIndex] = adj_res;
+            tabsize -= 1;
             return adj_res;
           }
 
@@ -616,10 +628,13 @@ class ServerGameData extends shared.GameData {
           resolutions[orderIndex] = true;
           resolutionStates[orderIndex] = resolutionStateEnum.Guessing;
 
+          console.log(`${"  ".repeat(tabsize)}Guessing ${resolutions[orderIndex]} for ${orders[orderIndex].id}`);
+
           let adj_res_2 = adjudicate(orderIndex);
 
           // Cycle only has one resolution
           if (adj_res == adj_res_2) {
+            console.log(`${"  ".repeat(tabsize)}Cycle has only one resolution, where ${orders[orderIndex].id} resolves as ${adj_res}`);
             // Set all dependencies to unresolved
             for (let i = dep_list.length - 1; i >= old_dep_size; i--) {
               resolutionStates[dep_list[i]] = resolutionStateEnum.Unresolved;
@@ -627,15 +642,18 @@ class ServerGameData extends shared.GameData {
 
             resolutions[orderIndex] = adj_res;
             resolutionStates[orderIndex] = resolutionStateEnum.Resolved;
+            tabsize -= 1;
             return adj_res;
           }
 
           // Cycle has two or no resolutions, pass to backup rule.
           // Clean up dependencies so that dep_list.length == old_dep_size
           // Dependencies should be set to Resolved or Unresolved.
+          console.log(`${"  ".repeat(tabsize)}Cycle has zero or two resolutions`);
           backup_rule(old_dep_size);
 
           // Start over in case backup rule leaves some orders unresolved.
+          tabsize -= 1;
           return resolve(orderIndex);
         }
       }
@@ -710,9 +728,9 @@ class ServerGameData extends shared.GameData {
           // Get orders that are competing for the same territory
           let other_attacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && o.dest == order.dest);
 
-          console.log(`Attack strength: ${attack_strength}`);
-          console.log(`Hold strength: ${hold_strength}`);
-          console.log(`Is head-to-head battle? ${is_hth_battle}`);
+          console.log(`${"  ".repeat(tabsize)}Attack strength: ${attack_strength}`);
+          console.log(`${"  ".repeat(tabsize)}Hold strength: ${hold_strength}`);
+          console.log(`${"  ".repeat(tabsize)}Is head-to-head battle? ${is_hth_battle}`);
 
           // If there's a head-to-head battle, calculate defend strength
           if (is_hth_battle) {
@@ -723,11 +741,14 @@ class ServerGameData extends shared.GameData {
             return false;
           }
 
+          console.log(`${"  ".repeat(tabsize)}Other attacks from: ${other_attacks.map(o => o.province).join(", ")}`);
+
           for (let attack of other_attacks) {
             // Prevent strength is 0 if part of a head-to-head battle with a unit that successfully moves
             // Otherwise, prevent strength is 1 plus the number of successfully supporting units
-            let successful_hth_order = orders.find((o, i) => o.type == shared.orderTypeEnum.move && o.province == attack.dest && o.dest == attack.province && resolve(i));
+            let successful_hth_order = orders.find((o, i) => o.type == shared.orderTypeEnum.move && o.province == attack.dest && o.dest == attack.province && !o.isConvoy && !attack.isConvoy && resolve(i));
             let prevent_strength = successful_hth_order ? 0 : 1 + strength_ignore_teams(attack);
+            console.log(`${"  ".repeat(tabsize)}Prevent strength for ${attack.id}: ${prevent_strength}`)
             if (prevent_strength >= attack_strength) return false;
           }
 
@@ -754,7 +775,7 @@ class ServerGameData extends shared.GameData {
     // Create new state object and prepare for applying adjudications.
     this.start_retreat_writing();
 
-    console.log("\nStarting adjudication\n");
+    console.log("\n----------Starting adjudication----------\n");
 
     /** Units to be dislodged. */
     let to_dislodge = [];
@@ -780,7 +801,7 @@ class ServerGameData extends shared.GameData {
         });
       }
 
-      console.log(`Does ${order.id} succeed? ${success}\n`);
+      console.log(`${"  ".repeat(tabsize + 1)}Does ${order.id} succeed? ${success}\n`);
     }
 
     to_dislodge = to_dislodge.filter(p => !cannot_dislodge.includes(p));
