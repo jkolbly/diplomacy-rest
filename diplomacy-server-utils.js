@@ -659,6 +659,29 @@ class ServerGameData extends shared.GameData {
       }
     };
 
+    /** Return whether any convoy route succeeds for a convoy move order `order`. Also returns true if order is not a convoy movement. */
+    let any_convoy_route = (order) => {
+      // Convoys fail if any of the fleets can't convoy
+      if (order.isConvoy) {
+        let anyrouteworks = false;
+        for (let route of this.all_convoy_routes(orders, order.province, order.dest)) {
+          let routeworks = true;
+          for (let i of route) {
+            if (!resolve(i)) {
+              routeworks = false;
+              break;
+            }
+          }
+          if (routeworks) {
+            anyrouteworks = true;
+            break;
+          }
+        }
+        if (!anyrouteworks) return false;
+      }
+      return true;
+    }
+
     /**
      * @param {number} orderIndex
      */
@@ -671,31 +694,14 @@ class ServerGameData extends shared.GameData {
         case shared.orderTypeEnum["support move"]:
           for (let i = 0; i < orders.length; i++) {
             let o = orders[i];
-            // Cut support if attacked by a foreign power from any province other than the one being supported
-            if (o.type == shared.orderTypeEnum.move && o.dest == order.province && !this.same_team(o.province, order.province) && (o.province != order.supporting || resolve(i))) {
+            // Cut support if attacked by a foreign power from any province other than the one being supported, except if the cutting unit is unsuccessfully convoyed
+            if (o.type == shared.orderTypeEnum.move && o.dest == order.province && !this.same_team(o.province, order.province) && (o.province != order.supporting || resolve(i)) && any_convoy_route(o)) {
               return false;
             }
           }
           return true;
         case shared.orderTypeEnum.move: {
-          // Convoys fail if any of the fleets can't convoy
-          if (order.isConvoy) {
-            let anyrouteworks = false;
-            for (let route of this.all_convoy_routes(orders, order.province, order.dest)) {
-              let routeworks = true;
-              for (let i of route) {
-                if (!resolve(i)) {
-                  routeworks = false;
-                  break;
-                }
-              }
-              if (routeworks) {
-                anyrouteworks = true;
-                break;
-              }
-            }
-            if (!anyrouteworks) return false;
-          }
+          if (!any_convoy_route(order)) return false;
 
           /**
            * @param {shared.Order} ord
