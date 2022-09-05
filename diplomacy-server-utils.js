@@ -753,7 +753,7 @@ class ServerGameData extends shared.GameData {
             // Prevent strength is 0 if part of a head-to-head battle with a unit that successfully moves
             // Otherwise, prevent strength is 1 plus the number of successfully supporting units
             let successful_hth_order = orders.find((o, i) => o.type == shared.orderTypeEnum.move && o.province == attack.dest && o.dest == attack.province && !o.isConvoy && !attack.isConvoy && resolve(i));
-            let prevent_strength = successful_hth_order ? 0 : 1 + strength_ignore_teams(attack);
+            let prevent_strength = successful_hth_order || !any_convoy_route(attack) ? 0 : 1 + strength_ignore_teams(attack);
             console.log(`${"  ".repeat(tabsize)}Prevent strength for ${attack.id}: ${prevent_strength}`)
             if (prevent_strength >= attack_strength) return false;
           }
