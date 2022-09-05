@@ -707,7 +707,8 @@ class ServerGameData extends shared.GameData {
               ? 0 // Attacking and defending units are on the same team
               : 1 + strength(order)); // Attack strength is 1 plus number of supports
 
-          let other_attacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && (o.dest == order.dest || (!o.isConvoy && o.dest == order.province && o.province == order.dest)));
+          // Get orders that are competing for the same territory
+          let other_attacks = orders.filter((o, i) => i != orderIndex && o.type == shared.orderTypeEnum.move && o.dest == order.dest);
 
           console.log(`Attack strength: ${attack_strength}`);
           console.log(`Hold strength: ${hold_strength}`);
