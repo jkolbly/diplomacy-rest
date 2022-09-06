@@ -787,7 +787,7 @@ class ServerGameData extends shared.GameData {
     let backup_rule = (_dep_start_index) => {
       console.log(`${"  ".repeat(tabsize)}Entering backup rule`);
       console.log(`${"  ".repeat(tabsize)}Paradoxical cycle dependencies: ${dep_list.slice(_dep_start_index).map(i => orders[i].id).join(", ")}`);
-      let type = backup_rule_type();
+      let type = backup_rule_type(_dep_start_index);
       for (let i_dep = dep_list.length - 1; i_dep >= _dep_start_index; i_dep--) {
         let i = dep_list[i_dep];
         if (type == backupRuleType.convoy && (orders[i].type == shared.orderTypeEnum.convoy || (orders[i].type == shared.orderTypeEnum.move && orders[i].isConvoy))) {
