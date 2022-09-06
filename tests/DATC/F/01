@@ -1,0 +1,22 @@
+start
+
+spawn-unit country:TUR province:gre type:army
+spawn-unit country:TUR province:aeg type:fleet
+spawn-unit country:TUR province:con type:fleet
+spawn-unit country:TUR province:bla type:fleet
+
+order-move country:TUR unit:gre dest:sev convoy:true shouldfail:true
+order-convoy country:TUR unit:aeg from:gre to:sev shouldfail:true
+order-convoy country:TUR unit:con from:gre to:sev shouldfail:true
+order-convoy country:TUR unit:bla from:gre to:sev shouldfail:true
+
+adjudicate
+
+assert-unit country:TUR province:gre
+assert-not-unit province:sev
+
+# Turkey: 
+# A Greece - Sevastopol
+# F Aegean Sea Convoys A Greece - Sevastopol
+# F Constantinople Convoys A Greece - Sevastopol
+# F Black Sea Convoys A Greece - Sevastopol

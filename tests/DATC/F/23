@@ -1,0 +1,50 @@
+start
+
+spawn-unit country:GBR province:edi type:fleet
+spawn-unit country:GBR province:yor type:fleet
+spawn-unit country:FRA province:bre type:army
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:DEU province:bel type:fleet
+spawn-unit country:DEU province:lon type:fleet
+spawn-unit country:ITA province:mao type:fleet
+spawn-unit country:ITA province:iri type:fleet
+spawn-unit country:RUS province:nor type:army
+spawn-unit country:RUS province:nth type:fleet
+
+order-move country:GBR unit:edi dest:nth
+order-support country:GBR unit:yor supporting:nth from:edi
+order-move country:FRA unit:bre dest:lon convoy:true
+order-convoy country:FRA unit:eng from:bre to:lon
+order-support country:DEU unit:bel supporting:eng
+order-support country:DEU unit:lon supporting:nth
+order-move country:ITA unit:mao dest:eng
+order-support country:ITA unit:iri supporting:eng from:mao
+order-move country:RUS unit:nor dest:bel convoy:true
+order-convoy country:RUS unit:nth from:nor to:bel
+
+adjudicate
+
+assert-unit country:GBR province:edi
+assert-unit country:FRA province:bre
+assert-unit country:ITA province:mao
+assert-unit country:RUS province:nor
+
+# England: 
+# F Edinburgh - North Sea
+# F Yorkshire Supports F Edinburgh - North Sea
+
+# France: 
+# A Brest - London
+# F English Channel Convoys A Brest - London
+
+# Germany: 
+# F Belgium Supports F English Channel
+# F London Supports F North Sea
+
+# Italy: 
+# F Mid-Atlantic Ocean - English Channel
+# F Irish Sea Supports F Mid-Atlantic Ocean - English Channel
+
+# Russia: 
+# A Norway - Belgium
+# F North Sea Convoys A Norway - Belgium

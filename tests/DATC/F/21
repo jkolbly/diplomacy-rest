@@ -1,0 +1,39 @@
+start
+
+spawn-unit country:RUS province:edi type:army
+spawn-unit country:RUS province:nwg type:fleet
+spawn-unit country:RUS province:nor type:army
+spawn-unit country:FRA province:iri type:fleet
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:GBR province:lvp type:army
+spawn-unit country:GBR province:nao type:fleet
+spawn-unit country:GBR province:cly type:fleet
+
+order-support country:RUS unit:edi supporting:cly from:nor
+order-convoy country:RUS unit:nwg from:nor to:cly
+order-move country:RUS unit:nor dest:cly convoy:true
+order-support country:FRA unit:iri supporting:nao from:mao
+order-move country:FRA unit:mao dest:nao
+order-move country:GBR unit:lvp dest:cly convoy:true
+order-convoy country:GBR unit:nao from:lvp to:cly
+order-support country:GBR unit:cly supporting:nao
+
+adjudicate
+
+assert-unit country:RUS province:cly
+assert-unit country:FRA province:nao
+assert-unit country:GBR province:lvp
+
+# Russia: 
+# A Edinburgh Supports A Norway - Clyde
+# F Norwegian Sea Convoys A Norway - Clyde
+# A Norway - Clyde
+
+# France: 
+# F Irish Sea Supports F Mid-Atlantic Ocean - North Atlantic Ocean
+# F Mid-Atlantic Ocean - North Atlantic Ocean
+
+# England: 
+# A Liverpool - Clyde via Convoy
+# F North Atlantic Ocean Convoys A Liverpool - Clyde
+# F Clyde Supports F North Atlantic Ocean

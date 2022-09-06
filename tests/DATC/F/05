@@ -1,0 +1,33 @@
+start
+
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:lon type:army
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:FRA province:bel type:fleet
+spawn-unit country:DEU province:ska type:fleet
+spawn-unit country:DEU province:den type:fleet
+
+order-convoy country:GBR unit:nth from:lon to:hol
+order-move country:GBR unit:lon dest:hol convoy:true
+order-move country:FRA unit:eng dest:nth
+order-support country:FRA unit:bel supporting:nth from:eng
+order-move country:DEU unit:ska dest:nth
+order-support country:DEU unit:den supporting:nth from:ska
+
+adjudicate
+
+assert-unit country:GBR province:hol
+assert-unit country:FRA province:eng
+assert-unit country:DEU province:ska
+
+# England: 
+# F North Sea Convoys A London - Holland
+# A London - Holland
+
+# France: 
+# F English Channel - North Sea
+# F Belgium Supports F English Channel - North Sea
+
+# Germany: 
+# F Skagerrak - North Sea
+# F Denmark Supports F Skagerrak - North Sea

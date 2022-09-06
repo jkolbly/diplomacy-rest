@@ -1,0 +1,21 @@
+start
+
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:GBR province:lon type:army
+spawn-unit country:FRA province:par type:army
+
+order-convoy country:GBR unit:eng from:lon to:bre
+order-move country:GBR unit:lon dest:bre convoy:true
+order-move country:FRA unit:par dest:bre
+
+adjudicate
+
+assert-unit country:GBR province:lon
+assert-unit country:FRA province:par
+
+# England: 
+# F English Channel Convoys A London - Brest
+# A London - Brest
+
+# France: 
+# A Paris - Brest

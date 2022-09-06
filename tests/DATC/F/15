@@ -1,0 +1,35 @@
+start
+
+spawn-unit country:GBR province:lon type:fleet
+spawn-unit country:GBR province:wal type:fleet
+spawn-unit country:FRA province:bre type:army
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:ITA province:iri type:fleet
+spawn-unit country:ITA province:mao type:fleet
+spawn-unit country:ITA province:naf type:army
+
+order-support country:GBR unit:lon supporting:eng from:wal
+order-move country:GBR unit:wal dest:eng
+order-move country:FRA unit:bre dest:lon convoy:true
+order-convoy country:FRA unit:eng from:bre to:lon
+order-convoy country:ITA unit:iri from:naf to:wal
+order-convoy country:ITA unit:mao from:naf to:wal
+order-move country:ITA unit:naf dest:wal convoy:true
+
+adjudicate
+
+assert-unit country:GBR province:eng
+assert-unit country:ITA province:wal
+
+# England: 
+# F London Supports F Wales - English Channel
+# F Wales - English Channel
+
+# France: 
+# A Brest - London
+# F English Channel Convoys A Brest - London
+
+# Italy: 
+# F Irish Sea Convoys A North Africa - Wales
+# F Mid-Atlantic Ocean Convoys A North Africa - Wales
+# A North Africa - Wales

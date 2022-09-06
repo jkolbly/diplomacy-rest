@@ -1,0 +1,39 @@
+start
+
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:lon type:army
+spawn-unit country:DEU province:hol type:army
+spawn-unit country:DEU province:bel type:army
+spawn-unit country:DEU province:hel type:fleet
+spawn-unit country:DEU province:ska type:fleet
+spawn-unit country:FRA province:pic type:army
+spawn-unit country:FRA province:bur type:army
+
+order-convoy country:GBR unit:nth from:lon to:hol
+order-move country:GBR unit:lon dest:hol convoy:true
+order-support country:DEU unit:hol supporting:bel
+order-support country:DEU unit:bel supporting:hol
+order-support country:DEU unit:hel supporting:nth from:ska
+order-move country:DEU unit:ska dest:nth
+order-move country:FRA unit:pic dest:bel
+order-support country:FRA unit:bur supporting:bel from:pic
+
+adjudicate
+
+assert-unit country:GBR province:lon
+assert-unit country:DEU province:nth
+assert-unit country:FRA province:pic
+
+# England: 
+# F North Sea Convoys A London - Holland
+# A London - Holland
+
+# Germany: 
+# A Holland Supports A Belgium
+# A Belgium Supports A Holland
+# F Helgoland Bight Supports F Skagerrak - North Sea
+# F Skagerrak - North Sea
+
+# France: 
+# A Picardy - Belgium
+# A Burgundy Supports A Picardy - Belgium

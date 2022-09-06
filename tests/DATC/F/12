@@ -1,0 +1,27 @@
+start
+
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:GBR province:lon type:army
+spawn-unit country:GBR province:iri type:fleet
+spawn-unit country:FRA province:nao type:fleet
+spawn-unit country:FRA province:mao type:fleet
+
+order-convoy country:GBR unit:eng from:lon to:bel
+order-move country:GBR unit:lon dest:bel convoy:true
+order-convoy country:GBR unit:iri from:lon to:bel
+order-support country:FRA unit:nao supporting:iri from:mao
+order-move country:FRA unit:mao dest:iri
+
+adjudicate
+
+assert-unit country:GBR province:bel
+assert-unit country:FRA province:iri
+
+# England: 
+# F English Channel Convoys A London - Belgium
+# A London - Belgium
+# F Irish Sea Convoys A London - Belgium
+
+# France: 
+# F North Atlantic Ocean Supports F Mid-Atlantic Ocean - Irish Sea
+# F Mid-Atlantic Ocean - Irish Sea

@@ -1,0 +1,32 @@
+start
+
+spawn-unit country:FRA province:tun type:army
+spawn-unit country:FRA province:tys type:fleet
+spawn-unit country:ITA province:nap type:fleet
+spawn-unit country:ITA province:ion type:fleet
+spawn-unit country:TUR province:aeg type:fleet
+spawn-unit country:TUR province:eas type:fleet
+
+order-move country:FRA unit:tun dest:nap convoy:true
+order-convoy country:FRA unit:tys from:tun to:nap
+order-support country:ITA unit:nap supporting:ion
+order-convoy country:ITA unit:ion from:tun to:nap
+order-support country:TUR unit:aeg supporting:ion from:eas
+order-move country:TUR unit:eas dest:ion
+
+adjudicate
+
+assert-unit country:FRA province:tun
+assert-unit country:TUR province:ion
+
+# France: 
+# A Tunis - Naples
+# F Tyrrhenian Sea Convoys A Tunis - Naples
+
+# Italy: 
+# F Naples Supports F Ionian Sea
+# F Ionian Sea Convoys A Tunis - Naples
+
+# Turkey: 
+# F Aegean Sea Supports F Eastern Mediterranean - Ionian Sea
+# F Eastern Mediterranean - Ionian Sea
