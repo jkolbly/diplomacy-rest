@@ -931,7 +931,7 @@ class ServerGameData extends shared.GameData {
     let indices = provinces.map(p => orders.findIndex(o => o.province == p));
 
     // Return the routes, replacing province strings with corresponding order indices
-    return routes(start, []).map(route => route.map(p => indices[provinces.indexOf(p)]));
+    return routes(start, []).filter(r => r.length).map(route => route.map(p => indices[provinces.indexOf(p)]));
   }
 
   /**
