@@ -663,7 +663,6 @@ class ServerGameData extends shared.GameData {
     let any_convoy_route = (order) => {
       // Convoys fail if any of the fleets can't convoy
       if (order.isConvoy) {
-        let anyrouteworks = false;
         for (let route of this.all_convoy_routes(orders, order.province, order.dest)) {
           let routeworks = true;
           for (let i of route) {
@@ -672,12 +671,9 @@ class ServerGameData extends shared.GameData {
               break;
             }
           }
-          if (routeworks) {
-            anyrouteworks = true;
-            break;
-          }
+          if (routeworks) return true;
         }
-        if (!anyrouteworks) return false;
+        return false;
       }
       return true;
     }
