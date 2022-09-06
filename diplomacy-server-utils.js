@@ -583,7 +583,7 @@ class ServerGameData extends shared.GameData {
           tabsize -= 1;
           return resolutions[orderIndex];
         case resolutionStateEnum.Guessing:
-          if (!dep_list.includes(orderIndex)) dep_list.push(orderIndex);
+          dep_list.push(orderIndex);
           console.log(`${"  ".repeat(tabsize)}Already guessed as ${resolutions[orderIndex]}`);
           tabsize -= 1;
           return resolutions[orderIndex];
