@@ -453,11 +453,12 @@ class ServerGameData extends shared.GameData {
    * @param {shared.Order} order Order to be submitted.
    */
   submit_order(username, order) {
+    if (this.phase != shared.phaseEnum["Order Writing"]) throw Error(`Cannot place an order during phase ${this.phase}`);
+    
     let unit = this.get_unit(order.province);
 
     if (!unit) throw Error(`There is no unit at ${order.province}.`);
     if (this.get_unit_owner_player(order.province) != username) throw Error(`User ${username} has no control over unit at ${order.province}.`);
-    if (this.phase != shared.phaseEnum["Order Writing"]) throw Error(`Cannot place an order during phase ${this.phase}`);
 
     if (order.type == shared.orderTypeEnum.cancel) {
       delete this.state.orders[this.get_unit_owner_id(unit.province)][unit.province];
