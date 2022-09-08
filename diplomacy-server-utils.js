@@ -507,13 +507,14 @@ class ServerGameData extends shared.GameData {
   /**
    * Mark a unit as retreating by moving from the map to the `retreats` object.
    */
-  make_unit_retreat(provinceId) {
+  make_unit_retreat(provinceId, attacker) {
     let unit = this.get_unit(provinceId);
     if (unit) {
       let owner = this.get_unit_owner_id(provinceId);
       if (!this.state.retreats[owner]) this.state.retreats[owner] = [];
       this.state.retreats[owner].push({
-        unit: unit
+        unit: unit,
+        attacker: attacker
       });
       this.remove_unit(provinceId);
     }
@@ -822,7 +823,7 @@ class ServerGameData extends shared.GameData {
       let success = resolve(i);
 
       if (success && order.type == shared.orderTypeEnum.move) {
-        to_dislodge.push(order.dest);
+        to_dislodge.push({ unit: order.dest, attacker: order.province });
         cannot_dislodge.push(order.province);
 
         successful_moves.push({
@@ -835,9 +836,9 @@ class ServerGameData extends shared.GameData {
       console.log(`${"  ".repeat(tabsize + 1)}Does ${order.id} succeed? ${success}\n`);
     }
 
-    to_dislodge = to_dislodge.filter(p => !cannot_dislodge.includes(p));
-    for (let p of to_dislodge) {
-      this.make_unit_retreat(p);
+    to_dislodge = to_dislodge.filter(d => !cannot_dislodge.includes(d.unit));
+    for (let d of to_dislodge) {
+      this.make_unit_retreat(d.unit, d.attacker);
     }
 
     for (let move of successful_moves) {
