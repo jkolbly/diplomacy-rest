@@ -527,34 +527,6 @@ class ServerGameData extends shared.GameData {
     if (this.phase != shared.phaseEnum["Order Writing"]) throw Error("Can only adjudicate orders during order writing phase.");
 
     let orders = Object.values(this.state.orders).map(nation => Object.values(nation)).reduce((arr, val) => { arr.push(...val); return arr; });
-    
-    /*
-      REMOVE ORDERS THAT FAIL PURELY BECAUSE THEY DEPENDED ON THE EXISTENCE/LACK OF EXISTENCE OF ANOTHER ORDER
-      This includes:
-        - Fleets attempting to convoy units that aren't using that convoy
-        - Armies attempting to convoy with no possible route
-        - Units supporting moves that aren't happening
-        - Support units that are being attacked from provinces other than the one they're providing support to
-    */
-    // /** @type {Object.<string,boolean} */
-    // let results = {};
-    // for (let order of orders) {
-    //   if (order.type == shared.orderTypeEnum.move && order.isconvoy) {
-    //     let fleetProvinces = orders.filter(o => o.type == shared.orderTypeEnum.convoy && o.start == order.province && o.end == order.dest).map(f => f.province);
-    //     let pathFindStep = (province, dest, ignore=[]) => {
-    //       if (province == dest) return true;
-    //       for (let p of this.get_adjacencies_ignore_coasts(province)) {
-    //         if (fleetProvinces.includes(p)) {
-    //           return p == dest || pathFindStep(p, dest, [province, ...ignore]);
-    //         }
-    //       }
-    //       return false;
-    //     }
-    //     if (!pathFindStep(order.province, order.dest)) {
-    //       results[order.id] = false;
-    //     }
-    //   }
-    // }
 
     /** @type {Object.<string,shared.Order[]>} */
     let dependencies = {};
