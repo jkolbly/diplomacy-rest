@@ -555,7 +555,8 @@ class ServerGameData extends shared.GameData {
       let prev_state = this.history[this.history.length - 2];
       prev_state.dislodgements[unit.province] = {
         unit: unit,
-        from: attacker
+        from: attacker,
+        country: this.get_unit_owner_id(provinceId)
       };
       this.remove_unit(provinceId);
     }
