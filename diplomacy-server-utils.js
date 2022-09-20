@@ -479,6 +479,8 @@ class ServerGameData extends shared.GameData {
 
     if (!this.get_valid_orders(unit).some(o => o.id == order.id)) throw Error(`Order ${order.id} is not valid.`);
 
+    order.result = shared.orderResultEnum.unprocessed;
+
     this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
   }
 
