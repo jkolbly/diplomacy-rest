@@ -571,6 +571,10 @@ class ServerGameData extends shared.GameData {
     this.phase = shared.phaseEnum.Retreating;
   }
 
+  start_creating_and_disbanding() {
+
+  }
+
   /**
    * Mark a unit as retreating by moving from the map to the `dislodgements` object.
    */
@@ -587,6 +591,37 @@ class ServerGameData extends shared.GameData {
       if (!prev_state.retreats[country]) prev_state.retreats[country] = {};
       this.remove_unit(provinceId);
     }
+  }
+
+  /**
+   * Adjudicate and apply all currently placed retreats (note that retreats are found on the second-to-last state).
+   */
+  calculate_retreats() {
+    if (this.phase != shared.phaseEnum.Retreating) throw Error(`Can only process retreats during retreating phase.`);
+
+    let prev_state = this.history[this.history.length - 2];
+    let retreats = Object.values(prev_state.retreats).flatMap(c => Object.values(c));
+
+    for (let retreat of retreats) {
+      retreat.result = retreats.some(r => r.id != retreat.id && r.dest == retreat.dest)
+        ? shared.orderResultEnum.fail
+        : shared.orderResultEnum.success;
+
+      if (retreat.result == shared.orderResultEnum.success) {
+        let dislodgement = prev_state.dislodgements[retreat.province];
+
+        /** @type {shared.Unit} */
+        let new_unit = {
+          province: retreat.dest,
+          coast: retreat.coast,
+          type: dislodgement.unit.type
+        };
+
+        this.state.nations[dislodgement.country].units.push(new_unit);
+      }
+    }
+
+    this.start_creating_and_disbanding();
   }
 
   /**
