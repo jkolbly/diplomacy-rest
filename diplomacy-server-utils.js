@@ -544,6 +544,8 @@ class ServerGameData extends shared.GameData {
     this.state.dislodgements = {};
 
     this.history.push(newState);
+
+    this.phase = shared.phaseEnum.Retreating;
   }
 
   /**
