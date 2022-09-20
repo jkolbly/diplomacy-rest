@@ -1,0 +1,30 @@
+start
+
+spawn-unit country:FRA province:bre type:fleet
+spawn-unit country:FRA province:pic type:army
+spawn-unit country:FRA province:bur type:army
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:GBR province:bel type:army
+
+order-move country:FRA unit:bre dest:eng
+order-move country:FRA unit:pic dest:bel
+order-support country:FRA unit:bur supporting:bel from:pic
+order-support country:FRA unit:mao supporting:eng from:bre
+order-convoy country:GBR unit:eng from:pic to:bel
+order-move country:GBR unit:bel dest:pic
+
+adjudicate
+
+assert-unit country:FRA province:eng
+assert-unit country:FRA province:bel
+
+# France: 
+# F Brest - English Channel
+# A Picardy - Belgium
+# A Burgundy Supports A Picardy - Belgium
+# F Mid-Atlantic Ocean Supports F Brest - English Channel
+#  
+# England: 
+# F English Channel Convoys A Picardy - Belgium
+# A Belgium - Picardy

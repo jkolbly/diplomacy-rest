@@ -1,0 +1,41 @@
+start
+
+spawn-unit country:GBR province:nor type:army
+spawn-unit country:GBR province:den type:fleet
+spawn-unit country:GBR province:fin type:fleet
+spawn-unit country:FRA province:nwg type:fleet
+spawn-unit country:FRA province:nth type:fleet
+spawn-unit country:DEU province:ska type:fleet
+spawn-unit country:RUS province:swe type:army
+spawn-unit country:RUS province:bar type:fleet
+
+order-move country:GBR unit:nor dest:swe
+order-support country:GBR unit:den supporting:swe from:nor
+order-support country:GBR unit:fin supporting:swe from:nor
+order-move country:FRA unit:nwg dest:nor
+order-support country:FRA unit:nth supporting:nor from:nwg
+order-convoy country:DEU unit:ska from:swe to:nor
+order-move country:RUS unit:swe dest:nor convoy:true
+order-support country:RUS unit:bar supporting:nor from:swe
+
+adjudicate
+
+assert-unit country:GBR province:swe
+assert-unit country:FRA province:nwg
+assert-not-unit province:nor
+
+# England: 
+# A Norway - Sweden
+# F Denmark Supports A Norway - Sweden
+# F Finland Supports A Norway - Sweden
+
+# France: 
+# F Norwegian Sea - Norway
+# F North Sea Supports F Norwegian Sea - Norway
+
+# Germany: 
+# F Skagerrak Convoys A Sweden - Norway
+
+# Russia: 
+# A Sweden - Norway via Convoy
+# F Barents Sea Supports A Sweden - Norway

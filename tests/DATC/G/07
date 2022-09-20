@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:GBR province:ska type:fleet
+spawn-unit country:GBR province:nor type:fleet
+spawn-unit country:RUS province:swe type:army
+spawn-unit country:RUS province:bot type:fleet
+
+order-convoy country:GBR unit:ska from:swe to:nor
+order-move country:GBR unit:nor dest:swe
+order-move country:RUS unit:swe dest:nor
+order-convoy country:RUS unit:bot from:swe to:nor shouldfail:true
+
+adjudicate
+
+assert-unit country:GBR province:nor
+assert-unit country:RUS province:swe
+
+# England: 
+# F Skagerrak Convoys A Sweden - Norway
+# F Norway - Sweden
+
+# Russia: 
+# A Sweden - Norway
+# F Gulf of Bothnia Convoys A Sweden - Norway

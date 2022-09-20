@@ -1,0 +1,22 @@
+start
+
+spawn-unit country:FRA province:bel type:army
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:hol type:army
+
+order-move country:FRA unit:bel dest:hol convoy:true
+order-move country:GBR unit:nth dest:hel
+order-move country:GBR unit:hol dest:kie
+
+adjudicate
+
+assert-unit country:FRA province:bel
+assert-unit country:GBR province:hel
+assert-unit country:GBR province:kie
+
+# France: 
+# A Belgium - Holland via Convoy
+
+# England: 
+# F North Sea - Helgoland Bight
+# A Holland - Kiel

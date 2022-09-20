@@ -1,0 +1,37 @@
+start
+
+spawn-unit country:GBR province:lvp type:army
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:DEU province:edi type:army
+spawn-unit country:FRA province:iri type:fleet
+spawn-unit country:FRA province:nth type:fleet
+spawn-unit country:RUS province:nwg type:fleet
+spawn-unit country:RUS province:nao type:fleet
+
+order-move country:GBR unit:lvp dest:edi
+order-convoy country:GBR unit:eng from:lvp to:edi
+order-move country:DEU unit:edi dest:lvp
+order-hold country:FRA unit:iri
+order-hold country:FRA unit:nth
+order-convoy country:RUS unit:nwg from:lvp to:edi
+order-convoy country:RUS unit:nao from:lvp to:edi
+
+adjudicate
+
+assert-unit country:GBR province:lvp
+assert-unit country:DEU province:edi
+
+# England: 
+# A Liverpool - Edinburgh
+# F English Channel Convoys A Liverpool - Edinburgh
+
+# Germany: 
+# A Edinburgh - Liverpool
+
+# France: 
+# F Irish Sea Hold
+# F North Sea Hold
+
+# Russia: 
+# F Norwegian Sea Convoys A Liverpool - Edinburgh
+# F North Atlantic Ocean Convoys A Liverpool - Edinburgh

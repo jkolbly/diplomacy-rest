@@ -1,0 +1,23 @@
+start
+
+spawn-unit country:GBR province:nor type:army
+spawn-unit country:RUS province:swe type:fleet
+spawn-unit country:DEU province:ska type:fleet
+
+order-move country:GBR unit:nor dest:swe
+order-move country:RUS unit:swe dest:nor
+order-convoy country:DEU unit:ska from:nor to:swe
+
+adjudicate
+
+assert-unit country:GBR province:nor
+assert-unit country:RUS province:swe
+
+# England: 
+# A Norway - Sweden
+
+# Russia: 
+# F Sweden - Norway
+
+# Germany: 
+# F Skagerrak Convoys A Norway - Sweden

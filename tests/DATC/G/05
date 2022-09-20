@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:ITA province:rom type:army
+spawn-unit country:ITA province:tys type:fleet
+spawn-unit country:TUR province:apu type:army
+spawn-unit country:TUR province:ion type:fleet
+
+order-move country:ITA unit:rom dest:apu
+order-convoy country:ITA unit:tys from:apu to:rom
+order-move country:TUR unit:apu dest:rom
+order-convoy country:TUR unit:ion from:apu to:rom
+
+adjudicate
+
+assert-unit country:ITA province:rom
+assert-unit country:TUR province:apu
+
+# Italy: 
+# A Rome - Apulia
+# F Tyrrhenian Sea Convoys A Apulia - Rome
+
+# Turkey:  
+# A Apulia - Rome
+# F Ionian Sea Convoys A Apulia - Rome

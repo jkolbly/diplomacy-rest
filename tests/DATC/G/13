@@ -1,0 +1,24 @@
+start
+
+spawn-unit country:AUT province:adr type:fleet
+spawn-unit country:AUT province:tri type:army
+spawn-unit country:ITA province:ven type:army
+spawn-unit country:ITA province:alb type:fleet
+
+order-convoy country:AUT unit:adr from:tri to:ven
+order-move country:AUT unit:tri dest:ven convoy:true
+order-support country:ITA unit:ven supporting:tri from:alb
+order-move country:ITA unit:alb dest:tri
+
+adjudicate
+
+assert-unit country:ITA province:ven
+assert-unit country:ITA province:tri
+
+# Austria: 
+# F Adriatic Sea Convoys A Trieste - Venice
+# A Trieste - Venice via Convoy
+
+# Italy: 
+# A Venice Supports F Albania - Trieste
+# F Albania - Trieste 

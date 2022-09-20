@@ -1,0 +1,37 @@
+start
+
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:hol type:army
+spawn-unit country:GBR province:yor type:army
+spawn-unit country:GBR province:lon type:army
+spawn-unit country:GBR province:ruh type:army
+spawn-unit country:FRA province:eng type:fleet
+spawn-unit country:FRA province:bel type:army
+spawn-unit country:FRA province:wal type:army
+
+order-convoy country:GBR unit:nth from:lon to:bel
+order-support country:GBR unit:hol supporting:bel from:lon
+order-move country:GBR unit:yor dest:lon
+order-move country:GBR unit:lon dest:bel convoy:true
+order-support country:GBR unit:ruh supporting:bel from:lon
+order-convoy country:FRA unit:eng from:bel to:lon
+order-move country:FRA unit:bel dest:lon convoy:true
+order-support country:FRA unit:wal supporting:lon from:bel
+
+adjudicate
+
+assert-unit country:GBR province:yor
+assert-unit country:GBR province:bel
+assert-unit country:FRA province:lon
+
+# England: 
+# F North Sea Convoys A London - Belgium
+# A Holland Supports A London - Belgium
+# A Yorkshire - London
+# A London - Belgium
+# A Ruhr Supports A London - Belgium
+
+# France: 
+# F English Channel Convoys A Belgium - London
+# A Belgium - London
+# A Wales Supports A Belgium - London

@@ -1,0 +1,27 @@
+start
+
+spawn-unit country:GBR province:nor type:fleet
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:RUS province:swe type:army
+spawn-unit country:RUS province:ska type:fleet
+spawn-unit country:RUS province:bar type:fleet
+
+order-support country:GBR unit:nor supporting:ska from:nth
+order-move country:GBR unit:nth dest:ska
+order-move country:RUS unit:swe dest:nor
+order-convoy country:RUS unit:ska from:swe to:nor
+order-support country:RUS unit:bar supporting:nor from:swe
+
+adjudicate
+
+assert-unit country:RUS province:nor
+assert-unit country:RUS province:ska
+
+# England: 
+# F Norway Supports F North Sea - Skagerrak
+# F North Sea - Skagerrak
+
+# Russia: 
+# A Sweden - Norway
+# F Skagerrak Convoys A Sweden - Norway
+# F Barents Sea Supports A Sweden - Norway
