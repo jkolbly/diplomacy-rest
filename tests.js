@@ -483,6 +483,7 @@ class Test {
       await get_instruction_spec(instruction.type).execute(this, instruction.params);
     } catch (error) {
       this.log(error.message, logLevelsEnum.Error);
+      console.error(error);
     }
   }
 
