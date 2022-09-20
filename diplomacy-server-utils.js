@@ -805,11 +805,16 @@ class ServerGameData extends shared.GameData {
         });
       }
 
+      order.result = success ? shared.orderResultEnum.success : shared.orderResultEnum.fail;
+
       console.log(`${"  ".repeat(tabsize + 1)}Does ${order.id} succeed? ${success}\n`);
     }
 
     to_dislodge = to_dislodge.filter(d => !cannot_dislodge.includes(d.unit));
     for (let d of to_dislodge) {
+      let dislodged_order = orders.find(o => o.province == d.unit);
+      if (dislodged_order) dislodged_order.result = shared.orderResultEnum.dislodged;
+
       this.make_unit_retreat(d.unit, d.attacker);
     }
 
