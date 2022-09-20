@@ -540,22 +540,24 @@ class ServerGameData extends shared.GameData {
 
     newState.nations = JSON.parse(JSON.stringify(this.state.nations));
     
-    newState.retreats = {};
+    this.state.retreats = {};
+    this.state.dislodgements = {};
 
     this.history.push(newState);
   }
 
   /**
-   * Mark a unit as retreating by moving from the map to the `retreats` object.
+   * Mark a unit as retreating by moving from the map to the `dislodgements` object.
    */
   make_unit_retreat(provinceId, attacker) {
     let unit = this.get_unit(provinceId);
     if (unit) {
+      let prev_state = this.history[this.history.length - 2];
       let owner = this.get_unit_owner_id(provinceId);
-      if (!this.state.retreats[owner]) this.state.retreats[owner] = [];
-      this.state.retreats[owner].push({
+      if (!prev_state.dislodgements[owner]) prev_state.dislodgements[owner] = [];
+      prev_state.dislodgements[owner].push({
         unit: unit,
-        attacker: attacker
+        from: attacker
       });
       this.remove_unit(provinceId);
     }
