@@ -295,6 +295,28 @@ const instructionSpecs = [
       );
     }
   ),
+  new InstructionSpec("order-retreat", [
+      { key: "country", required: true },
+      { key: "unit", required: true },
+      { key: "dest", required: true },
+      { key: "coast", default: "" },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
+    ],
+    async (test, params) => {
+      let province = test.gameData.get_province(params.dest);
+      if (
+        province.coasts.length == 1
+        && test.gameData.history[test.gameData.history.length - 2]
+        && test.gameData.history[test.gameData.history.length - 2].dislodgements
+        && test.gameData.history[test.gameData.history.length - 2].dislodgements[params.dest]
+        && test.gameData.history[test.gameData.history.length - 2].dislodgements[params.dest].unit.type == shared.unitTypeEnum.Fleet
+        ) params.coast = province.coasts[0].id;
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.RetreatOrder(params.unit, params.dest, params.coast)),
+        params.shouldfail
+      );
+    }
+  ),
   new InstructionSpec("adjudicate", [],
     async (test, _params) => {
       test.gameData.calculate_orders();
