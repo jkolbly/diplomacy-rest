@@ -553,12 +553,10 @@ class ServerGameData extends shared.GameData {
     let unit = this.get_unit(provinceId);
     if (unit) {
       let prev_state = this.history[this.history.length - 2];
-      let owner = this.get_unit_owner_id(provinceId);
-      if (!prev_state.dislodgements[owner]) prev_state.dislodgements[owner] = [];
-      prev_state.dislodgements[owner].push({
+      prev_state.dislodgements[unit.province] = {
         unit: unit,
         from: attacker
-      });
+      };
       this.remove_unit(provinceId);
     }
   }
