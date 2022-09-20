@@ -447,25 +447,54 @@ class ServerGameData extends shared.GameData {
     }
   }
 
+
+  /**
+   * Check if a cancel order is valid and process it if so.
+   * @param {string} username Username of the user trying to submit order.
+   * @param {shared.CancelOrder} order Cancel order to be submitted.
+   */
+  submit_cancel_order(username, order) {
+    switch (this.phase) {
+      case shared.phaseEnum["Order Writing"]: {
+        let unit = this.get_unit(order.province);
+        if (!unit) throw Error(`There is no unit at ${order.province}.`);
+        if (this.get_unit_owner_player(order.province) != username) throw Error(`User ${username} has no control over unit at ${order.province}.`);
+        delete this.state.orders[this.get_unit_owner_id(unit.province)][unit.province];
+        break;
+      }
+    }
+  }
+
+  /**
+   * Check if an order for the order writing phase (hold, move, support, or convoy) is valid and submit it if so.
+   * @param {string} username Username of the user trying to submit order.
+   * @param {shared.Order} order Order to be submitted.
+   */
+  submit_normal_order(username, order) {
+    if (this.phase != shared.phaseEnum["Order Writing"]) throw Error(`Cannot place an order during phase ${this.phase} (must be ${shared.phaseEnum["Order Writing"]})`);
+        
+    let unit = this.get_unit(order.province);
+    if (!unit) throw Error(`There is no unit at ${order.province}.`);
+    if (this.get_unit_owner_player(order.province) != username) throw Error(`User ${username} has no control over unit at ${order.province}.`);
+
+    if (!this.get_valid_orders(unit).some(o => o.id == order.id)) throw Error(`Order ${order.id} is not valid.`);
+
+    this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
+  }
+
   /**
    * Check if an order is valid and save it as submitted if so.
    * @param {string} username Username of user trying to submit order.
    * @param {shared.Order} order Order to be submitted.
    */
   submit_order(username, order) {
-    if (this.phase != shared.phaseEnum["Order Writing"]) throw Error(`Cannot place an order during phase ${this.phase} (must be ${shared.phaseEnum["Order Writing"]})`);
-
-    let unit = this.get_unit(order.province);
-
-    if (!unit) throw Error(`There is no unit at ${order.province}.`);
-    if (this.get_unit_owner_player(order.province) != username) throw Error(`User ${username} has no control over unit at ${order.province}.`);
-
-    if (order.type == shared.orderTypeEnum.cancel) {
-      delete this.state.orders[this.get_unit_owner_id(unit.province)][unit.province];
-    } else {
-      if (!this.get_valid_orders(unit).some(o => o.id == order.id)) throw Error(`Order ${order.id} is not valid.`);
-
-      this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
+    switch (order.type) {
+      case shared.orderTypeEnum.cancel:
+        this.submit_cancel_order(username, order);
+        break;
+      default: 
+        this.submit_normal_order(username, order);
+        break;
     }
   }
 
