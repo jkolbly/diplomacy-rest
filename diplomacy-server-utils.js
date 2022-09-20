@@ -590,10 +590,23 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Submit a hold order for every unit that doesn't have an order
+   */
+  fill_orders_with_holds() {
+    for (let c in this.state.nations) {
+      for (let u of this.state.nations[c].units) {
+        if (!this.state.orders[c][u.province]) this.state.orders[c][u.province] = new shared.HoldOrder(u.province);
+      }
+    }
+  }
+
+  /**
    * Adjudicate and apply all currently placed orders and move on to retreat writing phase.
    */
   calculate_orders() {
     if (this.phase != shared.phaseEnum["Order Writing"]) throw Error("Can only adjudicate orders during order writing phase.");
+
+    this.fill_orders_with_holds();
 
     let orders = Object.values(this.state.orders).map(nation => Object.values(nation)).reduce((arr, val) => { arr.push(...val); return arr; });
 
