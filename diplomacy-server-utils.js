@@ -927,12 +927,17 @@ class ServerGameData extends shared.GameData {
       console.log(`${"  ".repeat(tabsize + 1)}Does ${order.id} succeed? ${success}\n`);
     }
 
+    let any_retreats = false;
     to_dislodge = to_dislodge.filter(d => !cannot_dislodge.includes(d.unit));
     for (let d of to_dislodge) {
       let dislodged_order = orders.find(o => o.province == d.unit);
-      if (dislodged_order) dislodged_order.result = shared.orderResultEnum.dislodged;
+      if (dislodged_order) {
+        dislodged_order.result = shared.orderResultEnum.dislodged;
 
-      this.make_unit_retreat(d.unit, d.attacker);
+        this.make_unit_retreat(d.unit, d.attacker);
+
+        any_retreats = true;
+      }
     }
 
     for (let move of successful_moves) {
@@ -941,6 +946,8 @@ class ServerGameData extends shared.GameData {
     }
 
     console.log("Ended adjudication");
+
+    if (!any_retreats) this.start_creating_and_disbanding();
   }
 
   /**
