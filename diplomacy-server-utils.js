@@ -16,6 +16,16 @@ const resolutionStateEnum = {
 }
 
 /**
+ * Enum for storing a type of backup rule needing to be processed.
+ * @readonly
+ * @enum {number}
+ */
+const backupRuleType = {
+  circle: 0,
+  convoy: 1
+}
+
+/**
  * The config data loaded from ./config.
  */
 const config = {};
