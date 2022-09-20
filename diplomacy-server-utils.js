@@ -495,6 +495,26 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Check if a retreat is valid and submit it if so.
+   * @param {string} username Username of the user trying to submit retreat.
+   * @param {shared.RetreatOrder} retreat Retreat order to be submitted.
+   */
+  submit_retreat(username, retreat) {
+    if (this.phase != shared.phaseEnum.Retreating) throw Error(`Cannot submit a retreat during phase ${this.phase} (must be ${shared.phaseEnum.Retreating})`);
+
+    let prev_state = this.history[this.history.length - 2];
+    let dislodgement = prev_state.dislodgements[retreat.province];
+
+    if (!dislodgement) throw Error(`No unit was dislodged from ${retreat.province}`);
+    if (this.country_owner(dislodgement.country) != username) throw Error(`User ${username} has no control over unit dislodged from ${retreat.province}`);
+    if (!this.get_valid_retreats(dislodgement).some(r => r.id == retreat.id)) throw Error(`Retreat ${retreat.id} is not valid.`);
+
+    retreat.result = shared.orderResultEnum.unprocessed;
+
+    prev_state.retreats[dislodgement.country][dislodgement.unit.province] = retreat;
+  }
+
+  /**
    * Check if an order is valid and save it as submitted if so.
    * @param {string} username Username of user trying to submit order.
    * @param {shared.Order} order Order to be submitted.
@@ -503,6 +523,9 @@ class ServerGameData extends shared.GameData {
     switch (order.type) {
       case shared.orderTypeEnum.cancel:
         this.submit_cancel_order(username, order);
+        break;
+      case shared.orderTypeEnum.retreat:
+        this.submit_retreat(username, order);
         break;
       default: 
         this.submit_normal_order(username, order);
