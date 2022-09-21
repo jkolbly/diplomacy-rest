@@ -515,6 +515,40 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Check if an adjustment order is valid and submit it if so.
+   * @param {string} username 
+   * @param {shared.AdjustOrder} order 
+   */
+  submit_adjust_order(username, order) {
+    if (this.phase != shared.phaseEnum["Creating/Disbanding"]) throw Error(`Cannot submit an adjustment order during phase ${this.phase} (must be ${shared.phaseEnum["Creating/Disbanding"]})`);
+    if (this.country_owner(order.country) != username) throw Error(`User ${username} has no control over country ${order.country}.`);
+
+    let prev_state = this.history[this.history.length - 2];
+    let to_build = prev_state.nations[order.country].toBuild;
+    if (to_build == 0) throw Error(`Country ${order.country} cannot build or disband any units this turn.`);
+    
+    let valid_orders = to_build > 0
+      ? this.get_valid_build_orders(order.country)
+      : this.get_valid_disband_orders(order.country);
+    if (!valid_orders.some(o => o.id == order.id)) throw Error(`Adjustment ${order.id} is not valid.`);
+
+    let submitted = prev_state.adjustments[order.country];
+    if (order.type != shared.orderTypeEnum.pass && submitted.some(o => o.id == order.id)) throw Error(`Adjustment order ${order.id} has already been submitted.`);
+
+    // If the maximum number of adjustments has already been reached, overwrite a pass. If there is no submitted pass, throw an error.
+    if (submitted.length >= Math.abs(to_build)) {
+      let submitted_pass_index = submitted.findIndex(o => o.type == shared.orderTypeEnum.pass);
+      if (submitted_pass_index > -1) {
+        submitted.splice(submitted_pass_index, 1);
+      } else {
+        throw Error(`Country ${order.country} has already submitted its maximum number of adjustments.`);
+      }
+    }
+
+    submitted.push(order);
+  }
+
+  /**
    * Check if an order is valid and save it as submitted if so.
    * @param {string} username Username of user trying to submit order.
    * @param {shared.Order} order Order to be submitted.
@@ -526,6 +560,11 @@ class ServerGameData extends shared.GameData {
         break;
       case shared.orderTypeEnum.retreat:
         this.submit_retreat(username, order);
+        break;
+      case shared.orderTypeEnum.build:
+      case shared.orderTypeEnum.disband:
+      case shared.orderTypeEnum.pass:
+        this.submit_adjust_order(username, order);
         break;
       default: 
         this.submit_normal_order(username, order);
