@@ -162,13 +162,10 @@ app.get("/users/:username", generic_auth_func(async (username, req, res) => {
 
 app.get("/tests/run/:test(*)", generic_auth_func(async (username, req, res) => {
   let test = await tests.load_test(req.params.test);
-  let logs = {};
-  for await (let i of test.generator) {
-    logs[i.raw] = test.lastLogs;
-  }
+  await test.run();
   res.send({
     gameData: test.gameData.sanitized(),
-    logs: logs
+    logs: test.logs
   });
 }));
 

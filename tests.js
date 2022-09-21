@@ -27,7 +27,9 @@ const logLevelsEnum = {
   /** Messages that are normally visible but aren't errors. */
   Log: "log",
   /** Messages that are errors, including failed assertions. */
-  Error: "error"
+  Error: "error",
+  /** Messages that are just the string representation of an instruction */
+  Instruction: "instruction"
 }
 
 /**
@@ -515,6 +517,7 @@ class Test {
    */
   async* get_generator() {
     for (let instruction of this.instructions) {
+      this.log(instruction.raw, logLevelsEnum.Instruction);
       await this.execute(instruction);
       yield instruction;
     }
