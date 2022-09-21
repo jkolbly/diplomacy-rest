@@ -324,6 +324,11 @@ const instructionSpecs = [
       test.gameData.calculate_orders();
     }
   ),
+  new InstructionSpec("process-retreats", [],
+    async (test, _params) => {
+      test.gameData.calculate_retreats();
+    }
+  ),
   new InstructionSpec("todo", [],
     async (_test, _params) => {
       throw Error("Encountered \"todo\" instruction");
