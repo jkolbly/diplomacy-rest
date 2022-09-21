@@ -1,3 +1,18 @@
 start
 
-todo
+populate
+
+order-move country:RUS unit:stp dest:bot
+order-move country:RUS unit:war dest:gal
+order-move country:DEU unit:mun dest:boh
+
+adjudicate
+
+order-move country:RUS unit:gal dest:vie
+order-support country:DEU unit:boh supporting:vie from:gal
+
+adjudicate
+
+process-retreats
+
+order-build country:RUS province:stp fleet:true shouldfail:true
