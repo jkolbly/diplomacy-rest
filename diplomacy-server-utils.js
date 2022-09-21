@@ -571,8 +571,54 @@ class ServerGameData extends shared.GameData {
     this.phase = shared.phaseEnum.Retreating;
   }
 
-  start_creating_and_disbanding() {
+  /**
+   * Update which supply centers are owned by which countries based on the current position of units
+   */
+  update_supply_centers() {
+    let supply_centers = this.get_supply_centers().map(province => province.id);
 
+    for (let country in this.state.nations) {
+      for (let unit of this.state.nations[country].units) {
+        let province = unit.province;
+
+        // Don't do anything if supply center ownership isn't changing
+        if (supply_centers.includes(province) && !this.state.nations[country].supplyCenters.includes(province)) {
+          // Remove this supply center from whoever previously owned it
+          for (let c in this.state.nations) {
+            let index = this.state.nations[c].supplyCenters.indexOf(province);
+            if (index > -1) {
+              this.state.nations[c].supplyCenters.splice(index, 1);
+              break;
+            }
+          }
+
+          // Add this supply center to the new owner's list
+          this.state.nations[country].supplyCenters.push(province);
+        }
+      }
+    }
+  }
+
+  /**
+   * Prepare for the creating and disbanding units phase or skip it if this isn't the end of a Fall turn (i.e. the start of a Spring turn)
+   */
+  start_creating_and_disbanding() {
+    if (this.state.season == shared.seasonEnum.Spring) {
+      this.phase = shared.phaseEnum["Creating/Disbanding"];
+      let prev_state = this.history[this.history.length - 2];
+
+      this.update_supply_centers();
+
+      for (let c in this.state.nations) {
+        let supply_centers = this.state.nations[c].supplyCenters.length;
+        let units = this.state.nations[c].units.length;
+        prev_state.nations[c].toBuild = supply_centers - units;
+      }
+
+      prev_state.adjustments = Object.fromEntries(Object.keys(this.state.nations).filter(c => prev_state.nations[c].toBuild != 0).map(c => [c, []]));
+    } else {
+      this.start_order_writing();
+    }
   }
 
   /**
