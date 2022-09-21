@@ -334,7 +334,7 @@ const instructionSpecs = [
             params.country,
             params.province,
             params.fleet
-              ? shared.unitTypeEnum.Flee
+              ? shared.unitTypeEnum.Fleet
               : shared.unitTypeEnum.Army, params.coast
           )
         ),
