@@ -319,6 +319,52 @@ const instructionSpecs = [
       );
     }
   ),
+  new InstructionSpec("order-build", [
+      { key: "country", required: true },
+      { key: "province", required: true },
+      { key: "coast", default: "" },
+      { key: "fleet", type: instructionParamTypeEnum.boolean, default: false },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
+    ],
+    async (test, params) => {
+      conditional_expect_error(
+        () => test.gameData.submit_order(
+          test.gameData.country_owner(params.country),
+          new shared.BuildOrder(
+            params.country,
+            params.province,
+            params.fleet
+              ? shared.unitTypeEnum.Flee
+              : shared.unitTypeEnum.Army, params.coast
+          )
+        ),
+        params.shouldfail
+      );
+    }
+  ),
+  new InstructionSpec("order-disband", [
+      { key: "country", required: true },
+      { key: "unit", required: true },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
+    ],
+    async (test, params) => {
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.DisbandOrder(params.country, params.unit)),
+        params.shouldfail
+      );
+    }
+  ),
+  new InstructionSpec("order-pass", [
+      { key: "country", required: true },
+      { key: "shouldfail", type: instructionParamTypeEnum.boolean, default: false }
+    ],
+    async (test, params) => {
+      conditional_expect_error(
+        () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.PassOrder(params.country)),
+        params.shouldfail
+      );
+    }
+  ),
   new InstructionSpec("adjudicate", [],
     async (test, _params) => {
       test.gameData.calculate_orders();
