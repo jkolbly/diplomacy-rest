@@ -1005,7 +1005,7 @@ class ServerGameData extends shared.GameData {
       let success = resolve(i);
 
       if (success && order.type == shared.orderTypeEnum.move) {
-        to_dislodge.push({ unit: order.dest, attacker: order.province });
+        to_dislodge.push({ unit: order.dest, attacker: order.isConvoy ? "" : order.province });
         cannot_dislodge.push(order.province);
 
         successful_moves.push({
