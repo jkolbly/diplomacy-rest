@@ -1038,7 +1038,22 @@ class ServerGameData extends shared.GameData {
       move.unit.coast = move.coast;
     }
 
-    contested = contested.filter(p => !orders.some(o => o.type == shared.orderTypeEnum.move && o.dest == p && o.result == shared.orderResultEnum.success));
+    // Contested provinces are provinces where at least two orders satisfy the following:
+    //   - The order is not a convoy that failed because it didn't have a route (i.e. the province is already in "contested" array)
+    //   - The order is a move order that failed to move
+    //   - The order was not dislodged from where it was attempting to move
+    let failed_moves = orders.filter(o => o.type == shared.orderTypeEnum.move && o.result != shared.orderResultEnum.success);
+    contested = contested.filter(p => {
+      if (!contested.includes(p)) return false;
+      let attack_count = 0;
+      for (let o of failed_moves) {
+        if (o.result != shared.orderResultEnum.dislodged || !to_dislodge.some(d => d.unit == o.province && d.attacker == o.dest)) {
+          attack_count += 1;
+          if (attack_count >= 2) return true;
+        }
+      }
+      return false;
+    });
     this.history[this.history.length - 2].contested = contested;
 
     console.log("Ended adjudication");
