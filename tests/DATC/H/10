@@ -1,0 +1,47 @@
+start
+
+spawn-unit country:GBR province:kie type:army
+spawn-unit country:DEU province:ber type:army
+spawn-unit country:DEU province:mun type:army
+spawn-unit country:DEU province:pru type:army
+spawn-unit country:RUS province:war type:army
+spawn-unit country:RUS province:sil type:army
+
+order-hold country:GBR unit:kie
+order-move country:DEU unit:ber dest:kie
+order-support country:DEU unit:mun supporting:kie from:ber
+order-hold country:DEU unit:pru
+order-move country:RUS unit:war dest:pru
+order-support country:RUS unit:sil supporting:pru from:war
+
+adjudicate
+
+order-retreat country:GBR unit:kie dest:ber shouldfail:true
+order-retreat country:DEU unit:pru dest:ber
+
+process-retreats
+
+assert-unit country:DEU province:kie
+assert-unit country:DEU province:ber
+assert-unit country:RUS province:pru
+
+# England: 
+# A Kiel Hold
+
+# Germany: 
+# A Berlin - Kiel
+# A Munich Supports A Berlin - Kiel
+# A Prussia Hold
+
+# Russia: 
+# A Warsaw - Prussia
+# A Silesia Supports A Warsaw - Prussia
+
+
+# Retreats:
+
+# England:
+# A Kiel - Berlin
+
+# Germany:
+# A Prussia - Berlin

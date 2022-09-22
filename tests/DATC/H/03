@@ -1,0 +1,36 @@
+start
+
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:GBR province:hol type:army
+spawn-unit country:DEU province:kie type:fleet
+spawn-unit country:DEU province:ruh type:army
+
+order-hold country:GBR unit:nth
+order-hold country:GBR unit:hol
+order-support country:DEU unit:kie supporting:hol from:ruh
+order-move country:DEU unit:ruh dest:hol
+
+adjudicate
+
+order-retreat country:GBR unit:hol dest:yor shouldfail:true
+order-convoy country:GBR unit:nth from:hol to:yor shouldfail:true
+
+process-retreats
+
+assert-not-unit province:yor
+assert-unit country:DEU province:hol
+
+# England: 
+# F North Sea Hold
+# A Holland Hold
+
+# Germany: 
+# F Kiel Supports A Ruhr - Holland
+# A Ruhr - Holland
+
+
+# Retreats:
+
+# England: 
+# A Holland - Yorkshire
+# F North Sea Convoys A Holland - Yorkshire

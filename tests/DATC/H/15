@@ -1,0 +1,26 @@
+start
+
+spawn-unit country:GBR province:por type:fleet
+spawn-unit country:FRA province:spa type:fleet coast:SC
+spawn-unit country:FRA province:mao type:fleet
+
+order-hold country:GBR unit:por
+order-move country:FRA unit:spa dest:por
+order-support country:FRA unit:mao supporting:por from:spa
+
+adjudicate
+
+order-retreat country:GBR unit:por dest:spa coast:NC shouldfail:true
+
+# England: 
+# F Portugal Hold
+
+# France: 
+# F Spain(sc) - Portugal
+# F Mid-Atlantic Ocean Supports F Spain(sc) - Portugal
+
+
+# Retreats:
+
+# England:
+# F Portugal - Spain(nc)

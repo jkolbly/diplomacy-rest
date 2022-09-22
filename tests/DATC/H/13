@@ -1,0 +1,29 @@
+start
+
+spawn-unit country:GBR province:pic type:army
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:FRA province:par type:army
+spawn-unit country:FRA province:bre type:army
+
+order-hold country:GBR unit:pic
+order-convoy country:GBR unit:eng from:pic to:lon
+order-move country:FRA unit:par dest:pic
+order-support country:FRA unit:bre supporting:pic from:par
+
+adjudicate
+
+order-retreat country:GBR unit:pic dest:lon shouldfail:true
+
+# England: 
+# A Picardy Hold
+# F English Channel Convoys A Picardy - London
+
+# France: 
+# A Paris - Picardy
+# A Brest Supports A Paris - Picardy
+
+
+# Retreats:
+
+# England:
+# A Picardy - London

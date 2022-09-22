@@ -1,0 +1,52 @@
+start
+
+spawn-unit country:AUT province:tri type:fleet
+spawn-unit country:AUT province:ser type:army
+spawn-unit country:TUR province:gre type:fleet
+spawn-unit country:ITA province:ven type:army
+spawn-unit country:ITA province:tyr type:army
+spawn-unit country:ITA province:ion type:fleet
+spawn-unit country:ITA province:aeg type:fleet
+
+order-hold country:AUT unit:tri
+order-hold country:AUT unit:ser
+order-hold country:TUR unit:gre
+order-support country:ITA unit:ven supporting:tri from:tyr
+order-move country:ITA unit:tyr dest:tri
+order-move country:ITA unit:ion dest:gre
+order-support country:ITA unit:aeg supporting:gre from:ion
+
+adjudicate
+
+order-retreat country:AUT unit:tri dest:alb
+order-support country:AUT unit:ser supporting:alb from:tri shouldfail:true
+order-retreat country:TUR unit:gre dest:alb
+
+process-retreats
+
+assert-not-unit province:alb
+assert-unit country:ITA province:tri
+assert-unit country:ITA province:gre
+
+# Austria: 
+# F Trieste Hold
+# A Serbia Hold
+
+# Turkey: 
+# F Greece Hold
+
+# Italy: 
+# A Venice Supports A Tyrolia - Trieste
+# A Tyrolia - Trieste
+# F Ionian Sea - Greece
+# F Aegean Sea Supports F Ionian Sea - Greece
+
+
+# Retreats:
+
+# Austria: 
+# F Trieste - Albania
+# A Serbia Supports F Trieste - Albania
+
+# Turkey: 
+# F Greece - Albania

@@ -1,0 +1,59 @@
+start
+
+spawn-unit country:GBR province:lvp type:army
+spawn-unit country:GBR province:yor type:fleet
+spawn-unit country:GBR province:nor type:fleet
+spawn-unit country:DEU province:kie type:army
+spawn-unit country:DEU province:ruh type:army
+spawn-unit country:RUS province:edi type:fleet
+spawn-unit country:RUS province:swe type:army
+spawn-unit country:RUS province:fin type:army
+spawn-unit country:RUS province:hol type:fleet
+
+order-move country:GBR unit:lvp dest:edi
+order-support country:GBR unit:yor supporting:edi from:lvp
+order-hold country:GBR unit:nor
+order-support country:DEU unit:kie supporting:hol from:ruh
+order-move country:DEU unit:ruh dest:hol
+order-hold country:RUS unit:edi
+order-support country:RUS unit:swe supporting:nor from:fin
+order-move country:RUS unit:fin dest:nor
+order-hold country:RUS unit:hol
+
+adjudicate
+
+order-retreat country:GBR unit:nor dest:nth
+order-retreat country:RUS unit:edi dest:nth
+order-retreat country:RUS unit:hol dest:nth
+
+process-retreats
+
+assert-unit country:GBR province:edi
+assert-unit country:DEU province:hol
+assert-unit country:RUS province:nor
+assert-not-unit province:nth
+
+# England: 
+# A Liverpool - Edinburgh
+# F Yorkshire Supports A Liverpool - Edinburgh
+# F Norway Hold
+
+# Germany: 
+# A Kiel Supports A Ruhr - Holland
+# A Ruhr - Holland
+
+# Russia: 
+# F Edinburgh Hold
+# A Sweden Supports A Finland - Norway
+# A Finland - Norway
+# F Holland Hold
+
+
+# Retreats:
+
+# England: 
+# F Norway - North Sea
+
+# Russia: 
+# F Edinburgh - North Sea
+# F Holland - North Sea

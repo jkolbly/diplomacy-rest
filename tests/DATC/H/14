@@ -1,0 +1,50 @@
+start
+
+spawn-unit country:GBR province:pic type:army
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:FRA province:par type:army
+spawn-unit country:FRA province:bre type:army
+spawn-unit country:FRA province:bur type:army
+spawn-unit country:DEU province:mun type:army
+spawn-unit country:DEU province:mar type:army
+
+order-hold country:GBR unit:pic
+order-support country:GBR unit:eng supporting:bel from:pic
+order-move country:FRA unit:par dest:pic
+order-support country:FRA unit:bre supporting:pic from:par
+order-hold country:FRA unit:bur
+order-support country:DEU unit:mun supporting:bur from:mar
+order-move country:DEU unit:mar dest:bur
+
+adjudicate
+
+order-retreat country:GBR unit:pic dest:bel
+order-retreat country:FRA unit:bur dest:bel
+
+process-retreats
+
+assert-not-unit province:bel
+assert-unit country:FRA province:pic
+assert-unit country:DEU province:bur
+
+# England: 
+# A Picardy Hold
+# F English Channel Supports A Picardy - Belgium
+
+# France: 
+# A Paris - Picardy
+# A Brest Supports A Paris - Picardy
+# A Burgundy Hold
+
+# Germany: 
+# A Munich Supports A Marseilles - Burgundy
+# A Marseilles - Burgundy
+
+
+# Retreats:
+
+# England:
+# A Picardy - Belgium
+
+# France:
+# A Burgundy - Belgium

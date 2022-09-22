@@ -1,0 +1,40 @@
+start
+
+spawn-unit country:FRA province:gas type:army
+spawn-unit country:FRA province:bur type:army
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:FRA province:wes type:fleet
+spawn-unit country:FRA province:lyo type:fleet
+spawn-unit country:ITA province:mar type:army
+
+order-move country:FRA unit:gas dest:mar convoy:true
+order-support country:FRA unit:bur supporting:mar from:gas
+order-convoy country:FRA unit:mao from:gas to:mar
+order-convoy country:FRA unit:wes from:gas to:mar
+order-convoy country:FRA unit:lyo from:gas to:mar
+order-hold country:ITA unit:mar
+
+adjudicate
+
+order-retreat country:ITA unit:mar dest:gas
+
+process-retreats
+
+assert-unit country:FRA province:mar
+assert-unit country:ITA province:gas
+
+# France: 
+# A Gascony - Marseilles via Convoy
+# A Burgundy Supports A Gascony - Marseilles
+# F Mid-Atlantic Ocean Convoys A Gascony - Marseilles
+# F Western Mediterranean Convoys A Gascony - Marseilles
+# F Gulf of Lyon Convoys A Gascony - Marseilles
+
+# Italy: 
+# A Marseilles Hold
+
+
+# Retreats:
+
+# Italy:
+# A Marseilles - Gascony

@@ -1,0 +1,34 @@
+start
+
+spawn-unit country:AUT province:bud type:army
+spawn-unit country:AUT province:tri type:army
+spawn-unit country:DEU province:mun type:army
+spawn-unit country:DEU province:sil type:army
+spawn-unit country:ITA province:vie type:army
+
+order-support country:AUT unit:bud supporting:vie from:tri
+order-move country:AUT unit:tri dest:vie
+order-move country:DEU unit:mun dest:boh
+order-move country:DEU unit:sil dest:boh
+order-hold country:ITA unit:vie
+
+adjudicate
+
+order-retreat country:ITA unit:vie dest:boh shouldfail:true
+
+# Austria: 
+# A Budapest Supports A Trieste - Vienna
+# A Trieste - Vienna
+
+# Germany: 
+# A Munich - Bohemia
+# A Silesia - Bohemia
+
+# Italy: 
+# A Vienna Hold
+
+
+# Retreats:
+
+# Italy:
+# A Vienna - Bohemia

@@ -1,0 +1,55 @@
+start
+
+spawn-unit country:GBR province:lvp type:army
+spawn-unit country:GBR province:iri type:fleet
+spawn-unit country:GBR province:eng type:fleet
+spawn-unit country:GBR province:nth type:fleet
+spawn-unit country:FRA province:bre type:fleet
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:RUS province:edi type:army
+spawn-unit country:RUS province:nwg type:fleet
+spawn-unit country:RUS province:nao type:fleet
+spawn-unit country:RUS province:cly type:army
+
+order-move country:GBR unit:lvp dest:edi convoy:true
+order-convoy country:GBR unit:iri from:lvp to:edi
+order-convoy country:GBR unit:eng from:lvp to:edi
+order-convoy country:GBR unit:nth from:lvp to:edi
+order-move country:FRA unit:bre dest:eng
+order-support country:FRA unit:mao supporting:eng from:bre
+order-move country:RUS unit:edi dest:lvp convoy:true
+order-convoy country:RUS unit:nwg from:edi to:lvp
+order-convoy country:RUS unit:nao from:edi to:lvp
+order-support country:RUS unit:cly supporting:lvp from:edi
+
+adjudicate
+
+order-retreat country:GBR unit:lvp dest:edi
+
+process-retreats
+
+assert-unit country:GBR province:edi
+assert-unit country:FRA province:eng
+assert-unit country:RUS province:lvp
+
+# England: 
+# A Liverpool - Edinburgh via Convoy
+# F Irish Sea Convoys A Liverpool - Edinburgh
+# F English Channel Convoys A Liverpool - Edinburgh
+# F North Sea Convoys A Liverpool - Edinburgh
+
+# France: 
+# F Brest - English Channel
+# F Mid-Atlantic Ocean Supports F Brest - English Channel
+
+# Russia: 
+# A Edinburgh - Liverpool via Convoy
+# F Norwegian Sea Convoys A Edinburgh - Liverpool
+# F North Atlantic Ocean Convoys A Edinburgh - Liverpool
+# A Clyde Supports A Edinburgh - Liverpool
+
+
+# Retreats:
+
+# England:
+# A Liverpool - Edinburgh

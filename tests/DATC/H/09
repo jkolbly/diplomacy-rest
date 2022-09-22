@@ -1,0 +1,43 @@
+start
+
+spawn-unit country:GBR province:hel type:fleet
+spawn-unit country:GBR province:den type:fleet
+spawn-unit country:DEU province:ber type:army
+spawn-unit country:DEU province:kie type:fleet
+spawn-unit country:DEU province:sil type:army
+spawn-unit country:RUS province:pru type:army
+
+order-move country:GBR unit:hel dest:kie
+order-support country:GBR unit:den supporting:kie from:hel
+order-move country:DEU unit:ber dest:pru
+order-hold country:DEU unit:kie
+order-support country:DEU unit:sil supporting:pru from:ber
+order-move country:RUS unit:pru dest:ber
+
+adjudicate
+
+order-retreat country:DEU unit:kie dest:ber
+
+process-retreats
+
+assert-unit country:GBR province:kie
+assert-unit country:DEU province:pru
+assert-unit country:DEU province:ber
+
+# England: 
+# F Helgoland Bight - Kiel
+# F Denmark Supports F Helgoland Bight - Kiel
+
+# Germany: 
+# A Berlin - Prussia
+# F Kiel Hold
+# A Silesia Supports A Berlin - Prussia
+
+# Russia: 
+# A Prussia - Berlin
+
+
+# Retreats:
+
+# Germany:
+# F Kiel - Berlin

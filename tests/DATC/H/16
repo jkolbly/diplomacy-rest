@@ -1,0 +1,32 @@
+start
+
+spawn-unit country:FRA province:mao type:fleet
+spawn-unit country:FRA province:gas type:fleet
+spawn-unit country:FRA province:wes type:fleet
+spawn-unit country:ITA province:tun type:fleet
+spawn-unit country:ITA province:tys type:fleet
+
+order-move country:FRA unit:mao dest:spa coast:NC
+order-move country:FRA unit:gas dest:spa coast:NC
+order-hold country:FRA unit:wes
+order-support country:ITA unit:tun supporting:wes from:tys
+order-move country:ITA unit:tys dest:wes
+
+adjudicate
+
+order-retreat country:FRA unit:wes dest:spa coast:SC shouldfail:true
+
+# France: 
+# F Mid-Atlantic Ocean - Spain(nc)
+# F Gascony - Spain(nc)
+# F Western Mediterranean Hold
+
+# Italy: 
+# F Tunis Supports F Tyrrhenian Sea - Western Mediterranean
+# F Tyrrhenian Sea - Western Mediterranean
+
+
+# Retreats:
+
+# France:
+# F Western Mediterranean - Spain(sc)

@@ -1,0 +1,31 @@
+start
+
+spawn-unit country:RUS province:con type:fleet
+spawn-unit country:RUS province:bla type:fleet
+spawn-unit country:TUR province:ank type:fleet
+
+order-support country:RUS unit:con supporting:ank from:bla
+order-move country:RUS unit:bla dest:ank
+order-hold country:TUR unit:ank
+
+adjudicate
+
+order-retreat country:TUR unit:ank dest:bla shouldfail:true
+
+process-retreats
+
+assert-not-unit province:bla
+assert-unit country:RUS province:ank
+
+# Russia: 
+# F Constantinople Supports F Black Sea - Ankara
+# F Black Sea - Ankara
+
+# Turkey: 
+# F Ankara Hold
+
+
+# Retreats:
+
+# Turkey:
+# F Ankara - Black Sea
