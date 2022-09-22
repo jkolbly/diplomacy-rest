@@ -310,8 +310,8 @@ const instructionSpecs = [
         province.coasts.length == 1
         && test.gameData.history[test.gameData.history.length - 2]
         && test.gameData.history[test.gameData.history.length - 2].dislodgements
-        && test.gameData.history[test.gameData.history.length - 2].dislodgements[params.dest]
-        && test.gameData.history[test.gameData.history.length - 2].dislodgements[params.dest].unit.type == shared.unitTypeEnum.Fleet
+        && test.gameData.history[test.gameData.history.length - 2].dislodgements[params.unit]
+        && test.gameData.history[test.gameData.history.length - 2].dislodgements[params.unit].unit.type == shared.unitTypeEnum.Fleet
         ) params.coast = province.coasts[0].id;
       conditional_expect_error(
         () => test.gameData.submit_order(test.gameData.country_owner(params.country), new shared.RetreatOrder(params.unit, params.dest, params.coast)),
