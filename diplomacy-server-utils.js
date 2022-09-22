@@ -876,6 +876,8 @@ class ServerGameData extends shared.GameData {
         case shared.orderTypeEnum.move: {
           if (!any_convoy_route(order)) return false;
 
+          if (!contested.includes(order.dest)) contested.push(order.dest);
+
           /**
            * @param {shared.Order} ord
            */
@@ -992,6 +994,12 @@ class ServerGameData extends shared.GameData {
     /** Successful move orders to be executed simultaneously. */
     let successful_moves = [];
 
+    /**
+     * List of provinces that are contested.
+     * @type {Array<string>}
+     */
+    let contested = [];
+
     for (let i = 0; i < orders.length; i++) {
       let order = orders[i];
       let success = resolve(i);
@@ -1029,6 +1037,9 @@ class ServerGameData extends shared.GameData {
       move.unit.province = move.dest;
       move.unit.coast = move.coast;
     }
+
+    contested = contested.filter(p => !orders.some(o => o.type == shared.orderTypeEnum.move && o.dest == p && o.result == shared.orderResultEnum.success));
+    this.history[this.history.length - 2].contested = contested;
 
     console.log("Ended adjudication");
 
