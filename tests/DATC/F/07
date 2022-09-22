@@ -16,6 +16,9 @@ order-retreat country:GBR unit:nth dest:hol
 
 process-retreats
 
+assert-unit country:GBR province:hol
+assert-unit country:DEU province:nth
+
 # England: 
 # F North Sea Convoys A London - Holland
 # A London - Holland
