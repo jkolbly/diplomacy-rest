@@ -12,7 +12,9 @@ order-move country:DEU unit:ska dest:nth
 
 adjudicate
 
-todo
+order-retreat country:GBR unit:nth dest:hol
+
+process-retreats
 
 # England: 
 # F North Sea Convoys A London - Holland
