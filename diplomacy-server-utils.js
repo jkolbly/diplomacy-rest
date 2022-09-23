@@ -661,6 +661,29 @@ class ServerGameData extends shared.GameData {
   }
 
   /**
+   * Apply all current adjustments
+   */
+  calculate_adjustments() {
+    if (this.phase != shared.phaseEnum["Creating/Disbanding"]) throw Error(`Can only process adjustments during adjustment phase.`);
+
+    let prev_state = this.history[this.history.length - 2];
+    for (let c in prev_state.adjustments) {
+      for (let adj of prev_state.adjustments[c]) {
+        switch (adj.type) {
+          case shared.orderTypeEnum.build:
+            this.spawn_unit(c, adj.province, adj.unitType, adj.coast);
+            break;
+          case shared.orderTypeEnum.disband:
+            this.remove_unit(adj.province);
+            break;
+        }
+      }
+    }
+
+    this.start_order_writing();
+  }
+
+  /**
    * Mark a unit as retreating by moving from the map to the `dislodgements` object.
    */
   make_unit_retreat(provinceId, attacker) {
