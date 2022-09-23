@@ -1,0 +1,18 @@
+start
+
+adjudicate
+
+spawn-unit country:RUS province:fin
+spawn-unit country:RUS province:lvn
+spawn-unit country:RUS province:ukr
+
+adjudicate
+
+order-build country:RUS province:mos fleet:true shouldfail:true
+
+process-adjustments
+
+assert-not-unit province:mos
+
+# Russia:
+# Build F Moscow

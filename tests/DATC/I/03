@@ -1,0 +1,13 @@
+start
+
+adjudicate
+
+spawn-unit country:DEU province:ber
+spawn-unit country:DEU province:pru
+
+adjudicate
+
+order-build country:DEU province:ber shouldfail:true
+
+# Germany:
+# Build A Berlin

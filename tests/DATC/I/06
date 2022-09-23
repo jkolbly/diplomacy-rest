@@ -1,0 +1,20 @@
+start
+
+spawn-unit country:DEU province:war
+spawn-unit country:DEU province:pru
+spawn-unit country:DEU province:boh
+
+adjudicate
+adjudicate
+
+process-adjustments
+
+order-move country:DEU unit:war dest:sil
+
+adjudicate
+adjudicate
+
+order-build country:DEU province:war shouldfail:true
+
+# Germany:
+# Build A Warsaw

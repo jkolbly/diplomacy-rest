@@ -1,0 +1,15 @@
+start
+
+adjudicate
+
+spawn-unit country:RUS province:ukr
+spawn-unit country:RUS province:lvn
+
+adjudicate
+
+order-build country:RUS province:mos
+order-build country:RUS province:mos shouldfail:true
+
+# Russia:
+# Build A Moscow
+# Build A Moscow

@@ -1,0 +1,18 @@
+start
+
+adjudicate
+
+spawn-unit country:RUS province:stp coast:SC
+spawn-unit country:RUS province:lvn
+spawn-unit country:RUS province:gal
+
+adjudicate
+
+order-build country:RUS province:stp fleet:true coast:NC shouldfail:true
+
+process-adjustments
+
+assert-not-unit province:stp coast:NC
+
+# Russia:
+# Build A St Petersburg(nc)
