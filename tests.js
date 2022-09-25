@@ -367,17 +367,17 @@ const instructionSpecs = [
   ),
   new InstructionSpec("adjudicate", [],
     async (test, _params) => {
-      test.gameData.calculate_orders();
+      if (test.gameData.phase == shared.phaseEnum["Order Writing"]) test.gameData.calculate_orders();
     }
   ),
   new InstructionSpec("process-retreats", [],
     async (test, _params) => {
-      test.gameData.calculate_retreats();
+      if (test.gameData.phase == shared.phaseEnum.Retreating) test.gameData.calculate_retreats();
     }
   ),
   new InstructionSpec("process-adjustments", [],
     async (test, _params) => {
-      test.gameData.calculate_adjustments();
+      if (test.gameData.phase == shared.phaseEnum["Creating/Disbanding"]) test.gameData.calculate_adjustments();
     }
   ),
   new InstructionSpec("todo", [],
