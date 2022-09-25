@@ -492,6 +492,15 @@ class ServerGameData extends shared.GameData {
     order.result = shared.orderResultEnum.unprocessed;
 
     this.state.orders[this.get_unit_owner_id(unit.province)][unit.province] = order;
+
+    for (let c in this.state.nations) {
+      for (let u of this.state.nations[c].units) {
+        if (!this.state.orders[c][u.province]) return; // If not all orders are in, we're done
+      }
+    }
+
+    // If all orders are in, adjudicate
+    this.calculate_orders();
   }
 
   /**
@@ -512,6 +521,13 @@ class ServerGameData extends shared.GameData {
     retreat.result = shared.orderResultEnum.unprocessed;
 
     prev_state.retreats[dislodgement.country][dislodgement.unit.province] = retreat;
+
+    for (let d in prev_state.dislodgements) {
+      if (!prev_state.retreats[prev_state.dislodgements[d].country][d]) return; // If not all retreats are in, we're done
+    }
+
+    // Otherwise, move on to retreat calculation
+    this.calculate_retreats();
   }
 
   /**
@@ -546,6 +562,13 @@ class ServerGameData extends shared.GameData {
     }
 
     submitted.push(order);
+
+    for (let c in prev_state.nations) {
+      if (prev_state.nations[c].toBuild != 0 && prev_state.adjustments[c].length != Math.abs(prev_state.nations[c].toBuild)) return; // If not all adjustments are in, we're done
+    }
+
+    // Otherwise, move on to adjustment execution
+    this.calculate_adjustments();
   }
 
   /**
