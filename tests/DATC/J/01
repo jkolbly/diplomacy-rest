@@ -1,0 +1,29 @@
+start
+
+spawn-unit country:GBR province:mar
+spawn-unit country:FRA province:pic
+spawn-unit country:FRA province:fin
+spawn-unit country:FRA province:par
+
+adjudicate
+adjudicate
+
+process-adjustments
+
+order-move country:GBR unit:mar dest:pie
+
+adjudicate
+adjudicate
+
+order-disband country:FRA unit:lyo shouldfail:true
+order-disband country:FRA unit:pic
+order-disband country:FRA unit:par shouldfail:true
+
+process-adjustments
+
+assert-not-unit province:pic
+
+# France:
+# Remove F Gulf of Lyon
+# Remove A Picardy
+# Remove A Paris

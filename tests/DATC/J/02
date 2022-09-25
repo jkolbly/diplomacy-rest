@@ -1,0 +1,26 @@
+start
+
+spawn-unit country:GBR province:mar
+spawn-unit country:GBR province:bre
+spawn-unit country:FRA province:par
+spawn-unit country:FRA province:pic
+spawn-unit country:FRA province:gas
+
+adjudicate
+adjudicate
+
+process-adjustments
+
+adjudicate
+adjudicate
+
+order-disband country:FRA unit:par
+order-disband country:FRA unit:par shouldfail:true
+
+process-adjustments
+
+assert-not-unit province:par
+
+# France:
+# Remove A Paris
+# Remove A Paris
