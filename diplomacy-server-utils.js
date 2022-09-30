@@ -1084,18 +1084,16 @@ class ServerGameData extends shared.GameData {
       move.unit.coast = move.coast;
     }
 
-    // Contested provinces are provinces where at least two orders satisfy the following:
+    // Contested provinces are unoccupied provinces where at least one order satisfies the following:
     //   - The order is not a convoy that failed because it didn't have a route (i.e. the province is already in "contested" array)
     //   - The order is a move order that failed to move
     //   - The order was not dislodged from where it was attempting to move
     let failed_moves = orders.filter(o => o.type == shared.orderTypeEnum.move && o.result != shared.orderResultEnum.success);
     contested = contested.filter(p => {
-      if (!contested.includes(p)) return false;
-      let attack_count = 0;
+      if (this.get_unit(p)) return false;
       for (let o of failed_moves) {
         if (o.result != shared.orderResultEnum.dislodged || !to_dislodge.some(d => d.unit == o.province && d.attacker == o.dest)) {
-          attack_count += 1;
-          if (attack_count >= 2) return true;
+          return true;
         }
       }
       return false;
