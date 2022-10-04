@@ -170,6 +170,15 @@ const instructionSpecs = [
       test.gameData.populate();
     }
   ),
+  new InstructionSpec("claim-country", [
+      { key: "user", required: true },
+      { key: "country", required: true }
+    ],
+    async (test, params) => {
+      if (!test.gameData.users.includes(params.user)) throw Error(`Unknown player ${params.user}`);
+      test.gameData.claim_country(params.user, params.country);
+    }
+  ),
   new InstructionSpec("spawn-unit", [
       { key: "country", required: true },
       { key: "province", required: true },
