@@ -141,7 +141,8 @@ const instructionSpecs = [
       { key: "userCount", type: instructionParamTypeEnum.number, default: -1 },
       { key: "countryClaiming", type: instructionParamTypeEnum.boolean, default: true },
       { key: "users", type: instructionParamTypeEnum.stringList, default: [] },
-      { key: "date", type: instructionParamTypeEnum.number, default: -1 }
+      { key: "date", type: instructionParamTypeEnum.number, default: -1 },
+      { key: "season", type: instructionParamTypeEnum.string, default: "" }
     ],
     async (test, params) => {
       if (params.users.length == 0) {
@@ -160,6 +161,16 @@ const instructionSpecs = [
       test.gameData = await utils.new_game(params.users[0], params.name, params.map, params.users, false, false);
 
       if (params.date != -1) test.gameData.state.date = params.date;
+      if (params.season) switch (params.season.toLowerCase()) {
+        case "spring":
+          test.gameData.state.season = shared.seasonEnum.Spring;
+          break;
+        case "fall":
+          test.gameData.state.season = shared.seasonEnum.Fall;
+          break;
+        default:
+          throw Error(`Unknown season ${params.season}`);
+      }
 
       if (params.countryClaiming) {
         for (let user of params.users) {
