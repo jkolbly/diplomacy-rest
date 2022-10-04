@@ -140,7 +140,8 @@ const instructionSpecs = [
       { key: "name", default: "Test Game" },
       { key: "userCount", type: instructionParamTypeEnum.number, default: -1 },
       { key: "countryClaiming", type: instructionParamTypeEnum.boolean, default: true },
-      { key: "users", type: instructionParamTypeEnum.stringList, default: [] }
+      { key: "users", type: instructionParamTypeEnum.stringList, default: [] },
+      { key: "date", type: instructionParamTypeEnum.number, default: -1 }
     ],
     async (test, params) => {
       if (params.users.length == 0) {
@@ -157,6 +158,8 @@ const instructionSpecs = [
       }
 
       test.gameData = await utils.new_game(params.users[0], params.name, params.map, params.users, false, false);
+
+      if (params.date != -1) test.gameData.state.date = params.date;
 
       if (params.countryClaiming) {
         for (let user of params.users) {
